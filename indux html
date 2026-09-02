@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gulf Learning Educational Platform</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+        }
+        header {
+            background-color: #0a3d62;
+            color: white;
+            text-align: center;
+            padding: 2.5rem 1rem;
+        }
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+        }
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        .section-title {
+            text-align: center;
+            color: #0a3d62;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.12);
+        }
+        .card h3 {
+            color: #0a3d62;
+            margin-bottom: 0.75rem;
+            font-size: 1.3rem;
+        }
+        .card p {
+            color: #666;
+            margin-bottom: 1.25rem;
+            font-size: 0.95rem;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #0a3d62;
+            color: white;
+            text-decoration: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+            transition: background 0.2s ease;
+        }
+        .btn:hover {
+            background-color: #0c2461;
+        }
+        .whatsapp-btn {
+            background-color: #25D366;
+            margin-top: 2rem;
+            display: block;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+        .whatsapp-btn:hover {
+            background-color: #1eb854;
+        }
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background: #e0e0e0;
+            margin-top: 3rem;
+            font-size: 0.9rem;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Gulf Learning</h1>
+        <p>Welcome to Gulf Learning Educational Platform</p>
+    </header>
+
+    <div class="container">
+        <h2 class="section-title">Our Courses & Resources</h2>
+
+        <div class="grid">
+            <!-- Card 1: Gulf Arabic -->
+            <div class="card">
+                <div>
+                    <h3>Gulf Arabic</h3>
+                    <p>Learn practical spoken Gulf Arabic, daily vocabulary, and workplace phrases.</p>
+                </div>
+                <a href="arabic.html" class="btn">Explore Arabic</a>
+            </div>
+
+            <!-- Card 2: English Grammar -->
+            <div class="card">
+                <div>
+                    <h3>English Grammar</h3>
+                    <p>Improve vocabulary, sentence structure, root words, and professional communication.</p>
+                </div>
+                <a href="grammar.html" class="btn">Learn Grammar</a>
+            </div>
+
+            <!-- Card 3: Technical & Safety -->
+            <div class="card">
+                <div>
+                    <h3>Technical & Safety</h3>
+                    <p>Access HSE guidelines, site inspection materials, and technical documentation.</p>
+                </div>
+                <a href="hse.html" class="btn">Access HSE Guides</a>
+            </div>
+
+            <!-- Card 4: YouTube Short Clips -->
+            <div class="card">
+                <div>
+                    <h3>Short Video Clips</h3>
+                    <p>Watch and download video clips for learning and content creators.</p>
+                </div>
+                <a href="videos.html" class="btn">Watch Videos</a>
+            </div>
+
+            <!-- Card 5: eBooks & Materials -->
+            <div class="card">
+                <div>
+                    <h3>eBooks & Downloads</h3>
+                    <p>Download educational PDF books, notes, and preparation guides.</p>
+                </div>
+                <a href="ebooks.html" class="btn">Download eBooks</a>
+            </div>
+
+            <!-- Card 6: Gallery & Pictures -->
+            <div class="card">
+                <div>
+                    <h3>Picture Gallery</h3>
+                    <p>Browse general use images, charts, and educational graphics.</p>
+                </div>
+                <a href="gallery.html" class="btn">View Gallery</a>
+            </div>
+        </div>
+
+        <!-- WhatsApp Contact Link -->
+        <a href="https://wa.me/966000000000" target="_blank" class="btn whatsapp-btn">
+            💬 Contact Us on WhatsApp
+        </a>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Gulf Learning Educational Platform. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
