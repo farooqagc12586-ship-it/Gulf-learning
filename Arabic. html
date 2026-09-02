@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gulf Arabic Course - Gulf Learning</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+        }
+        header {
+            background-color: #0a3d62;
+            color: white;
+            text-align: center;
+            padding: 2.5rem 1rem;
+            position: relative;
+        }
+        header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        header p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        .back-btn {
+            position: absolute;
+            left: 15px;
+            top: 15px;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            background: rgba(255,255,255,0.2);
+            padding: 0.4rem 0.8rem;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        .section-title {
+            color: #0a3d62;
+            margin-bottom: 1.2rem;
+            font-size: 1.5rem;
+            border-bottom: 2px solid #0a3d62;
+            padding-bottom: 0.4rem;
+        }
+        .vocab-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2.5rem;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+        }
+        .vocab-table th, .vocab-table td {
+            padding: 0.8rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        .vocab-table th {
+            background-color: #0a3d62;
+            color: white;
+            font-weight: 600;
+        }
+        .vocab-table tr:hover {
+            background-color: #f9f9f9;
+        }
+        .arabic-text {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #0a3d62;
+            direction: rtl;
+        }
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            background: #e0e0e0;
+            margin-top: 3rem;
+            font-size: 0.9rem;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="back-btn">← Home</a>
+        <h1>Gulf Arabic Spoken Course</h1>
+        <p>Learn practical daily spoken Arabic & workplace vocabulary</p>
+    </header>
+
+    <div class="container">
+        
+        <!-- Section 1 -->
+        <h2 class="section-title">1. Daily Greetings & Basic Phrases</h2>
+        <table class="vocab-table">
+            <thead>
+                <tr>
+                    <th>English Meaning</th>
+                    <th>Gulf Arabic (Pronunciation)</th>
+                    <th>Arabic Text</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Hello / Welcome</td><td>Ahlan wa Sahlan</td><td class="arabic-text">أهلاً وسهلاً</td></tr>
+                <tr><td>How are you?</td><td>Kayf Halak?</td><td class="arabic-text">كيف حالك؟</td></tr>
+                <tr><td>I am fine, praise be to Allah</td><td>Ana bekhar, Al-hamdulillah</td><td class="arabic-text">أنا بخير، الحمد لله</td></tr>
+                <tr><td>Good morning</td><td>Sabah al-khair</td><td class="arabic-text">صباح الخير</td></tr>
+                <tr><td>Thank you very much</td><td>Shukran Jazeelan</td><td class="arabic-text">شكراً جزيلاً</td></tr>
+                <tr><td>No problem / You're welcome</td><td>Ma fi mushkilah / Afwan</td><td class="arabic-text">ما في مشكلة / عفواً</td></tr>
+            </tbody>
+        </table>
+
+        <!-- Section 2 -->
+        <h2 class="section-title">2. Workplace & Practical Terms</h2>
+        <table class="vocab-table">
+            <thead>
+                <tr>
+                    <th>English Meaning</th>
+                    <th>Gulf Arabic (Pronunciation)</th>
+                    <th>Arabic Text</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Work / Job</td><td>Shughul</td><td class="arabic-text">Shughul</td></tr>
+                <tr><td>Come here</td><td>Ta'al huna</td><td class="arabic-text">تعال هنا</td></tr>
+                <tr><td>Hurry up / Go ahead</td><td>Yalla</td><td class="arabic-text">يلا</td></tr>
+                <tr><td>Be careful / Pay attention</td><td>Intebih</td><td class="arabic-text">انتبه</td></tr>
+                <tr><td>Is it understood?</td><td>Mafhoom?</td><td class="arabic-text">مفهوم؟</td></tr>
+                <tr><td>Finished / Complete</td><td>Khalas</td><td class="arabic-text">خلاص</td></tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Gulf Learning Educational Platform</p>
+    </footer>
+
+</body>
+</html>
