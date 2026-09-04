@@ -4,29 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>القرآن الكريم - المكتبة الرقمية</title>
-    
-    <!-- Scheherazade New (Bold) & Noto Nastaliq Urdu Fonts -->
+    <!-- Scheherazade New (Bold) Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 
     <style>
         :root {
             --primary-emerald: #0e3b2e;
             --accent-gold: #d4af37;
             --light-gold: #f4e8c1;
-            --bg-cream: #faf8f5;
+            --bg-light-orange: #fff0e6; /* ہلکا اورنج بیک گراؤنڈ */
             --card-white: #ffffff;
             --text-dark: #1f2937;
         }
 
         body {
-            font-family: 'Noto Nastaliq Urdu', 'Scheherazade New', serif;
-            background-color: var(--bg-cream);
+            font-family: 'Scheherazade New', serif;
+            font-weight: 700;
+            background-color: var(--bg-light-orange);
             color: var(--text-dark);
             margin: 0;
             padding: 12px;
-            padding-bottom: 90px;
             direction: rtl;
         }
 
@@ -49,7 +48,7 @@
 
         .header-banner h1 {
             font-family: 'Scheherazade New', serif;
-            font-size: 34px;
+            font-size: 36px;
             margin: 0;
             font-weight: 700;
             letter-spacing: 1px;
@@ -58,7 +57,7 @@
 
         .header-banner p {
             color: #e0e0e0;
-            font-size: 14px;
+            font-size: 15px;
             margin: 8px 0 0 0;
         }
 
@@ -68,10 +67,10 @@
             border-radius: 14px;
             padding: 20px;
             margin-bottom: 20px;
-            border: 1px solid #e5e7eb;
+            border: 1px solid #ffd8be;
             box-shadow: 0 4px 15px rgba(0,0,0,0.03);
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
             gap: 15px;
             align-items: flex-end;
         }
@@ -83,18 +82,19 @@
         }
 
         label {
-            font-size: 13px;
+            font-size: 14px;
             color: var(--primary-emerald);
             font-weight: bold;
         }
 
         select, input {
             padding: 10px;
-            font-size: 14px;
+            font-size: 15px;
             border-radius: 8px;
             border: 1px solid #cbd5e1;
             background-color: #f8fafc;
-            font-family: inherit;
+            font-family: 'Scheherazade New', serif;
+            font-weight: 700;
             outline: none;
             transition: border 0.2s;
         }
@@ -108,8 +108,9 @@
             color: var(--accent-gold);
             border: 1px solid var(--accent-gold);
             padding: 11px;
-            font-size: 15px;
+            font-size: 16px;
             font-weight: bold;
+            font-family: 'Scheherazade New', serif;
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -121,30 +122,25 @@
             color: var(--primary-emerald);
         }
 
-        /* Sticky Bottom Audio Player Bar */
+        /* Sticky Player Bar */
         .player-bar {
-            position: fixed;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            max-width: 900px;
+            position: sticky;
+            top: 10px;
             background: var(--primary-emerald);
             border: 1px solid var(--accent-gold);
-            border-bottom: none;
             color: #ffffff;
             padding: 12px 20px;
-            border-radius: 16px 16px 0 0;
+            border-radius: 12px;
+            margin-bottom: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            z-index: 9999;
-            box-shadow: 0 -6px 25px rgba(0, 0, 0, 0.25);
-            box-sizing: border-box;
+            z-index: 1000;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
         }
 
         .player-status {
-            font-size: 14px;
+            font-size: 15px;
             color: var(--light-gold);
         }
 
@@ -158,8 +154,9 @@
             color: var(--primary-emerald);
             border: none;
             padding: 6px 16px;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: bold;
+            font-family: 'Scheherazade New', serif;
             border-radius: 6px;
             cursor: pointer;
             transition: 0.2s;
@@ -175,23 +172,23 @@
             border-radius: 12px;
             padding: 22px;
             margin-bottom: 16px;
-            border: 1px solid #eaeaea;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            border: 1px solid #ffe3d1;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
             transition: all 0.3s ease;
             position: relative;
         }
 
         .ayah-card.playing {
             border: 2px solid var(--accent-gold);
-            background-color: #fcf9f2;
-            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.2);
+            background-color: #fffcf7;
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.25);
         }
 
         .meta-tag {
-            font-size: 12px;
+            font-size: 13px;
             color: var(--primary-emerald);
             background: var(--light-gold);
-            padding: 3px 10px;
+            padding: 3px 12px;
             border-radius: 20px;
             display: inline-block;
             margin-bottom: 12px;
@@ -208,20 +205,23 @@
             margin-bottom: 14px;
         }
 
+        /* اردو ترجمہ: Scheherazade Bold اور مکمل Black Color */
         .urdu {
-            font-family: 'Noto Nastaliq Urdu', serif;
-            font-size: 18px;
-            color: #334155;
+            font-family: 'Scheherazade New', serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: #000000; /* مکمل بلیک کلر */
             line-height: 2.2;
             text-align: right;
-            border-top: 1px dashed #e2e8f0;
+            border-top: 1px dashed #ffd8be;
             padding-top: 12px;
         }
 
         .play-btn-small {
             margin-top: 12px;
-            font-size: 12px;
-            padding: 5px 12px;
+            font-size: 13px;
+            padding: 5px 14px;
+            font-family: 'Scheherazade New', serif;
             background: transparent;
             color: var(--primary-emerald);
             border: 1px solid var(--primary-emerald);
@@ -285,7 +285,7 @@
         <button class="btn-load" onclick="loadContent()">لوڈ کریں</button>
     </div>
 
-    <!-- Fixed Bottom Audio Player Bar -->
+    <!-- Sticky Audio Player -->
     <div class="player-bar">
         <div class="player-status" id="playerStatus">حالت: تیار ہے</div>
         <div class="player-controls">
@@ -296,7 +296,7 @@
 
     <!-- Quran Content -->
     <div id="quranContainer">
-        <p style="text-align:center; color: #64748b; margin-top: 30px;">براہِ کرم اپنی پسند کے مطابق آپشن منتخب کر کے "لوڈ کریں" پر کلک کریں۔</p>
+        <p style="text-align:center; color: #7c2d12; margin-top: 30px;">براہِ کرم اپنی پسند کے مطابق آپشن منتخب کر کے "لوڈ کریں" پر کلک کریں۔</p>
     </div>
 </div>
 
@@ -357,7 +357,6 @@
         rukuSelect.innerHTML = '<option>رکوع لوڈ ہو رہے ہیں...</option>';
 
         try {
-            // سورت کے رکوع معلوم کرنے کے لیے ہلکی ترین API کال
             const res = await fetch(`https://api.alquran.cloud/v1/surah/${surahId}`);
             const data = await res.json();
             
@@ -374,7 +373,6 @@
                     rukuSelect.appendChild(opt);
                 });
                 
-                // ایک آپشن مکمل سورت کا بھی رکھ دیا ہے
                 let allOpt = document.createElement('option');
                 allOpt.value = 'all';
                 allOpt.textContent = 'مکمل سورۃ (تمام رکوع)';
@@ -419,7 +417,7 @@
         pauseAudio();
         const mode = document.getElementById('modeSelect').value;
         const selectedVal = document.getElementById('itemSelect').value;
-        const rukuVal = document.getElementById('rukuSelect').value;
+        const rukuVal = document.getElementById('rukuSelect') ? document.getElementById('rukuSelect').value : 'all';
         const container = document.getElementById('quranContainer');
 
         if (!selectedVal) return;
@@ -429,10 +427,8 @@
         let url = '';
         if (mode === 'surah') {
             if (rukuVal && rukuVal !== 'all') {
-                // صرف منتخب رکوع لوڈ ہوگا
                 url = `https://api.alquran.cloud/v1/ruku/${rukuVal}/editions/ar.abdulbasitmurattal,ur.jalandhry,ur.khan`;
             } else {
-                // مکمل سورت
                 url = `https://api.alquran.cloud/v1/surah/${selectedVal}/editions/ar.abdulbasitmurattal,ur.jalandhry,ur.khan`;
             }
         } else if (mode === 'juz') {
@@ -553,4 +549,7 @@
                 playTrack();
             } else {
                 isArabicTurn = true;
-                curr
+                currentTrackIndex++;
+                playTrack();
+            }
+    
