@@ -252,13 +252,7 @@
 
         <div class="control-group">
             <label id="selectionLabel">سورۃ منتخب کریں:</label>
-            <select id="itemSelect" onchange="handleItemChange()"></select>
-        </div>
-
-        <!-- اضافی نئی لائن: رکوع / چھوٹی سورۃ نام کا ظاہر ہونا -->
-        <div class="control-group" id="subBox">
-            <label id="subLabel">تفصیل / رکوع:</label>
-            <select id="subSelect"></select>
+            <select id="itemSelect"></select>
         </div>
 
         <div class="control-group" id="ayahBox" style="display: none;">
@@ -291,6 +285,64 @@
     <div id="quranContainer">
         <p style="text-align:center; color: #64748b; margin-top: 30px;">براہِ کرم اپنی پسند کے مطابق آپشن منتخب کر کے "لوڈ کریں" پر کلک کریں۔</p>
     </div>
+    <!-- 1. مین سورۃ ڈراپ ڈاؤن -->
+<div class="control-group">
+    <label id="selectionLabel">سورۃ منتخب کریں:</label>
+    <select id="itemSelect" onchange="handleItemChange()"></select>
+</div>
+
+<!-- 2. یہ وہ ایک ہی مستقل ڈراپ ڈاؤن ہے جو ہمیشہ سکرین پر رہے گا -->
+<div class="control-group" id="subBox">
+    <label id="subLabel">رکوع / تفصیل:</label>
+    <select id="subSelect"></select>
+</div>
+    // 1 رکوع والی چھوٹی سورتوں کی تشخیص (سورۃ الفاتحہ اور سورۃ 80 سے 114)
+function isSmallSurah(surahId) {
+    const id = parseInt(surahId);
+    return id === 1 || id >= 80;
+}
+
+// جب بھی سورۃ تبدیل ہوگی، یہ ایک ہی ڈراپ ڈاؤن کو دونوں کاموں کے لیے اپ ڈیٹ کرے گا
+async function handleItemChange() {
+    const selectedVal = document.getElementById('itemSelect').value;
+    const subLabel = document.getElementById('subLabel');
+    const subSelect = document.getElementById('subSelect');
+
+    if (!selectedVal) return;
+
+    // A) اگر چھوٹی سورۃ منتخب ہوئی ہے:
+    if (isSmallSurah(selectedVal)) {
+        const surahName = SURAHS[selectedVal - 1];
+        subLabel.textContent = "چھوٹی سورۃ (مکمل):";
+        // اسی ایک ڈراپ ڈاؤن میں چھوٹی سورۃ کا نام بطورِ 1 رکوع شو ہوگا
+        subSelect.innerHTML = `<option value="all">${surahName} (مکمل - 1 رکوع)</option>`;
+    } 
+    // B) اگر بڑی سورۃ منتخب ہوئی ہے:
+    else {
+        subLabel.textContent = "بڑی سورۃ (رکوع چنیں):";
+        subSelect.innerHTML = '<option value="all">تمام رکوع (مکمل سورۃ)</option>';
+
+        try {
+            // API سے اس بڑی سورۃ کے رکوع لانا
+            const res = await fetch(`https://api.alquran.cloud/v1/surah/${selectedVal}`);
+            const data = await res.json();
+            const ayahs = data.data.ayahs;
+            
+            // رکوع کی لسٹ بنانا
+            const rukuSet = [...new Set(ayahs.map(a => a.ruku))];
+
+            rukuSet.forEach((rukuGlobalId, index) => {
+                let opt = document.createElement('option');
+                opt.value = rukuGlobalId;
+                opt.textContent = `رکوع نمبر ${index + 1}`;
+                subSelect.appendChild(opt);
+            });
+        } catch (e) {
+            console.error("رکوع لوڈ کرنے میں مسئلہ:", e);
+        }
+    }
+}
+    
 </div>
 
 <audio id="globalAudioPlayer"></audio>
@@ -315,14 +367,67 @@
     let currentTrackIndex = 0;
     let isArabicTurn = true;
     let isPlayingMode = false;
+    <script>
+    // 1. آپ کا سورتوں کا پرانا لسٹ (Array)
+    const SURAHS = [
+        "1. الفاتحة", "2. البقرة", ..., "114. الناس"
+    ];
 
-    const audioPlayer = document.getElementById('globalAudioPlayer');
+    // 📍 **یہاں (اس لوکیشن پر) نیا کوڈ پیسٹ کریں** 👇
 
-    // 1 رکوع والی چھوٹی سورتوں کی تشخیص
     function isSmallSurah(surahId) {
         const id = parseInt(surahId);
         return id === 1 || id >= 80;
     }
+
+    async function handleItemChange() {
+        const selectedVal = document.getElementById('itemSelect').value;
+        const subLabel = document.getElementById('subLabel');
+        const subSelect = document.getElementById('subSelect');
+
+        if (!selectedVal) return;
+
+        if (isSmallSurah(selectedVal)) {
+            const surahName = SURAHS[selectedVal - 1];
+            subLabel.textContent = "چھوٹی سورۃ (مکمل):";
+            subSelect.innerHTML = `<option value="all">${surahName} (مکمل - 1 رکوع)</option>`;
+        } else {
+            subLabel.textContent = "بڑی سورۃ (رکوع چنیں):";
+            subSelect.innerHTML = '<option value="all">تمام رکوع (مکمل سورۃ)</option>';
+
+            try {
+                const res = await fetch(`https://api.alquran.cloud/v1/surah/${selectedVal}`);
+                const data = await res.json();
+                const ayahs = data.data.ayahs;
+                const rukuSet = [...new Set(ayahs.map(a => a.ruku))];
+
+                rukuSet.forEach((rukuGlobalId, index) => {
+                    let opt = document.createElement('option');
+                    opt.value = rukuGlobalId;
+                    opt.textContent = `رکوع نمبر ${index + 1}`;
+                    subSelect.appendChild(opt);
+                });
+            } catch (e) {
+                console.error("رکوع لوڈ کرنے میں مسئلہ:", e);
+            }
+        }
+    }
+
+    // 📍 **نیا کوڈ یہاں ختم ہوا** 👆
+
+    // 2. اس کے بعد آپ کے پرانے فنکشنز آ جائیں گے:
+    let currentPlaylist = [];
+    let currentTrackIndex = 0;
+
+    function populateSurahs() {
+        // ...
+    }
+    
+    // ... باقی سارا پرانا JavaScript کوڈ
+</script>
+    
+
+    const audioPlayer = document.getElementById('globalAudioPlayer');
 
     function populateSurahs() {
         const select = document.getElementById('itemSelect');
@@ -346,69 +451,22 @@
         }
     }
 
-    async function handleItemChange() {
-        const mode = document.getElementById('modeSelect').value;
-        const selectedVal = document.getElementById('itemSelect').value;
-        const subBox = document.getElementById('subBox');
-        const subLabel = document.getElementById('subLabel');
-        const subSelect = document.getElementById('subSelect');
-
-        if (mode !== 'surah' || !selectedVal) {
-            subBox.style.display = 'none';
-            return;
-        }
-
-        subBox.style.display = 'flex';
-
-        if (isSmallSurah(selectedVal)) {
-            // چھوٹی سورۃ: یہاں صرف سورت کا نام دکھایا جائے گا
-            const surahName = SURAHS[selectedVal - 1];
-            subLabel.textContent = "چھوٹی سورۃ (مکمل):";
-            subSelect.innerHTML = `<option value="all">${surahName}</option>`;
-        } else {
-            // بڑی سورۃ: رکوع ظاہر ہوں گے
-            subLabel.textContent = "بڑی سورۃ (رکوع):";
-            subSelect.innerHTML = '<option value="all">تمام رکوع (مکمل سورۃ)</option>';
-
-            try {
-                const res = await fetch(`https://api.alquran.cloud/v1/surah/${selectedVal}`);
-                const data = await res.json();
-                const ayahs = data.data.ayahs;
-                const rukuSet = [...new Set(ayahs.map(a => a.ruku))];
-
-                subSelect.innerHTML = '<option value="all">تمام رکوع (مکمل سورۃ)</option>';
-                rukuSet.forEach((rukuGlobalId, index) => {
-                    let opt = document.createElement('option');
-                    opt.value = rukuGlobalId;
-                    opt.textContent = `رکوع ${index + 1}`;
-                    subSelect.appendChild(opt);
-                });
-            } catch (e) {
-                console.error(e);
-            }
-        }
-    }
-
     function handleModeChange() {
         const mode = document.getElementById('modeSelect').value;
         const label = document.getElementById('selectionLabel');
         const ayahBox = document.getElementById('ayahBox');
-        const subBox = document.getElementById('subBox');
 
         if (mode === 'surah') {
             label.textContent = 'سورۃ منتخب کریں:';
             ayahBox.style.display = 'none';
             populateSurahs();
-            handleItemChange();
         } else if (mode === 'juz') {
             label.textContent = 'پارہ منتخب کریں:';
             ayahBox.style.display = 'none';
-            subBox.style.display = 'none';
             populateJuzs();
         } else if (mode === 'ayah') {
             label.textContent = 'سورۃ:';
             ayahBox.style.display = 'flex';
-            subBox.style.display = 'none';
             populateSurahs();
         }
     }
@@ -417,7 +475,6 @@
         pauseAudio();
         const mode = document.getElementById('modeSelect').value;
         const selectedVal = document.getElementById('itemSelect').value;
-        const subVal = document.getElementById('subSelect') ? document.getElementById('subSelect').value : 'all';
         const container = document.getElementById('quranContainer');
 
         if (!selectedVal) return;
@@ -426,11 +483,7 @@
 
         let url = '';
         if (mode === 'surah') {
-            if (subVal && subVal !== 'all') {
-                url = `https://api.alquran.cloud/v1/ruku/${subVal}/editions/ar.abdulbasitmurattal,ur.jalandhry,ur.khan`;
-            } else {
-                url = `https://api.alquran.cloud/v1/surah/${selectedVal}/editions/ar.abdulbasitmurattal,ur.jalandhry,ur.khan`;
-            }
+            url = `https://api.alquran.cloud/v1/surah/${selectedVal}/editions/ar.abdulbasitmurattal,ur.jalandhry,ur.khan`;
         } else if (mode === 'juz') {
             url = `https://api.alquran.cloud/v1/juz/${selectedVal}/editions/ar.abdulbasitmurattal,ur.jalandhry,ur.khan`;
         } else if (mode === 'ayah') {
@@ -550,4 +603,37 @@
             } else {
                 isArabicTurn = true;
                 currentTrackIndex++;
-                playTrack(
+                playTrack();
+            }
+        } else {
+            currentTrackIndex++;
+            playTrack();
+        }
+    };
+
+    function pauseAudio() {
+        audioPlayer.pause();
+        isPlayingMode = false;
+        document.getElementById('playerStatus').textContent = "آڈیو روک دی گئی ہے";
+    }
+
+    function highlightCard(index) {
+        clearHighlights();
+        const card = document.getElementById(`card-${index}`);
+        if (card) {
+            card.classList.add('playing');
+            card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
+
+    function clearHighlights() {
+        document.querySelectorAll('.ayah-card').forEach(c => c.classList.remove('playing'));
+    }
+
+    window.onload = function() {
+        populateSurahs();
+    };
+</script>
+
+</body>
+</html>
