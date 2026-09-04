@@ -7,13 +7,12 @@ html = r"""<!doctype html>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Quran Majeed | Farooq Ahmed Chitrali</title>
 
-<!-- Fonts Import: Aleo, Arabic Uthmanic, Urdu Jameel Noori Kasheeda -->
-<link href="https://fonts.googleapis.com/css2?family=Aleo:wght@400;700&display=swap" rel="stylesheet">
+<!-- Reliable Google Fonts for Quranic Arabic, Urdu Nastaliq, and English Aleo -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Aleo:wght@400;700&family=Amiri+Quran&family=Noto+Nastaliq+Urdu:wght@400;700&family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet">
+
 <style>
-@font-face {
-    font-family: 'KFGQPC UTHMANIC taha naskh regular';
-    src: url('https://cdn.jsdelivr.net/gh/QuranCentral/quran-fonts/fonts/KFGQPC%20Uthmanic%20Script%20HAFS%20Regular.ttf') format('truetype');
-}
 @font-face {
     font-family: 'Jameel Noori Nastaliq Kasheeda';
     src: url('https://cdn.jsdelivr.net/gh/UrduFonts/Jameel-Noori-Nastaleeq@1.0/Jameel%20Noori%20Nastaleeq%20Kasheeda.ttf') format('truetype');
@@ -21,14 +20,14 @@ html = r"""<!doctype html>
 
 :root{--p:#087f6b;--d:#064c42;--g:#c99b3b;--bg:#f3f8f6;--card:#fff;--txt:#18312b;--muted:#6b7d77;--line:#dbe9e4}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--txt);font-family:"Jameel Noori Nastaliq Kasheeda", serif}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:'Jameel Noori Nastaliq Kasheeda', 'Noto Nastaliq Urdu', serif}
 header{background:linear-gradient(135deg,var(--d),var(--p));color:#fff;text-align:center;padding:24px 12px}
 h1{margin:0;font-size:2rem}
 header p{margin:4px 0;font-family:'Aleo', serif}
 
 main{max-width:1100px;margin:auto;padding:18px}
 .hero,.surah,.ayah{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 8px 24px #064c4210}
-.hero{text-align:center;padding:22px}.hero h2{margin:0;color:var(--p);font-size:2.2rem;font-family:'KFGQPC UTHMANIC taha naskh regular',serif}.hero p{margin:4px;color:var(--muted)}
+.hero{text-align:center;padding:22px}.hero h2{margin:0;color:var(--p);font-size:2.4rem;font-family:'Amiri Quran', serif}.hero p{margin:4px;color:var(--muted)}
 
 .toolbar,.categories{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:16px 0}
 input,select,button{font:inherit;border:1px solid var(--line);border-radius:12px;padding:10px 13px}
@@ -53,17 +52,59 @@ button:hover{background:var(--d)}
 .reader{display:none}
 .reader.show{display:block}
 .reader-head{background:linear-gradient(135deg,var(--d),var(--p));color:#fff;border-radius:18px;padding:22px;text-align:center}
-.reader-head h2{margin:0;font-size:2rem;font-family:'KFGQPC UTHMANIC taha naskh regular', serif}
+.reader-head h2{margin:0;font-size:2.2rem;font-family:'Amiri Quran', serif}
 .reader-head p{margin:4px;font-family:'Aleo', serif}
 
-.bismillah{text-align:center;color:var(--g);font-size:2rem;margin:18px;font-family:'KFGQPC UTHMANIC taha naskh regular', serif}
-.ayah{padding:18px;margin:12px 0}
-.ayahno{display:inline-flex;width:30px;height:30px;border-radius:50%;align-items:center;justify-content:center;background:var(--p);color:#fff;font:12px 'Aleo', serif}
-.ruku{background:#fff3d4;color:#80601c;border-radius:20px;padding:4px 9px;margin-right:7px;font-size:13px}
+.bismillah{text-align:center;color:var(--g);font-size:2.2rem;margin:18px;font-family:'Amiri Quran', serif}
 
-.arabic{font-family:'KFGQPC UTHMANIC taha naskh regular', serif;font-size:2rem;line-height:2.3;margin-top:14px;direction:rtl}
-.urdu{font-family:'Jameel Noori Nastaliq Kasheeda', serif;font-size:1.4rem;line-height:2.2;color:#31584e;border-top:1px solid var(--line);margin-top:12px;padding-top:10px}
-.english{font-family:'Aleo', serif;font-size:1.1rem;line-height:1.6;color:#2c3e50;border-top:1px dashed var(--line);margin-top:8px;padding-top:8px;direction:ltr;text-align:left}
+/* Ruku Header Divider */
+.ruku-header{
+    background: #fff3d4;
+    color: #80601c;
+    border: 1px solid #f0d58c;
+    border-radius: 12px;
+    padding: 6px 16px;
+    margin: 20px 0 10px 0;
+    font-size: 1.1rem;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.ayah{padding:18px;margin:12px 0;position:relative}
+.ayahno{display:inline-flex;width:32px;height:32px;border-radius:50%;align-items:center;justify-content:center;background:var(--p);color:#fff;font:bold 13px 'Aleo', serif}
+
+/* Arabic Quran Font Settings */
+.arabic{
+    font-family: 'Amiri Quran', 'Scheherazade New', serif;
+    font-size: 2.2rem;
+    line-height: 2.4;
+    margin-top: 10px;
+    direction: rtl;
+    text-align: right;
+    word-spacing: 2px;
+}
+
+.urdu{
+    font-family: 'Jameel Noori Nastaliq Kasheeda', 'Noto Nastaliq Urdu', serif;
+    font-size: 1.35rem;
+    line-height: 2.2;
+    color: #31584e;
+    border-top: 1px solid var(--line);
+    margin-top: 12px;
+    padding-top: 10px;
+}
+
+.english{
+    font-family: 'Aleo', serif;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: #2c3e50;
+    border-top: 1px dashed var(--line);
+    margin-top: 8px;
+    padding-top: 8px;
+    direction: ltr;
+    text-align: left;
+}
 
 .ayah audio{width:100%;margin-top:12px}
 .player{position:sticky;bottom:0;background:#fffffff5;border-top:1px solid var(--line);padding:10px;z-index:5}
@@ -77,11 +118,16 @@ button:hover{background:var(--d)}
 footer{text-align:center;padding:25px 10px 90px;color:var(--muted);font:12px 'Aleo', serif}
 .hide{display:none!important}
 
-@media(max-width:600px){.categories{grid-template-columns:1fr}.arabic{font-size:1.7rem}.urdu{font-size:1.2rem}h1{font-size:1.5rem}}
+@media(max-width:600px){
+    .categories{grid-template-columns:1fr}
+    .arabic{font-size:1.8rem;line-height:2.2}
+    .urdu{font-size:1.2rem}
+    h1{font-size:1.5rem}
+}
 </style>
 </head>
 <body>
-<header><h1>قرآن مجید</h1><p>Quran Majeed • Translation & Recitation</p></header>
+<header><h1>قرآن مجید</h1><p>Quran Majeed • Audio & Translation</p></header>
 <main>
 <section class="hero"><h2>ٱلْقُرْآنُ ٱلْكَرِيمُ</h2><p>پڑھیے، سنیے اور قرآن مجید سے جڑیے</p></section>
 
@@ -103,14 +149,14 @@ footer{text-align:center;padding:25px 10px 90px;color:var(--muted);font:12px 'Al
   <option value="ar.khalidaljaleel">الشیخ خالد الجلیل</option>
 </select>
 
-<!-- ترجمہ زبان اور مترجم منتخب کرنے کا اختیار -->
+<!-- ترجمہ زبان کا اختیار -->
 <select id="selectTransLang" title="ترجمہ منتخب کریں">
   <option value="ur">اردو (شمشاد علی خان / جالندھری)</option>
   <option value="en">English (Maulana Wahiduddin Khan)</option>
   <option value="both">اردو + English دونوں</option>
 </select>
 
-<select id="voiceMode"><option value="ayah">آیت وائس</option><option value="para">پارہ وائس</option><option value="surah">سورہ وائس</option></select>
+<select id="voiceMode"><option value="ayah">آیت وائس</option><option value="surah">سورت وائس</option></select>
 <select id="selectSurah"><option value="">سورت منتخب کریں</option></select>
 <button id="back">سورتوں کی فہرست</button>
 </div>
@@ -163,7 +209,7 @@ async function init(){
      $("selectSurah").append(o);
    });
  } catch(e){
-   $("list").innerHTML="<p>ڈیٹا لوڈ نہیں ہو سکا۔ انٹرنیٹ چیک کریں۔</p>";
+   $("list").innerHTML="<p style='text-align:center;'>ڈیٹا لوڈ نہیں ہو سکا۔ انٹرنیٹ کنیکشن چیک کریں۔</p>";
  }
 }
 
@@ -183,31 +229,61 @@ async function openSurah(n){
  if(!s)return;
  state.surah=s;
  
- // اردو (شمشاد علی خان / جالندھری) اور انگلش (مولانا وحید الدین خان) کے ڈیٹا ایڈیشنز
- let data=(await get(`${API}/surah/${n}/editions/quran-uthmani,ur.jalandhry,en.wahiduddin`)).data;
- 
- state.ayahs=data[0].ayahs.map((a,i)=>({
-   ar:a.text,
-   ur:data[1].ayahs[i].text,
-   en:data[2].ayahs[i].text,
-   no:a.numberInSurah,
-   global:a.number,
-   juz:a.juz,
-   ruku:a.ruku||"—"
- }));
- 
+ $("ayahs").innerHTML = "<p style='text-align:center; padding:20px;'>لوڈ ہو رہا ہے...</p>";
  $("title").textContent=s.name;
  $("subtitle").textContent=s.englishName+" • "+s.numberOfAyahs+" آیات";
- $("bismillah").classList.toggle("hide",n==9);
- renderAyahs();
  $("list").classList.add("hide");
  $("reader").classList.add("show");
  scrollTo(0,0);
+
+ try {
+   // Fetch Quran Arabic, Urdu, English, and Audio Edition directly from API
+   let res = await get(`${API}/surah/${n}/editions/quran-uthmani,ur.jalandhry,en.wahiduddin,${state.reciter}`);
+   let data = res.data;
+   
+   let currentRuku = 0;
+   let lastGlobalRuku = -1;
+
+   state.ayahs = data[0].ayahs.map((a, i) => {
+     let isNewRuku = false;
+     // Track Ruku changes within the Surah
+     if (a.ruku !== lastGlobalRuku) {
+       currentRuku++;
+       lastGlobalRuku = a.ruku;
+       isNewRuku = true;
+     }
+
+     return {
+       ar: a.text,
+       ur: data[1].ayahs[i].text,
+       en: data[2].ayahs[i].text,
+       audio: data[3].ayahs[i].audio || `https://cdn.islamic.network/quran/audio/128/${state.reciter}/${a.number}.mp3`,
+       no: a.numberInSurah,
+       global: a.number,
+       surahRuku: currentRuku,
+       isNewRuku: isNewRuku
+     };
+   });
+   
+   $("bismillah").classList.toggle("hide", n == 9);
+   renderAyahs();
+ } catch(e) {
+   $("ayahs").innerHTML = "<p style='text-align:center; color:red;'>آیات اور آڈیو لوڈ کرنے میں ناکامی ہوئی۔ براہ کرم دوبارہ کوشش کریں۔</p>";
+ }
 }
 
 function renderAyahs(){
  $("ayahs").innerHTML="";
+ 
  state.ayahs.forEach((a,i)=>{
+   // Display Ruku Header ONLY when a new Ruku starts
+   if (a.isNewRuku) {
+     let rukuDiv = document.createElement("div");
+     rukuDiv.className = "ruku-header";
+     rukuDiv.textContent = `رکوع ${a.surahRuku}`;
+     $("ayahs").append(rukuDiv);
+   }
+
    let d=document.createElement("article");
    d.className="ayah";
    
@@ -224,24 +300,38 @@ function renderAyahs(){
      }
    }
 
-   d.innerHTML=`<span class="ayahno">${a.no}</span><span class="ruku">رکوع ${a.ruku}</span>
-   ${showArabic ? `<div class="arabic">${a.ar}</div>` : ""}
-   ${transHtml}
-   <audio controls preload="none" src="https://cdn.islamic.network/quran/audio/128/${state.reciter}/${a.global}.mp3"></audio>`;
+   d.innerHTML=`
+     <span class="ayahno">${a.no}</span>
+     ${showArabic ? `<div class="arabic">${a.ar}</div>` : ""}
+     ${transHtml}
+     <audio controls preload="none" src="${a.audio}"></audio>
+   `;
    
    let au=d.querySelector("audio");
+   
    au.onplay=()=>{
      document.querySelectorAll("audio").forEach(x=>{if(x!==au)x.pause()});
      state.index=i;
      $("ptitle").textContent=state.surah.name+" — آیت "+a.no;
-     $("pstatus").textContent="رکوع "+a.ruku;
+     $("pstatus").textContent="رکوع "+a.surahRuku;
+     $("play").textContent="Ⅱ";
    };
+   
+   au.onpause=()=>{
+     $("play").textContent="▶";
+   };
+
+   au.onerror=()=>{
+     console.warn("Audio load error for ayah", a.no);
+   };
+
    au.onended=()=>{
      if(state.voice=="ayah"){
        let next=document.querySelectorAll(".ayah audio")[i+1];
-       if(next)next.play();
+       if(next) next.play();
      }
    };
+   
    $("ayahs").append(d);
  });
 }
@@ -260,12 +350,12 @@ document.querySelectorAll(".cat").forEach(x=>x.onclick=()=>{
 
 $("selectReciter").onchange=e=>{
   state.reciter=e.target.value;
-  if(state.surah)renderAyahs();
+  if(state.surah) openSurah(state.surah.number);
 };
 
 $("selectTransLang").onchange=e=>{
   state.transLang=e.target.value;
-  if(state.surah)renderAyahs();
+  if(state.surah) renderAyahs();
 };
 
 $("voiceMode").onchange=e=>state.voice=e.target.value;
