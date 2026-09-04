@@ -103,6 +103,11 @@
             border-color: var(--accent-gold);
         }
 
+        optgroup {
+            font-weight: bold;
+            color: var(--primary-emerald);
+        }
+
         .btn-load {
             background: linear-gradient(135deg, #0e3b2e 0%, #175241 100%);
             color: var(--accent-gold);
@@ -122,7 +127,7 @@
             color: var(--primary-emerald);
         }
 
-        /* Sticky Player Bar */
+        /* Sticky Audio Player */
         .player-bar {
             position: sticky;
             top: 10px;
@@ -251,7 +256,7 @@
         <div class="control-group">
             <label>انتخاب کا طریقہ:</label>
             <select id="modeSelect" onchange="handleModeChange()">
-                <option value="surah">سورۃ وائز (رکوع)</option>
+                <option value="surah">سورۃ وائز</option>
                 <option value="juz">پارہ وائز</option>
                 <option value="ayah">آیت وائز</option>
             </select>
@@ -289,8 +294,8 @@
     <div class="player-bar">
         <div class="player-status" id="playerStatus">حالت: تیار ہے</div>
         <div class="player-controls">
-            <button onclick="playAll()">پلے کریں ▶</button>
-            <button onclick="pauseAudio()">روکیں ⏸</button>
+            <button id="btnPlayAll" onclick="playAll()">پلے کریں ▶</button>
+            <button id="btnPause" onclick="pauseAudio()">روکیں ⏸</button>
         </div>
     </div>
 
@@ -325,15 +330,37 @@
 
     const audioPlayer = document.getElementById('globalAudioPlayer');
 
+    // 1 رکوع والی چھوٹی سورتوں کی پہچان (سورۃ 1، اور سورۃ 80 سے 114)
+    function isSmallSurah(surahId) {
+        const id = parseInt(surahId);
+        return id === 1 || id >= 80;
+    }
+
     function populateSurahs() {
         const select = document.getElementById('itemSelect');
         select.innerHTML = '';
+
+        const groupBig = document.createElement('optgroup');
+        groupBig.label = "بڑی سورتیں (رکوع وائز)";
+
+        const groupSmall = document.createElement('optgroup');
+        groupSmall.label = "چھوٹی سورتیں (مکمل سورۃ)";
+
         SURAHS.forEach((name, index) => {
+            const surahId = index + 1;
             let opt = document.createElement('option');
-            opt.value = index + 1;
+            opt.value = surahId;
             opt.textContent = name;
-            select.appendChild(opt);
+
+            if (isSmallSurah(surahId)) {
+                groupSmall.appendChild(opt);
+            } else {
+                groupBig.appendChild(opt);
+            }
         });
+
+        select.appendChild(groupBig);
+        select.appendChild(groupSmall);
     }
 
     function populateJuzs() {
@@ -350,22 +377,29 @@
     async function handleItemChange() {
         const mode = document.getElementById('modeSelect').value;
         const surahId = document.getElementById('itemSelect').value;
+        const rukuBox = document.getElementById('rukuBox');
         const rukuSelect = document.getElementById('rukuSelect');
 
         if (mode !== 'surah' || !surahId) return;
 
-        rukuSelect.innerHTML = '<option>رکوع لوڈ ہو رہے ہیں...</option>';
+        // اگر چھوٹی سورۃ منتخب ہو تو رکوع ڈراپ ڈاؤن چھپا دیں
+        if (isSmallSurah(surahId)) {
+            rukuBox.style.display = 'none';
+            rukuSelect.innerHTML = '<option value="all">مکمل سورۃ</option>';
+        } else {
+            // بڑی سورت کے لیے رکوع ڈراپ ڈاؤن دکھائیں اور رکوع بھریں
+            rukuBox.style.display = 'flex';
+            rukuSelect.innerHTML = '<option>رکوع لوڈ ہو رہے ہیں...</option>';
 
-        try {
-            const res = await fetch(`https://api.alquran.cloud/v1/surah/${surahId}`);
-            const data = await res.json();
-            
-            const ayahs = data.data.ayahs;
-            const rukuSet = [...new Set(ayahs.map(a => a.ruku))];
+            try {
+                const res = await fetch(`https://api.alquran.cloud/v1/surah/${surahId}`);
+                const data = await res.json();
+                
+                const ayahs = data.data.ayahs;
+                const rukuSet = [...new Set(ayahs.map(a => a.ruku))];
 
-            rukuSelect.innerHTML = '';
+                rukuSelect.innerHTML = '';
 
-            if (rukuSet.length > 1) {
                 rukuSet.forEach((rukuGlobalId, index) => {
                     let opt = document.createElement('option');
                     opt.value = rukuGlobalId;
@@ -377,14 +411,10 @@
                 allOpt.value = 'all';
                 allOpt.textContent = 'مکمل سورۃ (تمام رکوع)';
                 rukuSelect.appendChild(allOpt);
-            } else {
-                let opt = document.createElement('option');
-                opt.value = rukuSet[0];
-                opt.textContent = 'مکمل سورۃ (رکوع 1)';
-                rukuSelect.appendChild(opt);
+
+            } catch (e) {
+                rukuSelect.innerHTML = '<option value="all">تمام رکوع</option>';
             }
-        } catch (e) {
-            rukuSelect.innerHTML = '<option value="all">تمام رکوع</option>';
         }
     }
 
@@ -397,7 +427,6 @@
         if (mode === 'surah') {
             label.textContent = 'سورۃ منتخب کریں:';
             ayahBox.style.display = 'none';
-            rukuBox.style.display = 'flex';
             populateSurahs();
             handleItemChange();
         } else if (mode === 'juz') {
@@ -417,7 +446,8 @@
         pauseAudio();
         const mode = document.getElementById('modeSelect').value;
         const selectedVal = document.getElementById('itemSelect').value;
-        const rukuVal = document.getElementById('rukuSelect') ? document.getElementById('rukuSelect').value : 'all';
+        const rukuSelect = document.getElementById('rukuSelect');
+        const rukuVal = rukuSelect ? rukuSelect.value : 'all';
         const container = document.getElementById('quranContainer');
 
         if (!selectedVal) return;
@@ -426,10 +456,10 @@
 
         let url = '';
         if (mode === 'surah') {
-            if (rukuVal && rukuVal !== 'all') {
-                url = `https://api.alquran.cloud/v1/ruku/${rukuVal}/editions/ar.abdulbasitmurattal,ur.jalandhry,ur.khan`;
-            } else {
+            if (isSmallSurah(selectedVal) || rukuVal === 'all' || !rukuVal) {
                 url = `https://api.alquran.cloud/v1/surah/${selectedVal}/editions/ar.abdulbasitmurattal,ur.jalandhry,ur.khan`;
+            } else {
+                url = `https://api.alquran.cloud/v1/ruku/${rukuVal}/editions/ar.abdulbasitmurattal,ur.jalandhry,ur.khan`;
             }
         } else if (mode === 'juz') {
             url = `https://api.alquran.cloud/v1/juz/${selectedVal}/editions/ar.abdulbasitmurattal,ur.jalandhry,ur.khan`;
@@ -525,31 +555,4 @@
                 audioPlayer.src = currentItem.arabicAudio;
             } else {
                 document.getElementById('playerStatus').textContent = `پلے ہو رہا ہے: آیت ${currentItem.ayahNo} (اردو ترجمہ)`;
-                audioPlayer.src = currentItem.urduAudio;
-            }
-        } else if (audioOpt === 'arabic') {
-            document.getElementById('playerStatus').textContent = `پلے ہو رہا ہے: آیت ${currentItem.ayahNo} (عربی تلاوت)`;
-            audioPlayer.src = currentItem.arabicAudio;
-        } else if (audioOpt === 'urdu') {
-            document.getElementById('playerStatus').textContent = `پلے ہو رہا ہے: آیت ${currentItem.ayahNo} (اردو ترجمہ)`;
-            audioPlayer.src = currentItem.urduAudio;
-        }
-
-        audioPlayer.play().catch(err => console.error(err));
-    }
-
-    audioPlayer.onended = function() {
-        if (!isPlayingMode) return;
-
-        const audioOpt = document.getElementById('audioOption').value;
-
-        if (audioOpt === 'both') {
-            if (isArabicTurn) {
-                isArabicTurn = false;
-                playTrack();
-            } else {
-                isArabicTurn = true;
-                currentTrackIndex++;
-                playTrack();
-            }
-    
+                audioPlayer.sr
