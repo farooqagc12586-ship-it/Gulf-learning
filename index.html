@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>القرآن الكريم - المكتبة الرقمية</title>
-    <!-- Scheherazade New (Bold) & Noto Nastaliq Urdu Fonts -->
+    <!-- Scheherazade New & Noto Nastaliq Urdu Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
@@ -132,6 +132,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
             z-index: 1000;
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
         }
@@ -150,7 +152,7 @@
             background: var(--accent-gold);
             color: var(--primary-emerald);
             border: none;
-            padding: 6px 16px;
+            padding: 6px 14px;
             font-size: 13px;
             font-weight: bold;
             border-radius: 6px;
@@ -214,7 +216,7 @@
         .play-btn-small {
             margin-top: 12px;
             font-size: 12px;
-            padding: 5px 12px;
+            padding: 6px 14px;
             background: transparent;
             color: var(--primary-emerald);
             border: 1px solid var(--primary-emerald);
@@ -276,8 +278,10 @@
     <div class="player-bar">
         <div class="player-status" id="playerStatus">حالت: تیار ہے</div>
         <div class="player-controls">
-            <button onclick="playAll()">پلے کریں ▶</button>
+            <button onclick="prevAyah()">⏮ پچھلی</button>
+            <button onclick="playAll()">پلے ▶</button>
             <button onclick="pauseAudio()">روکیں ⏸</button>
+            <button onclick="nextAyah()">اگلی ⏭</button>
         </div>
     </div>
 
@@ -362,7 +366,7 @@
 
         if (!selectedVal) return;
 
-        container.innerHTML = '<p style="text-align:center; color:#0e3b2e; font-weight:bold;">لوڈ ہو رہا ہے... براہِ کرم انتظار کریں۔</p>';
+        container.innerHTML = '<p style="text-align:center; color:#0e3b2e; font-weight:bold; font-size: 18px;">ڈیٹا لوڈ ہو رہا ہے... براہِ کرم انتظار کریں۔</p>';
 
         let url = '';
         if (mode === 'surah') {
@@ -442,9 +446,11 @@
         playTrack();
     }
 
-    function playTrack() {
+    async function playTrack() {
+        if (currentTrackIndex < 0) currentTrackIndex = 0;
+
         if (currentTrackIndex >= currentPlaylist.length) {
-            document.getElementById('playerStatus').textContent = "مکمل ہو گیا";
+            document.getElementById('playerStatus').textContent = "تلاوت مکمل ہو گئی";
             clearHighlights();
             isPlayingMode = false;
             return;
@@ -455,26 +461,45 @@
 
         highlightCard(currentTrackIndex);
 
+        let audioUrl = "";
+        let statusMessage = "";
+
         if (audioOpt === 'both') {
             if (isArabicTurn) {
-                document.getElementById('playerStatus').textContent = `پلے ہو رہا ہے: آیت ${currentItem.ayahNo} (عربی تلاوت)`;
-                audioPlayer.src = currentItem.arabicAudio;
+                statusMessage = `پلے ہو رہا ہے: آیت ${currentItem.ayahNo} (عربی تلاوت)`;
+                audioUrl = currentItem.arabicAudio;
             } else {
-                document.getElementById('playerStatus').textContent = `پلے ہو رہا ہے: آیت ${currentItem.ayahNo} (اردو ترجمہ)`;
-                audioPlayer.src = currentItem.urduAudio;
+                statusMessage = `پلے ہو رہا ہے: آیت ${currentItem.ayahNo} (اردو ترجمہ)`;
+                audioUrl = currentItem.urduAudio;
             }
         } else if (audioOpt === 'arabic') {
-            document.getElementById('playerStatus').textContent = `پلے ہو رہا ہے: آیت ${currentItem.ayahNo} (عربی تلاوت)`;
-            audioPlayer.src = currentItem.arabicAudio;
+            statusMessage = `پلے ہو رہا ہے: آیت ${currentItem.ayahNo} (عربی تلاوت)`;
+            audioUrl = currentItem.arabicAudio;
         } else if (audioOpt === 'urdu') {
-            document.getElementById('playerStatus').textContent = `پلے ہو رہا ہے: آیت ${currentItem.ayahNo} (اردو ترجمہ)`;
-            audioPlayer.src = currentItem.urduAudio;
+            statusMessage = `پلے ہو رہا ہے: آیت ${currentItem.ayahNo} (اردو ترجمہ)`;
+            audioUrl = currentItem.urduAudio;
         }
 
-        audioPlayer.play().catch(err => console.error(err));
+        if (!audioUrl) {
+            // اگر آڈیو لنک موجود نہ ہو تو خود بخود اگلی آڈیو پر منتقل ہو جائے
+            advancePlaylist();
+            return;
+        }
+
+        document.getElementById('playerStatus').textContent = statusMessage + " (لوڈ ہو رہا ہے...)";
+        audioPlayer.src = audioUrl;
+
+        try {
+            await audioPlayer.play();
+            document.getElementById('playerStatus').textContent = statusMessage;
+        } catch (err) {
+            console.warn("آڈیو پلے کرنے میں مسئلہ آیا:", err);
+            // اگر آڈیو پلے نہ ہو سکے تو فریز ہونے کے بجائے اگلی آڈیو پر چلے جائیں
+            setTimeout(advancePlaylist, 1000);
+        }
     }
 
-    audioPlayer.onended = function() {
+    function advancePlaylist() {
         if (!isPlayingMode) return;
 
         const audioOpt = document.getElementById('audioOption').value;
@@ -482,22 +507,48 @@
         if (audioOpt === 'both') {
             if (isArabicTurn) {
                 isArabicTurn = false;
-                playTrack();
             } else {
                 isArabicTurn = true;
                 currentTrackIndex++;
-                playTrack();
             }
         } else {
             currentTrackIndex++;
-            playTrack();
         }
+        playTrack();
+    }
+
+    // آڈیو ختم ہونے پر آٹو ایڈوانس
+    audioPlayer.onended = function() {
+        advancePlaylist();
+    };
+
+    // آڈیو لوڈنگ ایرر آنے پر آٹو اسکیپ (تاکہ کوڈ فریز نہ ہو)
+    audioPlayer.onerror = function() {
+        console.warn("آڈیو فائل لوڈ نہیں ہو سکی، اگلا ٹریک پلے کیا جا رہا ہے۔");
+        document.getElementById('playerStatus').textContent = "آڈیو لوڈنگ کا مسئلہ! اگلی آڈیو پر منتقل ہو رہے ہیں...";
+        setTimeout(advancePlaylist, 1200);
     };
 
     function pauseAudio() {
         audioPlayer.pause();
         isPlayingMode = false;
         document.getElementById('playerStatus').textContent = "آڈیو روک دی گئی ہے";
+    }
+
+    function nextAyah() {
+        if (currentPlaylist.length === 0) return;
+        currentTrackIndex++;
+        isArabicTurn = true;
+        isPlayingMode = true;
+        playTrack();
+    }
+
+    function prevAyah() {
+        if (currentPlaylist.length === 0) return;
+        currentTrackIndex--;
+        isArabicTurn = true;
+        isPlayingMode = true;
+        playTrack();
     }
 
     function highlightCard(index) {
