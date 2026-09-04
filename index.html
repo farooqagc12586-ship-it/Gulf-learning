@@ -1,185 +1,145 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ur">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gulf Learning</title>
+    <title>القرآن الكريم - اردو ترجمہ اور آڈیو</title>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-        }
         body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f4f7f6;
-            color: #333;
-            line-height: 1.6;
-        }
-        header {
-            background: #003366;
-            color: #ffffff;
-            text-align: center;
-            padding: 40px 20px;
-        }
-        header h1 {
-            font-size: 2rem;
-            margin-bottom: 10px;
-        }
-        header p {
-            font-size: 1.1rem;
-            opacity: 0.9;
+            margin: 0;
+            padding: 20px;
+            direction: rtl;
         }
         .container {
-            max-width: 900px;
-            margin: 30px auto;
-            padding: 0 20px;
-        }
-        .section-title {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             text-align: center;
-            color: #003366;
+        }
+        h1 {
+            color: #1b5e20;
             margin-bottom: 20px;
         }
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
+        .controls {
+            margin-bottom: 25px;
         }
-        .card {
-            background: #ffffff;
-            border-radius: 8px;
-            padding: 25px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
-            text-align: center;
+        select, button {
+            padding: 10px 15px;
+            font-size: 16px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            margin: 5px;
         }
-        .card h3 {
-            color: #003366;
+        button {
+            background-color: #2e7d32;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #1b5e20;
+        }
+        .ayah-card {
+            border-bottom: 1px solid #eee;
+            padding: 15px 0;
+            text-align: right;
+        }
+        .arabic {
+            font-size: 26px;
+            color: #2c3e50;
+            line-height: 1.8;
+            margin-bottom: 8px;
+        }
+        .urdu {
+            font-size: 18px;
+            color: #555;
+            line-height: 1.6;
             margin-bottom: 10px;
         }
-        .card p {
-            font-size: 0.95rem;
-            color: #555;
-        }
-        .about-sec {
-            background: #ffffff;
-            padding: 30px;
-            border-radius: 8px;
-            margin-top: 30px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
-        }
-        footer {
-            text-align: center;
-            padding: 20px;
-            background: #222;
-            color: #ccc;
-            font-size: 0.9rem;
-            margin-top: 40px;
+        audio {
+            width: 100%;
+            margin-top: 5px;
+            height: 35px;
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>Gulf Learning</h1>
-        <p>Welcome to Gulf Learning Educational Platform</p>
-    </header>
+<div class="container">
+    <h1>القرآن الكريم (اردو ترجمہ و آڈیو)</h1>
 
-    <div class="container">
-        <h2 class="section-title">Our Courses & Resources</h2>
-        
-        <div class="card-grid">
-            <div class="card">
-                <h3>Gulf Arabic</h3>
-                <p>Learn practical spoken Gulf Arabic, daily vocabulary, and workplace phrases.</p>
-            </div>
-            <div class="card">
-                <h3>English Grammar</h3>
-                <p>Improve vocabulary, sentence structure, root words, and professional communication.</p>
-            </div>
-            <div class="card">
-                <h3>Technical & Safety</h3>
-                <p>Access HSE guidelines, site inspection materials, and technical documentation.</p>
-            </div>
-        </div>
-
-        <div class="about-sec">
-            <h3 style="color: #003366; margin-bottom: 10px;">About Gulf Learning</h3>
-            <p>Gulf Learning is dedicated to providing quality educational resources, practical language learning materials, and professional guidance for learners and professionals.</p>
-        </div>
+    <div class="controls">
+        <label for="surahSelect">سورۃ منتخب کریں:</label>
+        <select id="surahSelect"></select>
+        <button onclick="loadSurah()">کھولیں</button>
     </div>
 
-    <footer>
-        <p>&copy; 2026 Gulf Learning. All Rights Reserved.</p>
-    </footer>
-
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="ur" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quran Urdu Translation</title>
-
-<style>
-body {
-  margin: 0;
-  padding: 20px;
-  background: #f4f7f6;
-  font-family: Arial, sans-serif;
-}
-
-.card {
-  max-width: 700px;
-  margin: auto;
-  background: white;
-  padding: 25px;
-  border-radius: 18px;
-  box-shadow: 0 4px 15px #0001;
-  text-align: center;
-}
-
-.arabic {
-  font-size: 30px;
-  color: #14532d;
-  background: #f0fdf4;
-  padding: 20px;
-  border-radius: 12px;
-  line-height: 2;
-}
-
-.translation {
-  font-size: 20px;
-  text-align: right;
-  background: #f8fafc;
-  padding: 18px;
-  border-right: 5px solid #16a34a;
-  border-radius: 8px;
-  line-height: 2;
-}
-</style>
-</head>
-
-<body>
-
-<div class="card">
-
-  <h2>سورۃ الفاتحہ</h2>
-  <p>آیت نمبر 1</p>
-
-  <h3>عربی آیت</h3>
-
-  <div class="arabic">
-    بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
-  </div>
-
-  <h3>اردو ترجمہ — شمشاد علی خان</h3>
-
-  <div class="translation">
-    یہاں شمشاد علی خان کا اصل ترجمہ لکھیں۔
-  </div>
-
+    <div id="quranContainer">
+        <p>براہِ کرم سورۃ منتخب کر کے "کھولیں" کا بٹن دبائیں۔</p>
+    </div>
 </div>
+
+<script>
+    // سورتوں کی فہرست لوڈ کرنا
+    async function loadSurahList() {
+        const response = await fetch('https://api.alquran.cloud/v1/surah');
+        const data = await response.json();
+        const select = document.getElementById('surahSelect');
+        
+        data.data.forEach(surah => {
+            let option = document.createElement('option');
+            option.value = surah.number;
+            option.textContent = `${surah.number}. ${surah.name} (${surah.englishName})`;
+            select.appendChild(option);
+        });
+    }
+
+    // منتخب سورۃ کا عربی متن، اردو ترجمہ اور آڈیو لوڈ کرنا
+    async function loadSurah() {
+        const surahNumber = document.getElementById('surahSelect').value;
+        const container = document.getElementById('quranContainer');
+        container.innerHTML = '<p>لوڈ ہو رہا ہے...</p>';
+
+        try {
+            // عربی، اردو ترجمہ (جالندھری) اور آڈیو (مشاری العفاسی) ایک ساتھ حاصل کریں
+            const response = await fetch(`https://api.alquran.cloud/v1/surah/${surahNumber}/editions/quran-uthmani,ur.jalandhry,ar.alafasy`);
+            const data = await response.json();
+
+            const arabicAyahs = data.data[0].ayahs;
+            const urduAyahs = data.data[1].ayahs;
+            const audioAyahs = data.data[2].ayahs;
+
+            let html = '';
+
+            for (let i = 0; i < arabicAyahs.length; i++) {
+                html += `
+                    <div class="ayah-card">
+                        <div class="arabic">${arabicAyahs[i].text} ﴿${arabicAyahs[i].numberInSurah}﴾</div>
+                        <div class="urdu">${urduAyahs[i].text}</div>
+                        <audio controls preload="none">
+                            <source src="${audioAyahs[i].audio}" type="audio/mpeg">
+                            آپ کا براؤزر آڈیو پلیئر کو سپورٹ نہیں کرتا۔
+                        </audio>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = html;
+        } catch (error) {
+            container.innerHTML = '<p>لوڈ کرنے میں مسئلہ آیا ہے۔ دوبارہ کوشش کریں۔</p>';
+            console.error(error);
+        }
+    }
+
+    // پیج لوڈ ہوتے ہی سورتوں کی لسٹ حاصل کریں
+    loadSurahList();
+</script>
 
 </body>
 </html>
