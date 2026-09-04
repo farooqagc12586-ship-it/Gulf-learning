@@ -1,587 +1,199 @@
 <!DOCTYPE html>
-<html lang="ur">
+<html lang="ur" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>القرآن الكريم - المكتبة الرقمية</title>
-    <!-- Scheherazade New & Noto Nastaliq Urdu Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
-
+    <title>القرآن الکریم</title>
     <style>
-        :root {
-            --primary-emerald: #0e3b2e;
-            --accent-gold: #d4af37;
-            --light-gold: #f4e8c1;
-            --bg-cream: #faf8f5;
-            --card-white: #ffffff;
-            --text-dark: #1f2937;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            font-family: 'Noto Nastaliq Urdu', 'Scheherazade New', serif;
-            background-color: var(--bg-cream);
-            color: var(--text-dark);
-            margin: 0;
-            padding: 12px;
-            direction: rtl;
+            background-color: #f4f6f8;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 15px;
         }
 
         .container {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        /* Header Banner with Integrated Name at Top Right */
-        .header-banner {
-            position: relative;
-            background: linear-gradient(135deg, #0e3b2e 0%, #175241 100%);
-            color: var(--accent-gold);
-            text-align: center;
-            padding: 32px 15px 22px 15px;
-            border-radius: 16px;
-            border: 2px solid var(--accent-gold);
-            box-shadow: 0 10px 25px rgba(14, 59, 46, 0.15);
-            margin-bottom: 20px;
-        }
-
-        .top-credit-name {
-            position: absolute;
-            top: 8px;
-            right: 12px;
-            font-size: 12px;
-            color: var(--accent-gold);
-            font-weight: bold;
-            letter-spacing: 0.5px;
-        }
-
-        .header-banner h1 {
-            font-family: 'Scheherazade New', serif;
-            font-size: 34px;
-            margin: 0;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .header-banner p {
-            color: #e0e0e0;
-            font-size: 13px;
-            margin: 8px 0 0 0;
-        }
-
-        /* Controls Card */
-        .controls-card {
-            background: var(--card-white);
-            border-radius: 14px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border: 1px solid #e5e7eb;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            align-items: flex-end;
-        }
-
-        .control-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        label {
-            font-size: 13px;
-            color: var(--primary-emerald);
-            font-weight: bold;
-        }
-
-        select, input {
             width: 100%;
-            box-sizing: border-box;
-            padding: 10px;
-            height: 46px;
-            font-size: 14px;
+            max-width: 480px;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            border: 1px solid #e0e0e0;
+        }
+
+        .header {
+            background: #107c41;
+            color: white;
+            text-align: center;
+            padding: 18px 15px;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .controls {
+            padding: 15px;
+            background: #fafafa;
+            border-bottom: 1px solid #eee;
+        }
+
+        .select-box {
+            width: 100%;
+            padding: 12px 15px;
+            font-size: 16px;
+            border: 1px solid #ccc;
             border-radius: 8px;
-            border: 1px solid #cbd5e1;
-            background-color: #ffffff;
-            color: #1f2937;
-            font-family: inherit;
-            direction: rtl;
+            background-color: #fff;
             outline: none;
-        }
-
-        select:focus, input:focus {
-            border-color: var(--accent-gold);
-        }
-
-        .btn-load {
-            height: 46px;
-            background: linear-gradient(135deg, #0e3b2e 0%, #175241 100%);
-            color: var(--accent-gold);
-            border: 1px solid var(--accent-gold);
-            font-size: 15px;
-            font-weight: bold;
-            border-radius: 8px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 10px rgba(14, 59, 46, 0.2);
+            color: #333;
         }
 
-        .btn-load:hover {
-            background: var(--accent-gold);
-            color: var(--primary-emerald);
+        .select-box:focus {
+            border-color: #107c41;
         }
 
-        /* Sticky Player Bar */
-        .player-bar {
-            position: sticky;
-            top: 10px;
-            background: var(--primary-emerald);
-            border: 1px solid var(--accent-gold);
-            color: #ffffff;
-            padding: 12px 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
+        .list-container {
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 10px 15px;
+        }
+
+        .list-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            z-index: 1000;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+            padding: 12px 10px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background 0.2s;
         }
 
-        .player-status {
-            font-size: 13px;
-            color: var(--light-gold);
+        .list-item:hover {
+            background-color: #f5f5f5;
         }
 
-        .player-controls {
-            display: flex;
-            gap: 8px;
+        .list-item:last-child {
+            border-bottom: none;
         }
 
-        .player-controls button {
-            background: var(--accent-gold);
-            color: var(--primary-emerald);
-            border: none;
-            padding: 6px 14px;
-            font-size: 13px;
-            font-weight: bold;
-            border-radius: 6px;
+        .item-title {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .radio-btn {
+            width: 18px;
+            height: 18px;
+            accent-color: #107c41;
             cursor: pointer;
         }
 
-        /* Bismillah Card */
-        .bismillah-card {
-            background: linear-gradient(135deg, #fcf8ec 0%, #f4e8c1 100%);
-            border: 2px solid var(--accent-gold);
-            border-radius: 14px;
-            padding: 18px 15px;
+        .content-area {
+            padding: 20px 15px;
             text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .bismillah-card.playing {
-            border: 2px solid var(--primary-emerald);
-            background: #f5e6b3;
-        }
-
-        .bismillah-arabic {
-            font-family: 'Scheherazade New', serif;
-            font-size: 32px;
-            font-weight: 700;
-            color: var(--primary-emerald);
+            font-size: 18px;
             line-height: 1.8;
-        }
-
-        .bismillah-urdu {
-            font-family: 'Noto Nastaliq Urdu', serif;
-            font-size: 15px;
-            color: #334155;
-            margin-top: 8px;
-            border-top: 1px dashed rgba(212, 175, 55, 0.5);
-            padding-top: 8px;
-        }
-
-        /* Ayah Cards */
-        .ayah-card {
-            background: var(--card-white);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 16px;
-            border: 1px solid #eaeaea;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-            transition: all 0.3s ease;
-        }
-
-        .ayah-card.playing {
-            border: 2px solid var(--accent-gold);
-            background-color: #fcf9f2;
-        }
-
-        .meta-tag {
-            font-size: 12px;
-            color: var(--primary-emerald);
-            background: var(--light-gold);
-            padding: 3px 10px;
-            border-radius: 20px;
-            display: inline-block;
-            margin-bottom: 12px;
-            font-weight: bold;
-        }
-
-        .arabic {
-            font-family: 'Scheherazade New', serif;
-            font-size: 30px;
-            font-weight: 700;
-            color: var(--primary-emerald);
-            line-height: 2.2;
-            text-align: right;
-            margin-bottom: 14px;
-        }
-
-        .urdu {
-            font-family: 'Noto Nastaliq Urdu', serif;
-            font-size: 17px;
-            color: #334155;
-            line-height: 2.2;
-            text-align: right;
-            border-top: 1px dashed #e2e8f0;
-            padding-top: 12px;
-        }
-
-        .play-btn-small {
-            margin-top: 12px;
-            font-size: 12px;
-            padding: 5px 12px;
-            background: transparent;
-            color: var(--primary-emerald);
-            border: 1px solid var(--primary-emerald);
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .play-btn-small:hover {
-            background: var(--primary-emerald);
-            color: #ffffff;
+            color: #222;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- Header Banner -->
-    <div class="header-banner">
-        <div class="top-credit-name">(فاروق احمد چترالی)</div>
-        <h1>القرآن الكريم</h1>
-        <p>تلاوت: قاری عبد الباسط عبد الصمد • اردو ترجمہ صوتی: شمشاد علی خان</p>
+    <div class="header">
+        <h1>القرآن الکریم</h1>
     </div>
 
-    <!-- Controls Card -->
-    <div class="controls-card">
-        <div class="control-group">
-            <label>انتخاب کا طریقہ:</label>
-            <select id="modeSelect" onchange="handleModeChange()">
-                <option value="surah" selected>سورۃ وائز</option>
-                <option value="juz">پارہ وائز</option>
-                <option value="ayah">آیت وائز</option>
-            </select>
-        </div>
+    <div class="controls">
+        <select id="selectionType" class="select-box" onchange="loadList()">
+            <option value="surah">سورۃ منتخب کریں</option>
+            <option value="para">پارہ منتخب کریں</option>
+        </select>
+    </div>
 
-        <div class="control-group">
-            <label id="selectionLabel">سورۃ منتخب کریں:</label>
-            <select id="itemSelect">
-                <!-- HTML میں پہلے سے سورتیں موجود ہیں تاکہ کبھی بھی خالی نظر نہ آئے -->
-                <option value="1">1. الفاتحة</option><option value="2">2. البقرة</option><option value="3">3. آل عمران</option><option value="4">4. النساء</option><option value="5">5. المائدة</option><option value="6">6. الأنعام</option><option value="7">7. الأعراف</option><option value="8">8. الأنفال</option><option value="9">9. التوبة</option><option value="10">10. يونس</option><option value="11">11. هود</option><option value="12">12. يوسف</option><option value="13">13. الرعد</option><option value="14">14. إبراهيم</option><option value="15">15. الحجر</option><option value="16">16. النحل</option><option value="17">17. الإسراء</option><option value="18">18. الكهف</option><option value="19">19. مريم</option><option value="20">20. طه</option><option value="21">21. الأنبياء</option><option value="22">22. الحج</option><option value="23">23. المؤمنون</option><option value="24">24. النور</option><option value="25">25. الفرقان</option><option value="26">26. الشعراء</option><option value="27">27. النمل</option><option value="28">28. القصص</option><option value="29">29. العنكبوت</option><option value="30">30. الروم</option><option value="31">31. لقمان</option><option value="32">32. السجدة</option><option value="33">33. الأحزاب</option><option value="34">34. سبأ</option><option value="35">35. فاطر</option><option value="36">36. يس</option><option value="37">37. الصافات</option><option value="38">38. ص</option><option value="39">39. الزمر</option><option value="40">40. غافر</option><option value="41">41. فصلت</option><option value="42">42. الشورى</option><option value="43">43. الزخرف</option><option value="44">44. الدخان</option><option value="45">45. الجاثية</option><option value="46">46. الأحقاف</option><option value="47">47. محمد</option><option value="48">48. الفتح</option><option value="49">49. الحجرات</option><option value="50">50. ق</option><option value="51">51. الذاريات</option><option value="52">52. الطور</option><option value="53">53. النجم</option><option value="54">54. القمر</option><option value="55">ان دونوں مسئلوں کی اصل وجہ یہ تھی:
+    <div class="list-container" id="itemsList">
+        <!-- لسٹ یہاں لوڈ ہوگی -->
+    </div>
+</div>
 
-1. **خالی لسٹ کا مسئلہ:** پہلے کوڈ میں ڈراپ ڈاؤن لسٹ کو بھرنے والا جاوا سکرپٹ فنکشن پیج لوڈ ہوتے ہی خود بخود ایگزیکیوٹ نہیں ہو رہا تھا، جس کی وجہ سے لسٹ خالی رہ جاتی تھی اور لیبل "سورۃ منتخب کریں" پر ہی اٹکا رہتا تھا (جیسے آپ کی امیج میں "پارہ وائز" منتخب کرنے پر بھی نیچے لسٹ نہیں بن رہی تھی)۔
-2. **نام نظر نہ آنے کا مسئلہ:** CSS میں نیگیٹو پوزیشن (`top: -5px`) استعمال کی گئی تھی جس کی وجہ سے آپ کا نام اسکرین کے اوپر والے بارڈر کے پیچھے چھپ کر کٹ جاتا تھا۔
+<script>
+    // سورۃ کی لسٹ
+    const surahs = [
+        "الفاتحة", "البقرة", "آل عمران", "النساء", "المائدة", "الأنعام", "الأعراف", "الأنفال", "التوبة", "يونس",
+        "هود", "يوسف", "الرعد", "إبراهيم", "الحجر", "النحل", "الإسراء", "الكهف", "مريم", "طه",
+        "الأنبياء", "الحج", "المؤمنون", "النور", "الفرقان", "الشعراء", "النمل", "القصص", "العنكبوت", "الروم",
+        "لقمان", "السجدة", "الأحزاب", "سبأ", "فاطر", "يس", "الصافات", "ص", "الزمر", "غافر",
+        "فصلت", "الشورى", "الزخرف", "الدخان", "الجاثية", "الأحقاف", "محمد", "الفتح", "الحجرات", "ق",
+        "الذاريات", "الطور", "النجم", "القمر", "الرحمن", "الواقعة", "الحديد", "المجادلة", "الحشر", "الممتحنة",
+        "الصف", "الجمعة", "المنافقون", "التغابن", "الطلاق", "التحريم", "الملك", "القلم", "الحاقة", "المعارج",
+        "نوح", "الجن", "المزمل", "المدثر", "القيامة", "الإنسان", "المرسلات", "النبأ", "النازعات", "عبس",
+        "التكوير", "الانفطار", "المطففين", "الانشقاق", "البروج", "الطارق", "الأعلى", "الغاشية", "الفجر", "البلد",
+        "الشمس", "الليل", "الضحى", "الشرح", "التين", "العلق", "القدر", "البينة", "الزلزلة", "العاديات",
+        "القارعة", "التكاثر", "العصر", "الهمزة", "الفيل", "قريش", "المواعون", "الكوثر", "الكافرون", "النصر",
+        "المسد", "الإخلاص", "الفلق", "الناس"
+    ];
 
-ان دونوں مسئلوں کو کوڈ میں اس طرح ٹھیک کیا گیا ہے:
-* `DOMContentLoaded` کا ایونٹ شامل کیا گیا ہے جو پیج کھلتے ہی تمام سورتوں یا پاروں کی لسٹ خود بخود فوراً بنا دے گا۔
-* نام کو ایک واضح **گولڈن بیج (Badge)** کی شکل میں اوپر دائیں کونے پر پوزیشن کر دیا گیا ہے تاکہ یہ ہر اسکرین پر نمایاں نظر آئے اور چھپ نہ سکے۔
+    // لسٹ لوڈ کرنے کا فنکشن
+    function loadList() {
+        const type = document.getElementById("selectionType").value;
+        const container = document.getElementById("itemsList");
+        container.innerHTML = "";
 
----
+        if (type === "surah") {
+            surahs.forEach((surah, index) => {
+                const item = document.createElement("div");
+                item.className = "list-item";
+                item.onclick = () => selectItem(index + 1, surah, "surah");
 
-### مکمل اور 100% ورکنگ `index.html` کوڈ:
+                item.innerHTML = `
+                    <span class="item-title">${index + 1}. ${surah}</span>
+                    <input type="radio" name="quran_item" class="radio-btn" value="${index + 1}">
+                `;
+                container.appendChild(item);
+            });
+        } else if (type === "para") {
+            for (let i = 1; i <= 30; i++) {
+                const item = document.createElement("div");
+                item.className = "list-item";
+                item.onclick = () => selectItem(i, `پارہ ${i}`, "para");
 
-اپنی GitHub Repository میں جا کر `index.html` کا پورا پرانا کوڈ مٹا دیں اور یہ نیا کوڈ پیسٹ کر کے Save (Commit) کر دیں:
-
-```html
-<!DOCTYPE html>
-<html lang="ur">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>القرآن الكريم - المكتبة الرقمية</title>
-    <!-- Scheherazade New & Noto Nastaliq Urdu Fonts -->
-    <link rel="preconnect" href="[https://fonts.googleapis.com](https://fonts.googleapis.com)">
-    <link rel="preconnect" href="[https://fonts.gstatic.com](https://fonts.gstatic.com)" crossorigin>
-    <link href="[https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&family=Scheherazade+New:wght@700&display=swap](https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&family=Scheherazade+New:wght@700&display=swap)" rel="stylesheet">
-
-    <style>
-        :root {
-            --primary-emerald: #0e3b2e;
-            --accent-gold: #d4af37;
-            --light-gold: #f4e8c1;
-            --bg-cream: #faf8f5;
-            --card-white: #ffffff;
-            --text-dark: #1f2937;
+                item.innerHTML = `
+                    <span class="item-title">پارہ ${i}</span>
+                    <input type="radio" name="quran_item" class="radio-btn" value="${i}">
+                `;
+                container.appendChild(item);
+            }
         }
+    }
 
-        body {
-            font-family: 'Noto Nastaliq Urdu', 'Scheherazade New', serif;
-            background-color: var(--bg-cream);
-            color: var(--text-dark);
-            margin: 0;
-            padding: 12px;
-            direction: rtl;
-        }
+    // آئٹم سلیکٹ کرنے کا فنکشن
+    function selectItem(id, name, type) {
+        const radios = document.getElementsByName("quran_item");
+        radios.forEach(radio => {
+            if (radio.value == id) radio.checked = true;
+        });
+        console.log(`Selected ${type}: ${id} - ${name}`);
+    }
 
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            position: relative;
-            padding-top: 25px;
-        }
+    // پیج لوڈ ہوتے ہی سورۃ کی لسٹ خود بخود دکھائیں
+    window.onload = function() {
+        loadList();
+    };
+</script>
 
-        /* Top Right Name Badge */
-        .top-credit-name {
-            position: absolute;
-            top: 0px;
-            right: 5px;
-            font-size: 13px;
-            color: var(--primary-emerald);
-            font-weight: bold;
-            background-color: #f4e8c1;
-            border: 1px solid var(--accent-gold);
-            padding: 2px 10px;
-            border-radius: 6px;
-            z-index: 1000;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-
-        /* Header Banner */
-        .header-banner {
-            background: linear-gradient(135deg, #0e3b2e 0%, #175241 100%);
-            color: var(--accent-gold);
-            text-align: center;
-            padding: 28px 15px 22px 15px;
-            border-radius: 16px;
-            border: 2px solid var(--accent-gold);
-            box-shadow: 0 10px 25px rgba(14, 59, 46, 0.15);
-            margin-bottom: 20px;
-            margin-top: 10px;
-        }
-
-        .header-banner h1 {
-            font-family: 'Scheherazade New', serif;
-            font-size: 34px;
-            margin: 0;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .header-banner p {
-            color: #e0e0e0;
-            font-size: 14px;
-            margin: 8px 0 0 0;
-        }
-
-        /* Controls Card */
-        .controls-card {
-            background: var(--card-white);
-            border-radius: 14px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border: 1px solid #e5e7eb;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px;
-            align-items: flex-end;
-        }
-
-        .control-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        label {
-            font-size: 13px;
-            color: var(--primary-emerald);
-            font-weight: bold;
-        }
-
-        select, input {
-            padding: 10px;
-            font-size: 14px;
-            border-radius: 8px;
-            border: 1px solid #cbd5e1;
-            background-color: #ffffff;
-            color: #1f2937;
-            font-family: inherit;
-            outline: none;
-            transition: border 0.2s;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        select:focus, input:focus {
-            border-color: var(--accent-gold);
-        }
-
-        .btn-load {
-            background: linear-gradient(135deg, #0e3b2e 0%, #175241 100%);
-            color: var(--accent-gold);
-            border: 1px solid var(--accent-gold);
-            padding: 11px;
-            font-size: 15px;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 10px rgba(14, 59, 46, 0.2);
-            width: 100%;
-        }
-
-        .btn-load:hover {
-            background: var(--accent-gold);
-            color: var(--primary-emerald);
-        }
-
-        /* Sticky Player Bar */
-        .player-bar {
-            position: sticky;
-            top: 10px;
-            background: var(--primary-emerald);
-            border: 1px solid var(--accent-gold);
-            color: #ffffff;
-            padding: 12px 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 1000;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .player-status {
-            font-size: 14px;
-            color: var(--light-gold);
-        }
-
-        .player-controls {
-            display: flex;
-            gap: 8px;
-        }
-
-        .player-controls button {
-            background: var(--accent-gold);
-            color: var(--primary-emerald);
-            border: none;
-            padding: 6px 16px;
-            font-size: 13px;
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .player-controls button:hover {
-            background: #ffffff;
-        }
-
-        /* Bismillah Card */
-        .bismillah-card {
-            background: linear-gradient(135deg, #fcf8ec 0%, #f4e8c1 100%);
-            border: 2px solid var(--accent-gold);
-            border-radius: 14px;
-            padding: 18px 15px;
-            text-align: center;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.15);
-            transition: all 0.3s ease;
-        }
-
-        .bismillah-card.playing {
-            border: 2px solid var(--primary-emerald);
-            background: #f5e6b3;
-            box-shadow: 0 6px 20px rgba(14, 59, 46, 0.25);
-        }
-
-        .bismillah-arabic {
-            font-family: 'Scheherazade New', serif;
-            font-size: 32px;
-            font-weight: 700;
-            color: var(--primary-emerald);
-            line-height: 1.8;
-        }
-
-        .bismillah-urdu {
-            font-family: 'Noto Nastaliq Urdu', serif;
-            font-size: 16px;
-            color: #334155;
-            margin-top: 8px;
-            border-top: 1px dashed rgba(212, 175, 55, 0.5);
-            padding-top: 8px;
-            line-height: 1.8;
-        }
-
-        /* Ayah Cards */
-        .ayah-card {
-            background: var(--card-white);
-            border-radius: 12px;
-            padding: 22px;
-            margin-bottom: 16px;
-            border: 1px solid #eaeaea;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .ayah-card.playing {
-            border: 2px solid var(--accent-gold);
-            background-color: #fcf9f2;
-            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.2);
-        }
-
-        .meta-tag {
-            font-size: 12px;
-            color: var(--primary-emerald);
-            background: var(--light-gold);
-            padding: 3px 10px;
-            border-radius: 20px;
-            display: inline-block;
-            margin-bottom: 12px;
-            font-weight: bold;
-        }
-
-        .arabic {
-            font-family: 'Scheherazade New', serif;
-            font-size: 32px;
-            font-weight: 700;
-            color: var(--primary-emerald);
-            line-height: 2.2;
-            text-align: right;
-            margin-bottom: 14px;
-        }
-
-        .urdu {
-            font-family: 'Noto Nastaliq Urdu', serif;
-            font-size: 18px;
-            color: #334155;
-            line-height: 2.2;
-            text-align: right;
-            border-top: 1px dashed #e2e8f0;
-            padding-top: 12px;
-        }
-
-        .play-btn-small {
-            margin-top: 12px;
-            font
+</body>
+</html>
