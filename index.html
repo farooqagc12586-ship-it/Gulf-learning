@@ -26,11 +26,25 @@
             margin: 0;
             padding: 12px;
             direction: rtl;
+            position: relative;
         }
 
         .container {
             max-width: 900px;
             margin: 0 auto;
+            position: relative;
+        }
+
+        /* Top Right Credit Name */
+        .top-credit-name {
+            position: absolute;
+            top: -5px;
+            right: 5px;
+            font-size: 11px;
+            color: var(--primary-emerald);
+            font-weight: bold;
+            opacity: 0.85;
+            z-index: 10;
         }
 
         /* Header Banner */
@@ -38,11 +52,12 @@
             background: linear-gradient(135deg, #0e3b2e 0%, #175241 100%);
             color: var(--accent-gold);
             text-align: center;
-            padding: 25px 15px;
+            padding: 28px 15px 22px 15px;
             border-radius: 16px;
             border: 2px solid var(--accent-gold);
             box-shadow: 0 10px 25px rgba(14, 59, 46, 0.15);
             margin-bottom: 20px;
+            margin-top: 22px;
         }
 
         .header-banner h1 {
@@ -162,6 +177,42 @@
             background: #ffffff;
         }
 
+        /* Bismillah Card */
+        .bismillah-card {
+            background: linear-gradient(135deg, #fcf8ec 0%, #f4e8c1 100%);
+            border: 2px solid var(--accent-gold);
+            border-radius: 14px;
+            padding: 18px 15px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .bismillah-card.playing {
+            border: 2px solid var(--primary-emerald);
+            background: #f5e6b3;
+            box-shadow: 0 6px 20px rgba(14, 59, 46, 0.25);
+        }
+
+        .bismillah-arabic {
+            font-family: 'Scheherazade New', serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary-emerald);
+            line-height: 1.8;
+        }
+
+        .bismillah-urdu {
+            font-family: 'Noto Nastaliq Urdu', serif;
+            font-size: 16px;
+            color: #334155;
+            margin-top: 8px;
+            border-top: 1px dashed rgba(212, 175, 55, 0.5);
+            padding-top: 8px;
+            line-height: 1.8;
+        }
+
         /* Ayah Cards */
         .ayah-card {
             background: var(--card-white);
@@ -229,13 +280,13 @@
             color: #ffffff;
         }
 
-        /* Footer Credit (نچلا کونہ) */
+        /* Footer Credit */
         .footer-credit {
             margin-top: 30px;
             padding-top: 15px;
             border-top: 1px solid var(--light-gold);
-            text-align: left; /* نچلا بایاں کونہ */
-            font-size: 15px;
+            text-align: left;
+            font-size: 14px;
             color: var(--primary-emerald);
             font-weight: bold;
             opacity: 0.85;
@@ -245,6 +296,9 @@
 <body>
 
 <div class="container">
+    <!-- Top Right Name Credit -->
+    <div class="top-credit-name">(فاروق احمد چترالی)</div>
+
     <!-- Header -->
     <div class="header-banner">
         <h1>القرآن الكريم</h1>
@@ -410,12 +464,51 @@
             currentPlaylist = [];
             let html = '';
 
+            // سورۃ التوبہ (سورۃ 9) اور سورۃ 1 (جس کی آیت 1 بسم اللہ ہے) کے علاوہ تمام سورتوں کی پلے لسٹ میں بسم اللہ آڈیو شامل کریں
+            const shouldAddBismillah = (mode === 'surah' && selectedVal != '9' && selectedVal != '1') || 
+                                       (mode === 'ayah' && selectedVal != '9' && selectedVal != '1' && document.getElementById('ayahInput').value == '1');
+
+            if (shouldAddBismillah) {
+                currentPlaylist.push({
+                    index: 'bismillah',
+                    isBismillah: true,
+                    surahName: '',
+                    ayahNo: 'بسم اللہ',
+                    arabicText: 'بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ',
+                    urduText: 'شروع اللہ کے نام سے جو بے حد مہربان، نہایت رحم کرنے والا ہے۔',
+                    arabicAudio: 'https://cdn.islamic.network/quran/audio/128/ar.abdulbasitmurattal/1.mp3',
+                    urduAudio: 'https://cdn.islamic.network/quran/audio/128/ur.khan/1.mp3'
+                });
+
+                html += `
+                    <div class="bismillah-card" id="card-bismillah">
+                        <div class="bismillah-arabic">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>
+                        <div class="bismillah-urdu">شروع اللہ کے نام سے جو بے حد مہربان، نہایت رحم کرنے والا ہے۔</div>
+                        <button class="play-btn-small" onclick="playSingleAyah(0)">بسم اللہ سنیں ▶</button>
+                    </div>
+                `;
+            } else if (selectedVal == '1') {
+                // سورۃ الفاتحہ کے لیے بصری بلاک
+                html += `
+                    <div class="bismillah-card" id="card-bismillah-fatiha" style="display:none;"></div>
+                `;
+            }
+
             for (let i = 0; i < arAyahs.length; i++) {
+                let arabicText = arAyahs[i].text;
+                
+                // متن میں سے ڈبل بسم اللہ ہٹائیں
+                if (selectedVal != '1' && i === 0 && arabicText.startsWith("بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ")) {
+                    arabicText = arabicText.replace("بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ", "").trim();
+                }
+
+                const playlistIdx = currentPlaylist.length;
                 const item = {
                     index: i,
+                    isBismillah: false,
                     surahName: arAyahs[i].surah ? arAyahs[i].surah.name : '',
                     ayahNo: arAyahs[i].numberInSurah,
-                    arabicText: arAyahs[i].text,
+                    arabicText: arabicText,
                     urduText: urTextAyahs[i].text,
                     arabicAudio: arAyahs[i].audio,
                     urduAudio: urAudioAyahs[i].audio
@@ -427,13 +520,13 @@
                         <span class="meta-tag">آیت: ${item.ayahNo} ${item.surahName ? '| سورۃ ' + item.surahName : ''}</span>
                         <div class="arabic">${item.arabicText} ﴿${item.ayahNo}﴾</div>
                         <div class="urdu">${item.urduText}</div>
-                        <button class="play-btn-small" onclick="playSingleAyah(${i})">یہ آیت سنیں ▶</button>
+                        <button class="play-btn-small" onclick="playSingleAyah(${playlistIdx})">یہ آیت سنیں ▶</button>
                     </div>
                 `;
             }
 
             container.innerHTML = html;
-            document.getElementById('playerStatus').textContent = `کُل آیات: ${currentPlaylist.length} | تیار ہے`;
+            document.getElementById('playerStatus').textContent = `کُل ٹریکس: ${currentPlaylist.length} | تیار ہے`;
             currentTrackIndex = 0;
 
         } catch (e) {
@@ -464,76 +557,4 @@
             document.getElementById('playerStatus').textContent = "مکمل ہو گیا";
             clearHighlights();
             isPlayingMode = false;
-            return;
-        }
-
-        const audioOpt = document.getElementById('audioOption').value;
-        const currentItem = currentPlaylist[currentTrackIndex];
-
-        highlightCard(currentTrackIndex);
-
-        if (audioOpt === 'both') {
-            if (isArabicTurn) {
-                document.getElementById('playerStatus').textContent = `پلے ہو رہا ہے: آیت ${currentItem.ayahNo} (عربی تلاوت)`;
-                audioPlayer.src = currentItem.arabicAudio;
-            } else {
-                document.getElementById('playerStatus').textContent = `پلے ہو رہا ہے: آیت ${currentItem.ayahNo} (اردو ترجمہ)`;
-                audioPlayer.src = currentItem.urduAudio;
-            }
-        } else if (audioOpt === 'arabic') {
-            document.getElementById('playerStatus').textContent = `پلے ہو رہا ہے: آیت ${currentItem.ayahNo} (عربی تلاوت)`;
-            audioPlayer.src = currentItem.arabicAudio;
-        } else if (audioOpt === 'urdu') {
-            document.getElementById('playerStatus').textContent = `پلے ہو رہا ہے: آیت ${currentItem.ayahNo} (اردو ترجمہ)`;
-            audioPlayer.src = currentItem.urduAudio;
-        }
-
-        audioPlayer.play().catch(err => console.error(err));
-    }
-
-    audioPlayer.onended = function() {
-        if (!isPlayingMode) return;
-
-        const audioOpt = document.getElementById('audioOption').value;
-
-        if (audioOpt === 'both') {
-            if (isArabicTurn) {
-                isArabicTurn = false;
-                playTrack();
-            } else {
-                isArabicTurn = true;
-                currentTrackIndex++;
-                playTrack();
-            }
-        } else {
-            currentTrackIndex++;
-            playTrack();
-        }
-    };
-
-    function pauseAudio() {
-        audioPlayer.pause();
-        isPlayingMode = false;
-        document.getElementById('playerStatus').textContent = "آڈیو روک دی گئی ہے";
-    }
-
-    function highlightCard(index) {
-        clearHighlights();
-        const card = document.getElementById(`card-${index}`);
-        if (card) {
-            card.classList.add('playing');
-            card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-    }
-
-    function clearHighlights() {
-        document.querySelectorAll('.ayah-card').forEach(c => c.classList.remove('playing'));
-    }
-
-    window.onload = function() {
-        populateSurahs();
-    };
-</script>
-
-</body>
-</html>
+            r
