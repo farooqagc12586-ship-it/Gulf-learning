@@ -3,170 +3,243 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>القرآن الكريم - اردو ترجمہ و آڈیو</title>
-    <!-- اردو اور عربی فونٹس کا انٹیگریشن -->
+    <title>القرآن الكريم - المكتبة الرقمية</title>
+    <!-- Scheherazade New (Bold) & Noto Nastaliq Urdu Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 
     <style>
-        @font-face {
-            font-family: 'Jameel Noori Nastaleeq';
-            src: url('https://cdn.jsdelivr.net/gh/zaheerk/jameel-noori-nastaleeq@master/Jameel%20Noori%20Nastaleeq.ttf') format('truetype');
+        :root {
+            --primary-emerald: #0e3b2e;
+            --accent-gold: #d4af37;
+            --light-gold: #f4e8c1;
+            --bg-cream: #faf8f5;
+            --card-white: #ffffff;
+            --text-dark: #1f2937;
         }
 
         body {
-            font-family: 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif;
-            background-color: #f0f4f1;
+            font-family: 'Noto Nastaliq Urdu', 'Scheherazade New', serif;
+            background-color: var(--bg-cream);
+            color: var(--text-dark);
             margin: 0;
-            padding: 15px;
+            padding: 12px;
             direction: rtl;
         }
 
         .container {
             max-width: 900px;
             margin: 0 auto;
-            background: #ffffff;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
         }
 
-        h1 {
-            color: #1b5e20;
+        /* Header Banner */
+        .header-banner {
+            background: linear-gradient(135deg, #0e3b2e 0%, #175241 100%);
+            color: var(--accent-gold);
             text-align: center;
-            font-size: 28px;
+            padding: 25px 15px;
+            border-radius: 16px;
+            border: 2px solid var(--accent-gold);
+            box-shadow: 0 10px 25px rgba(14, 59, 46, 0.15);
             margin-bottom: 20px;
         }
 
+        .header-banner h1 {
+            font-family: 'Scheherazade New', serif;
+            font-size: 34px;
+            margin: 0;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header-banner p {
+            color: #e0e0e0;
+            font-size: 14px;
+            margin: 8px 0 0 0;
+        }
+
+        /* Controls Card */
         .controls-card {
-            background: #e8f5e9;
-            padding: 18px;
-            border-radius: 10px;
+            background: var(--card-white);
+            border-radius: 14px;
+            padding: 20px;
             margin-bottom: 20px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            justify-content: center;
-            align-items: center;
-            border: 1px solid #c8e6c9;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            align-items: flex-end;
         }
 
         .control-group {
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 6px;
         }
 
         label {
+            font-size: 13px;
+            color: var(--primary-emerald);
+            font-weight: bold;
+        }
+
+        select, input {
+            padding: 10px;
             font-size: 14px;
-            color: #2e7d32;
-            font-weight: bold;
-        }
-
-        select, input, button {
-            padding: 8px 12px;
-            font-size: 15px;
-            border-radius: 6px;
-            border: 1px solid #a5d6a7;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            background-color: #f8fafc;
             font-family: inherit;
+            outline: none;
+            transition: border 0.2s;
         }
 
-        button {
-            background-color: #2e7d32;
-            color: white;
-            border: none;
-            cursor: pointer;
+        select:focus, input:focus {
+            border-color: var(--accent-gold);
+        }
+
+        .btn-load {
+            background: linear-gradient(135deg, #0e3b2e 0%, #175241 100%);
+            color: var(--accent-gold);
+            border: 1px solid var(--accent-gold);
+            padding: 11px;
+            font-size: 15px;
             font-weight: bold;
-            padding: 9px 20px;
-            transition: 0.2s;
-            margin-top: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(14, 59, 46, 0.2);
         }
 
-        button:hover {
-            background-color: #1b5e20;
+        .btn-load:hover {
+            background: var(--accent-gold);
+            color: var(--primary-emerald);
         }
 
+        /* Sticky Player Bar */
         .player-bar {
             position: sticky;
             top: 10px;
-            background: #1b5e20;
-            color: white;
+            background: var(--primary-emerald);
+            border: 1px solid var(--accent-gold);
+            color: #ffffff;
             padding: 12px 20px;
-            border-radius: 8px;
+            border-radius: 12px;
             margin-bottom: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            z-index: 100;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .player-status {
+            font-size: 14px;
+            color: var(--light-gold);
+        }
+
+        .player-controls {
+            display: flex;
+            gap: 8px;
         }
 
         .player-controls button {
-            background: #ffffff;
-            color: #1b5e20;
-            margin: 0 5px;
-            padding: 5px 12px;
+            background: var(--accent-gold);
+            color: var(--primary-emerald);
+            border: none;
+            padding: 6px 16px;
+            font-size: 13px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.2s;
         }
 
+        .player-controls button:hover {
+            background: #ffffff;
+        }
+
+        /* Ayah Cards */
         .ayah-card {
-            border: 1px solid #e0e0e0;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 15px;
-            background: #fafafa;
+            background: var(--card-white);
+            border-radius: 12px;
+            padding: 22px;
+            margin-bottom: 16px;
+            border: 1px solid #eaeaea;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
             transition: all 0.3s ease;
+            position: relative;
         }
 
         .ayah-card.playing {
-            border: 2px solid #2e7d32;
-            background-color: #f1f8e9;
-            box-shadow: 0 0 10px rgba(46, 125, 50, 0.2);
+            border: 2px solid var(--accent-gold);
+            background-color: #fcf9f2;
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.2);
         }
 
         .meta-tag {
             font-size: 12px;
-            color: #2e7d32;
-            background: #e8f5e9;
-            padding: 3px 8px;
-            border-radius: 4px;
+            color: var(--primary-emerald);
+            background: var(--light-gold);
+            padding: 3px 10px;
+            border-radius: 20px;
             display: inline-block;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            font-weight: bold;
         }
 
         .arabic {
-            font-family: 'Amiri', 'Traditional Arabic', serif;
-            font-size: 30px;
-            color: #1b5e20;
+            font-family: 'Scheherazade New', serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary-emerald);
             line-height: 2.2;
             text-align: right;
-            margin-bottom: 12px;
+            margin-bottom: 14px;
         }
 
         .urdu {
-            font-family: 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif;
-            font-size: 20px;
-            color: #333333;
+            font-family: 'Noto Nastaliq Urdu', serif;
+            font-size: 18px;
+            color: #334155;
             line-height: 2.2;
             text-align: right;
-            border-top: 1px dashed #ddd;
-            padding-top: 10px;
+            border-top: 1px dashed #e2e8f0;
+            padding-top: 12px;
         }
 
         .play-btn-small {
-            margin-top: 10px;
-            font-size: 13px;
-            padding: 4px 10px;
-            background: #4caf50;
+            margin-top: 12px;
+            font-size: 12px;
+            padding: 5px 12px;
+            background: transparent;
+            color: var(--primary-emerald);
+            border: 1px solid var(--primary-emerald);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .play-btn-small:hover {
+            background: var(--primary-emerald);
+            color: #ffffff;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>القرآن الكريم (عبد الباسط + شمشاد علی خان)</h1>
+    <!-- Header -->
+    <div class="header-banner">
+        <h1>القرآن الكريم</h1>
+        <p>تلاوت: قاری عبد الباسط عبد الصمد • اردو ترجمہ صوتی: شمشاد علی خان</p>
+    </div>
 
-    <!-- Controls Panel -->
+    <!-- Controls -->
     <div class="controls-card">
         <div class="control-group">
             <label>انتخاب کا طریقہ:</label>
@@ -177,14 +250,14 @@
             </select>
         </div>
 
-        <div class="control-group" id="selectionBox">
+        <div class="control-group">
             <label id="selectionLabel">سورۃ منتخب کریں:</label>
             <select id="itemSelect"></select>
         </div>
 
         <div class="control-group" id="ayahBox" style="display: none;">
             <label>آیت نمبر:</label>
-            <input type="number" id="ayahInput" value="1" min="1" style="width: 80px;">
+            <input type="number" id="ayahInput" value="1" min="1">
         </div>
 
         <div class="control-group">
@@ -196,29 +269,42 @@
             </select>
         </div>
 
-        <button onclick="loadContent()">لوڈ کریں</button>
+        <button class="btn-load" onclick="loadContent()">لوڈ کریں</button>
     </div>
 
-    <!-- Main Player Bar -->
+    <!-- Sticky Audio Player -->
     <div class="player-bar">
-        <div id="playerStatus">حالت: تیار ہے</div>
+        <div class="player-status" id="playerStatus">حالت: تیار ہے</div>
         <div class="player-controls">
             <button onclick="playAll()">پلے کریں ▶</button>
             <button onclick="pauseAudio()">روکیں ⏸</button>
         </div>
     </div>
 
-    <!-- Ayah Content Container -->
+    <!-- Quran Content -->
     <div id="quranContainer">
-        <p style="text-align:center;">براہِ کرم اپنی پسند کے مطابق آپشن منتخب کر کے "لوڈ کریں" پر کلک کریں۔</p>
+        <p style="text-align:center; color: #64748b; margin-top: 30px;">براہِ کرم اپنی پسند کے مطابق آپشن منتخب کر کے "لوڈ کریں" پر کلک کریں۔</p>
     </div>
 </div>
 
-<!-- Hidden Audio Player -->
 <audio id="globalAudioPlayer"></audio>
 
 <script>
-    let surahData = [];
+    const SURAHS = [
+        "1. الفاتحة", "2. البقرة", "3. آل عمران", "4. النساء", "5. المائدة", "6. الأنعام", "7. الأعراف", "8. الأنفال", "9. التوبة", "10. يونس",
+        "11. هود", "12. يوسف", "13. الرعد", "14. إبراهيم", "15. الحجر", "16. النحل", "17. الإسراء", "18. الكهف", "19. مريم", "20. طه",
+        "21. الأنبياء", "22. الحج", "23. المؤمنون", "24. النور", "25. الفرقان", "26. الشعراء", "27. النمل", "28. القصص", "29. العنكبوت", "30. الروم",
+        "31. لقمان", "32. السجدة", "33. الأحزاب", "34. سبأ", "35. فاطر", "36. يس", "37. الصافات", "38. ص", "39. الزمر", "40. غافر",
+        "41. فصلت", "42. الشورى", "43. الزخرف", "44. الدخان", "45. الجاثية", "46. الأحقاف", "47. محمد", "48. الفتح", "49. الحجرات", "50. ق",
+        "51. الذاريات", "52. الطور", "53. النجم", "54. القمر", "55. الرحمن", "56. الواقعة", "57. الحديد", "58. المجادلة", "59. الحشر", "60. الممتحنة",
+        "61. الصف", "62. الجمعة", "63. المنافقون", "64. التغابن", "65. الطلاق", "66. التحريم", "67. الملك", "68. القلم", "69. الحاقة", "70. المعارج",
+        "71. نوح", "72. الجن", "73. المزمل", "74. المدثر", "75. القيامة", "76. الإنسان", "77. المرسلات", "78. النبأ", "79. النازعات", "80. عبس",
+        "81. التكوير", "82. الانفطار", "83. المطففين", "84. الانشقاق", "85. البروج", "86. الطارق", "87. الأعلى", "88. الغاشية", "89. الفجر", "90. البلد",
+        "91. الشمس", "92. الليل", "93. الضحى", "94. الشرح", "95. التين", "96. العلق", "97. القدر", "98. البينة", "99. الزلزلة", "100. العاديات",
+        "101. القارعة", "102. التكاثر", "103. العصر", "104. الهمزة", "105. الفيل", "106. قريش", "107. الماعون", "108. الكوثر", "109. الكافرون", "110. النصر",
+        "111. المسد", "112. الإخلاص", "113. الفلق", "114. الناس"
+    ];
+
     let currentPlaylist = [];
     let currentTrackIndex = 0;
     let isArabicTurn = true;
@@ -226,30 +312,18 @@
 
     const audioPlayer = document.getElementById('globalAudioPlayer');
 
-    // سورتوں اور پاروں کی لسٹ تیار کرنا
-    async function initOptions() {
-        try {
-            const res = await fetch('https://api.alquran.cloud/v1/surah');
-            const data = await res.json();
-            surahData = data.data;
-            populateSurahDropdown();
-        } catch(e) {
-            console.error("معلومات لوڈ نہ ہو سکیں", e);
-        }
-    }
-
-    function populateSurahDropdown() {
+    function populateSurahs() {
         const select = document.getElementById('itemSelect');
         select.innerHTML = '';
-        surahData.forEach(s => {
+        SURAHS.forEach((name, index) => {
             let opt = document.createElement('option');
-            opt.value = s.number;
-            opt.textContent = `${s.number}. ${s.name} (${s.englishName})`;
+            opt.value = index + 1;
+            opt.textContent = name;
             select.appendChild(opt);
         });
     }
 
-    function populateJuzDropdown() {
+    function populateJuzs() {
         const select = document.getElementById('itemSelect');
         select.innerHTML = '';
         for (let i = 1; i <= 30; i++) {
@@ -257,41 +331,38 @@
             opt.value = i;
             opt.textContent = `پارہ نمبر ${i}`;
             select.appendChild(opt);
-        });
+        }
     }
 
     function handleModeChange() {
         const mode = document.getElementById('modeSelect').value;
-        const selectionBox = document.getElementById('selectionBox');
-        const ayahBox = document.getElementById('ayahBox');
         const label = document.getElementById('selectionLabel');
+        const ayahBox = document.getElementById('ayahBox');
 
         if (mode === 'surah') {
-            selectionBox.style.display = 'flex';
-            ayahBox.style.display = 'none';
             label.textContent = 'سورۃ منتخب کریں:';
-            populateSurahDropdown();
-        } else if (mode === 'juz') {
-            selectionBox.style.display = 'flex';
             ayahBox.style.display = 'none';
+            populateSurahs();
+        } else if (mode === 'juz') {
             label.textContent = 'پارہ منتخب کریں:';
-            populateJuzDropdown();
+            ayahBox.style.display = 'none';
+            populateJuzs();
         } else if (mode === 'ayah') {
-            selectionBox.style.display = 'flex';
-            ayahBox.style.display = 'flex';
             label.textContent = 'سورۃ:';
-            populateSurahDropdown();
+            ayahBox.style.display = 'flex';
+            populateSurahs();
         }
     }
 
-    // API سے ڈیٹا لانا
     async function loadContent() {
         pauseAudio();
         const mode = document.getElementById('modeSelect').value;
         const selectedVal = document.getElementById('itemSelect').value;
         const container = document.getElementById('quranContainer');
 
-        container.innerHTML = '<p style="text-align:center;">ڈیٹا لوڈ ہو رہا ہے... براہِ کرم انتظار کریں۔</p>';
+        if (!selectedVal) return;
+
+        container.innerHTML = '<p style="text-align:center; color:#0e3b2e; font-weight:bold;">لوڈ ہو رہا ہے... براہِ کرم انتظار کریں۔</p>';
 
         let url = '';
         if (mode === 'surah') {
@@ -349,14 +420,16 @@
             currentTrackIndex = 0;
 
         } catch (e) {
-            container.innerHTML = '<p style="color:red; text-align:center;">ڈیٹا حاصل کرنے میں ناکامی ہوئی۔ براہِ کرم اپنا انٹرنیٹ کنیکشن چیک کریں۔</p>';
+            container.innerHTML = '<p style="color:red; text-align:center;">ڈیٹا لوڈ کرنے میں مسئلہ آیا ہے۔ انٹرنیٹ چیک کر کے دوبارہ کوشش کریں۔</p>';
             console.error(e);
         }
     }
 
-    // آڈیو پلے بیک ہینڈلر (تسلّسل اور خودکار اگلی آیت)
     function playAll() {
-        if (currentPlaylist.length === 0) return;
+        if (currentPlaylist.length === 0) {
+            alert("پہلے 'لوڈ کریں' کا بٹن دبا کر سورت یا پارہ لوڈ کریں۔");
+            return;
+        }
         isPlayingMode = true;
         isArabicTurn = true;
         playTrack();
@@ -371,7 +444,7 @@
 
     function playTrack() {
         if (currentTrackIndex >= currentPlaylist.length) {
-            document.getElementById('playerStatus').textContent = "اختتام - تمام آیات مکمل ہو گئیں";
+            document.getElementById('playerStatus').textContent = "مکمل ہو گیا";
             clearHighlights();
             isPlayingMode = false;
             return;
@@ -398,10 +471,9 @@
             audioPlayer.src = currentItem.urduAudio;
         }
 
-        audioPlayer.play();
+        audioPlayer.play().catch(err => console.error(err));
     }
 
-    // آڈیو ختم ہونے پر اگلا سٹیپ
     audioPlayer.onended = function() {
         if (!isPlayingMode) return;
 
@@ -409,10 +481,10 @@
 
         if (audioOpt === 'both') {
             if (isArabicTurn) {
-                isArabicTurn = false; // اب اردو ترجمہ چلے گا
+                isArabicTurn = false;
                 playTrack();
             } else {
-                isArabicTurn = true; // اگلی آیت کے لیے عربی پر سوئچ کریں
+                isArabicTurn = true;
                 currentTrackIndex++;
                 playTrack();
             }
@@ -425,7 +497,7 @@
     function pauseAudio() {
         audioPlayer.pause();
         isPlayingMode = false;
-        document.getElementById('playerStatus').textContent = "آڈیو روکی گئی ہے";
+        document.getElementById('playerStatus').textContent = "آڈیو روک دی گئی ہے";
     }
 
     function highlightCard(index) {
@@ -441,8 +513,9 @@
         document.querySelectorAll('.ayah-card').forEach(c => c.classList.remove('playing'));
     }
 
-    // صفحہ لوڈ ہوتے ہی لسٹ بنانا
-    initOptions();
+    window.onload = function() {
+        populateSurahs();
+    };
 </script>
 
 </body>
