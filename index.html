@@ -1,93 +1,298 @@
 from pathlib import Path
 
-html = r'''<!doctype html>
+html = r"""<!doctype html>
 <html lang="ur" dir="rtl">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Quran Majeed | Farooq Ahmed Chitrali</title>
-<link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet">
+
+<!-- Fonts Import: Aleo, Arabic Uthmanic, Urdu Jameel Noori Kasheeda -->
+<link href="https://fonts.googleapis.com/css2?family=Aleo:wght@400;700&display=swap" rel="stylesheet">
 <style>
+@font-face {
+    font-family: 'KFGQPC UTHMANIC taha naskh regular';
+    src: url('https://cdn.jsdelivr.net/gh/QuranCentral/quran-fonts/fonts/KFGQPC%20Uthmanic%20Script%20HAFS%20Regular.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'Jameel Noori Nastaliq Kasheeda';
+    src: url('https://cdn.jsdelivr.net/gh/UrduFonts/Jameel-Noori-Nastaleeq@1.0/Jameel%20Noori%20Nastaleeq%20Kasheeda.ttf') format('truetype');
+}
+
 :root{--p:#087f6b;--d:#064c42;--g:#c99b3b;--bg:#f3f8f6;--card:#fff;--txt:#18312b;--muted:#6b7d77;--line:#dbe9e4}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font-family:"Scheherazade New",serif}
-header{background:linear-gradient(135deg,var(--d),var(--p));color:#fff;text-align:center;padding:24px 12px}h1{margin:0;font-size:2rem}header p{margin:4px 0;font-family:Arial}
-main{max-width:1100px;margin:auto;padding:18px}.hero,.surah,.ayah{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 8px 24px #064c4210}
-.hero{text-align:center;padding:22px}.hero h2{margin:0;color:var(--p);font-size:2.2rem}.hero p{margin:4px;color:var(--muted)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:"Jameel Noori Nastaliq Kasheeda", serif}
+header{background:linear-gradient(135deg,var(--d),var(--p));color:#fff;text-align:center;padding:24px 12px}
+h1{margin:0;font-size:2rem}
+header p{margin:4px 0;font-family:'Aleo', serif}
+
+main{max-width:1100px;margin:auto;padding:18px}
+.hero,.surah,.ayah{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 8px 24px #064c4210}
+.hero{text-align:center;padding:22px}.hero h2{margin:0;color:var(--p);font-size:2.2rem;font-family:'KFGQPC UTHMANIC taha naskh regular',serif}.hero p{margin:4px;color:var(--muted)}
+
 .toolbar,.categories{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:16px 0}
 input,select,button{font:inherit;border:1px solid var(--line);border-radius:12px;padding:10px 13px}
-input,select{background:#fff;color:var(--txt)}button{background:var(--p);color:#fff;border:0;cursor:pointer}button:hover{background:var(--d)}
-.search{width:min(100%,460px)}.categories{display:grid;grid-template-columns:repeat(3,1fr)}
-.cat{padding:13px;text-align:center;border:1px solid var(--line);border-radius:15px;background:#fff;cursor:pointer}.cat.active{background:var(--p);color:#fff}
-.cat b{display:block;font-size:1.15rem}.cat small{font-family:Arial}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}.surah{padding:16px;cursor:pointer}.surah:hover{border-color:var(--p);transform:translateY(-2px)}.num{color:var(--g);font:bold 18px Arial}.surah h3{margin:4px 0;color:var(--p);font-size:1.5rem}.surah p{margin:0;color:var(--muted);font-family:Arial;font-size:13px}
-.reader{display:none}.reader.show{display:block}.reader-head{background:linear-gradient(135deg,var(--d),var(--p));color:#fff;border-radius:18px;padding:22px;text-align:center}.reader-head h2{margin:0;font-size:2rem}.reader-head p{margin:4px;font-family:Arial}
-.bismillah{text-align:center;color:var(--g);font-size:2rem;margin:18px}.ayah{padding:18px;margin:12px 0}.ayahno{display:inline-flex;width:30px;height:30px;border-radius:50%;align-items:center;justify-content:center;background:var(--p);color:#fff;font:12px Arial}.ruku{background:#fff3d4;color:#80601c;border-radius:20px;padding:4px 9px;margin-right:7px;font-size:13px}.arabic{font-size:2rem;line-height:2.15;margin-top:14px}.urdu{font-size:1.35rem;font-weight:700;line-height:2;color:#31584e;border-top:1px solid var(--line);margin-top:12px;padding-top:10px}.ayah audio{width:100%;margin-top:12px}
-.player{position:sticky;bottom:0;background:#fffffff5;border-top:1px solid var(--line);padding:10px;z-index:5}.player-in{max-width:1100px;margin:auto;display:flex;align-items:center;gap:10px}.play{width:48px;height:48px;border-radius:50%;font-family:Arial}.pinfo{flex:1;min-width:0}.pinfo b{display:block;color:var(--p)}.pinfo small{color:var(--muted);font-family:Arial}.progress{width:100%;accent-color:var(--p)}
-footer{text-align:center;padding:25px 10px 90px;color:var(--muted);font:12px Arial}.hide{display:none!important}
+input,select{background:#fff;color:var(--txt)}
+button{background:var(--p);color:#fff;border:0;cursor:pointer}
+button:hover{background:var(--d)}
+
+.search{width:min(100%,460px)}
+.categories{display:grid;grid-template-columns:repeat(3,1fr)}
+.cat{padding:13px;text-align:center;border:1px solid var(--line);border-radius:15px;background:#fff;cursor:pointer}
+.cat.active{background:var(--p);color:#fff}
+.cat b{display:block;font-size:1.15rem}
+.cat small{font-family:'Aleo', serif}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+.surah{padding:16px;cursor:pointer}
+.surah:hover{border-color:var(--p);transform:translateY(-2px)}
+.num{color:var(--g);font:bold 18px 'Aleo', serif}
+.surah h3{margin:4px 0;color:var(--p);font-size:1.5rem}
+.surah p{margin:0;color:var(--muted);font-family:'Aleo', serif;font-size:13px}
+
+.reader{display:none}
+.reader.show{display:block}
+.reader-head{background:linear-gradient(135deg,var(--d),var(--p));color:#fff;border-radius:18px;padding:22px;text-align:center}
+.reader-head h2{margin:0;font-size:2rem;font-family:'KFGQPC UTHMANIC taha naskh regular', serif}
+.reader-head p{margin:4px;font-family:'Aleo', serif}
+
+.bismillah{text-align:center;color:var(--g);font-size:2rem;margin:18px;font-family:'KFGQPC UTHMANIC taha naskh regular', serif}
+.ayah{padding:18px;margin:12px 0}
+.ayahno{display:inline-flex;width:30px;height:30px;border-radius:50%;align-items:center;justify-content:center;background:var(--p);color:#fff;font:12px 'Aleo', serif}
+.ruku{background:#fff3d4;color:#80601c;border-radius:20px;padding:4px 9px;margin-right:7px;font-size:13px}
+
+.arabic{font-family:'KFGQPC UTHMANIC taha naskh regular', serif;font-size:2rem;line-height:2.3;margin-top:14px;direction:rtl}
+.urdu{font-family:'Jameel Noori Nastaliq Kasheeda', serif;font-size:1.4rem;line-height:2.2;color:#31584e;border-top:1px solid var(--line);margin-top:12px;padding-top:10px}
+.english{font-family:'Aleo', serif;font-size:1.1rem;line-height:1.6;color:#2c3e50;border-top:1px dashed var(--line);margin-top:8px;padding-top:8px;direction:ltr;text-align:left}
+
+.ayah audio{width:100%;margin-top:12px}
+.player{position:sticky;bottom:0;background:#fffffff5;border-top:1px solid var(--line);padding:10px;z-index:5}
+.player-in{max-width:1100px;margin:auto;display:flex;align-items:center;gap:10px}
+.play{width:48px;height:48px;border-radius:50%;font-family:'Aleo', serif}
+.pinfo{flex:1;min-width:0}
+.pinfo b{display:block;color:var(--p)}
+.pinfo small{color:var(--muted);font-family:'Aleo', serif}
+.progress{width:100%;accent-color:var(--p)}
+
+footer{text-align:center;padding:25px 10px 90px;color:var(--muted);font:12px 'Aleo', serif}
+.hide{display:none!important}
+
 @media(max-width:600px){.categories{grid-template-columns:1fr}.arabic{font-size:1.7rem}.urdu{font-size:1.2rem}h1{font-size:1.5rem}}
 </style>
 </head>
 <body>
-<header><h1>قرآن مجید</h1><p>Quran Majeed • Urdu Translation</p></header>
+<header><h1>قرآن مجید</h1><p>Quran Majeed • Translation & Recitation</p></header>
 <main>
 <section class="hero"><h2>ٱلْقُرْآنُ ٱلْكَرِيمُ</h2><p>پڑھیے، سنیے اور قرآن مجید سے جڑیے</p></section>
-<div class="toolbar"><input id="search" class="search" placeholder="سورت کا نام یا نمبر تلاش کریں"></div>
-<div class="categories">
-<div class="cat active" data-mode="both"><b>قرآن + اردو ترجمہ</b><small>عربی اور جالندھری ترجمہ</small></div>
-<div class="cat" data-mode="arabic"><b>بغیر ترجمہ</b><small>صرف عربی متن</small></div>
-<div class="cat" data-mode="urdu"><b>اردو ترجمہ</b><small>صرف اردو ترجمہ</small></div>
-</div>
+
 <div class="toolbar">
+<input id="search" class="search" placeholder="سورت کا نام یا نمبر تلاش کریں">
+</div>
+
+<div class="categories">
+<div class="cat active" data-mode="both"><b>قرآن + ترجمہ</b><small>عربی اور منتخب ترجمہ</small></div>
+<div class="cat" data-mode="arabic"><b>بغیر ترجمہ</b><small>صرف عربی متن</small></div>
+<div class="cat" data-mode="translation"><b>صرف ترجمہ</b><small>اردو / انگلش ترجمہ</small></div>
+</div>
+
+<div class="toolbar">
+<!-- قاری منتخب کرنے کا اختیار -->
+<select id="selectReciter" title="قاری منتخب کریں">
+  <option value="ar.abdulbasitmurattal">قاری عبد الباسط عبد الصمد</option>
+  <option value="ar.abdurrahmaanasSudais">الشیخ عبد الرحمن السدیس</option>
+  <option value="ar.khalidaljaleel">الشیخ خالد الجلیل</option>
+</select>
+
+<!-- ترجمہ زبان اور مترجم منتخب کرنے کا اختیار -->
+<select id="selectTransLang" title="ترجمہ منتخب کریں">
+  <option value="ur">اردو (شمشاد علی خان / جالندھری)</option>
+  <option value="en">English (Maulana Wahiduddin Khan)</option>
+  <option value="both">اردو + English دونوں</option>
+</select>
+
 <select id="voiceMode"><option value="ayah">آیت وائس</option><option value="para">پارہ وائس</option><option value="surah">سورہ وائس</option></select>
 <select id="selectSurah"><option value="">سورت منتخب کریں</option></select>
 <button id="back">سورتوں کی فہرست</button>
 </div>
+
 <section id="list" class="grid"></section>
+
 <section id="reader" class="reader">
 <div class="reader-head"><h2 id="title"></h2><p id="subtitle"></p></div>
 <div id="bismillah" class="bismillah">بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ</div>
 <div id="ayahs"></div>
 </section>
 </main>
+
 <div class="player"><div class="player-in">
-<button id="play" class="play">▶</button><div class="pinfo"><b id="ptitle">کوئی آڈیو منتخب نہیں</b><small id="pstatus">سورت منتخب کریں</small><input id="progress" class="progress" type="range" min="0" max="100" value="0"></div>
+<button id="play" class="play">▶</button>
+<div class="pinfo">
+  <b id="ptitle">کوئی آڈیو منتخب نہیں</b>
+  <small id="pstatus">سورت منتخب کریں</small>
+  <input id="progress" class="progress" type="range" min="0" max="100" value="0">
+</div>
 </div></div>
+
 <footer>Farooq Ahmed Chitrali</footer>
+
 <script>
 const API="https://api.alquran.cloud/v1";
-const AR_AUDIO="ar.abdulbasitmurattal";
-const state={surahs:[],surah:null,ayahs:[],mode:"both",voice:"ayah",index:0,audio:null};
+const state={
+  surahs:[],
+  surah:null,
+  ayahs:[],
+  mode:"both",
+  reciter:"ar.abdulbasitmurattal",
+  transLang:"ur",
+  voice:"ayah",
+  index:0
+};
+
 const $=id=>document.getElementById(id);
+
 async function get(url){let r=await fetch(url);if(!r.ok)throw Error("Network error");return r.json()}
+
 async function init(){
- try{state.surahs=(await get(API+"/surah")).data;renderList(state.surahs);state.surahs.forEach(s=>{let o=document.createElement("option");o.value=s.number;o.textContent=s.number+". "+s.name+" — "+s.englishName;$("selectSurah").append(o)})}
- catch(e){$("list").innerHTML="<p>ڈیٹا لوڈ نہیں ہو سکا۔ انٹرنیٹ چیک کریں۔</p>"}
+ try{
+   state.surahs=(await get(API+"/surah")).data;
+   renderList(state.surahs);
+   state.surahs.forEach(s=>{
+     let o=document.createElement("option");
+     o.value=s.number;
+     o.textContent=s.number+". "+s.name+" — "+s.englishName;
+     $("selectSurah").append(o);
+   });
+ } catch(e){
+   $("list").innerHTML="<p>ڈیٹا لوڈ نہیں ہو سکا۔ انٹرنیٹ چیک کریں۔</p>";
+ }
 }
-function renderList(arr){$("list").innerHTML="";arr.forEach(s=>{let d=document.createElement("div");d.className="surah";d.innerHTML=`<div class="num">${s.number}</div><h3>${s.name}</h3><p>${s.englishName} • ${s.numberOfAyahs} آیات</p>`;d.onclick=()=>openSurah(s.number);$("list").append(d)})}
+
+function renderList(arr){
+  $("list").innerHTML="";
+  arr.forEach(s=>{
+    let d=document.createElement("div");
+    d.className="surah";
+    d.innerHTML=`<div class="num">${s.number}</div><h3>${s.name}</h3><p>${s.englishName} • ${s.numberOfAyahs} آیات</p>`;
+    d.onclick=()=>openSurah(s.number);
+    $("list").append(d);
+  });
+}
+
 async function openSurah(n){
- let s=state.surahs.find(x=>x.number==n);if(!s)return;state.surah=s;
- let data=(await get(`${API}/surah/${n}/editions/quran-uthmani,ur.jalandhry`)).data;
- state.ayahs=data[0].ayahs.map((a,i)=>({ar:a.text,ur:data[1].ayahs[i].text,no:a.numberInSurah,global:a.number,juz:a.juz,ruku:a.ruku||"—"}));
- $("title").textContent=s.name;$("subtitle").textContent=s.englishName+" • "+s.numberOfAyahs+" آیات";
- $("bismillah").classList.toggle("hide",n==9);renderAyahs();$("list").classList.add("hide");$("reader").classList.add("show");scrollTo(0,0)
+ let s=state.surahs.find(x=>x.number==n);
+ if(!s)return;
+ state.surah=s;
+ 
+ // اردو (شمشاد علی خان / جالندھری) اور انگلش (مولانا وحید الدین خان) کے ڈیٹا ایڈیشنز
+ let data=(await get(`${API}/surah/${n}/editions/quran-uthmani,ur.jalandhry,en.wahiduddin`)).data;
+ 
+ state.ayahs=data[0].ayahs.map((a,i)=>({
+   ar:a.text,
+   ur:data[1].ayahs[i].text,
+   en:data[2].ayahs[i].text,
+   no:a.numberInSurah,
+   global:a.number,
+   juz:a.juz,
+   ruku:a.ruku||"—"
+ }));
+ 
+ $("title").textContent=s.name;
+ $("subtitle").textContent=s.englishName+" • "+s.numberOfAyahs+" آیات";
+ $("bismillah").classList.toggle("hide",n==9);
+ renderAyahs();
+ $("list").classList.add("hide");
+ $("reader").classList.add("show");
+ scrollTo(0,0);
 }
+
 function renderAyahs(){
- $("ayahs").innerHTML="";state.ayahs.forEach((a,i)=>{let d=document.createElement("article");d.className="ayah";
- d.innerHTML=`<span class="ayahno">${a.no}</span><span class="ruku">رکوع ${a.ruku}</span>${state.mode!="urdu"?`<div class="arabic">${a.ar}</div>`:""}${state.mode!="arabic"?`<div class="urdu">${a.ur}</div>`:""}<audio controls preload="none" src="https://cdn.islamic.network/quran/audio/128/${AR_AUDIO}/${a.global}.mp3"></audio>`;
- let au=d.querySelector("audio");au.onplay=()=>{document.querySelectorAll("audio").forEach(x=>{if(x!==au)x.pause()});state.index=i;$("ptitle").textContent=state.surah.name+" — آیت "+a.no;$("pstatus").textContent="رکوع "+a.ruku};au.onended=()=>{if(state.voice=="ayah"){let next=document.querySelectorAll(".ayah audio")[i+1];if(next)next.play()}};$("ayahs").append(d)})
+ $("ayahs").innerHTML="";
+ state.ayahs.forEach((a,i)=>{
+   let d=document.createElement("article");
+   d.className="ayah";
+   
+   let showArabic = state.mode !== "translation";
+   let showTrans = state.mode !== "arabic";
+   
+   let transHtml = "";
+   if(showTrans) {
+     if(state.transLang === "ur" || state.transLang === "both") {
+       transHtml += `<div class="urdu">${a.ur}</div>`;
+     }
+     if(state.transLang === "en" || state.transLang === "both") {
+       transHtml += `<div class="english">${a.en}</div>`;
+     }
+   }
+
+   d.innerHTML=`<span class="ayahno">${a.no}</span><span class="ruku">رکوع ${a.ruku}</span>
+   ${showArabic ? `<div class="arabic">${a.ar}</div>` : ""}
+   ${transHtml}
+   <audio controls preload="none" src="https://cdn.islamic.network/quran/audio/128/${state.reciter}/${a.global}.mp3"></audio>`;
+   
+   let au=d.querySelector("audio");
+   au.onplay=()=>{
+     document.querySelectorAll("audio").forEach(x=>{if(x!==au)x.pause()});
+     state.index=i;
+     $("ptitle").textContent=state.surah.name+" — آیت "+a.no;
+     $("pstatus").textContent="رکوع "+a.ruku;
+   };
+   au.onended=()=>{
+     if(state.voice=="ayah"){
+       let next=document.querySelectorAll(".ayah audio")[i+1];
+       if(next)next.play();
+     }
+   };
+   $("ayahs").append(d);
+ });
 }
-$("search").oninput=e=>{let q=e.target.value.toLowerCase();renderList(state.surahs.filter(s=>s.name.includes(q)||s.englishName.toLowerCase().includes(q)||String(s.number).includes(q)))};
-document.querySelectorAll(".cat").forEach(x=>x.onclick=()=>{document.querySelectorAll(".cat").forEach(y=>y.classList.remove("active"));x.classList.add("active");state.mode=x.dataset.mode;if(state.surah)renderAyahs()});
+
+$("search").oninput=e=>{
+  let q=e.target.value.toLowerCase();
+  renderList(state.surahs.filter(s=>s.name.includes(q)||s.englishName.toLowerCase().includes(q)||String(s.number).includes(q)));
+};
+
+document.querySelectorAll(".cat").forEach(x=>x.onclick=()=>{
+  document.querySelectorAll(".cat").forEach(y=>y.classList.remove("active"));
+  x.classList.add("active");
+  state.mode=x.dataset.mode;
+  if(state.surah)renderAyahs();
+});
+
+$("selectReciter").onchange=e=>{
+  state.reciter=e.target.value;
+  if(state.surah)renderAyahs();
+};
+
+$("selectTransLang").onchange=e=>{
+  state.transLang=e.target.value;
+  if(state.surah)renderAyahs();
+};
+
 $("voiceMode").onchange=e=>state.voice=e.target.value;
 $("selectSurah").onchange=e=>{if(e.target.value)openSurah(e.target.value)};
 $("back").onclick=()=>{$("reader").classList.remove("show");$("list").classList.remove("hide");scrollTo(0,0)};
-$("play").onclick=()=>{let a=document.querySelectorAll(".ayah audio")[state.index];if(!a)return;if(a.paused){a.play();$("play").textContent="Ⅱ"}else{a.pause();$("play").textContent="▶"}};
-$("progress").oninput=e=>{let a=document.querySelectorAll(".ayah audio")[state.index];if(a&&a.duration)a.currentTime=e.target.value/100*a.duration};
-setInterval(()=>{let a=document.querySelectorAll(".ayah audio")[state.index];if(a&&a.duration)$("progress").value=a.currentTime/a.duration*100},500);
+
+$("play").onclick=()=>{
+  let a=document.querySelectorAll(".ayah audio")[state.index];
+  if(!a)return;
+  if(a.paused){a.play();$("play").textContent="Ⅱ"}else{a.pause();$("play").textContent="▶"}
+};
+
+$("progress").oninput=e=>{
+  let a=document.querySelectorAll(".ayah audio")[state.index];
+  if(a&&a.duration)a.currentTime=e.target.value/100*a.duration;
+};
+
+setInterval(()=>{
+  let a=document.querySelectorAll(".ayah audio")[state.index];
+  if(a&&a.duration)$("progress").value=a.currentTime/a.duration*100;
+},500);
+
 init();
 </script>
 </body>
-</html>'''
-path=Path("/mnt/data/quran-majeed-farooq.html")
-path.write_text(html,encoding="utf-8")
+</html>"""
+
+path = Path("/mnt/data/quran-majeed-farooq.html")
+path.write_text(html, encoding="utf-8")
 print(f"Created: {path}")
