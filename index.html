@@ -3,142 +3,446 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>القرآن الكريم - اردو ترجمہ اور آڈیو</title>
+    <title>القرآن الكريم - اردو ترجمہ و آڈیو</title>
+    <!-- اردو اور عربی فونٹس کا انٹیگریشن -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
+
     <style>
+        @font-face {
+            font-family: 'Jameel Noori Nastaleeq';
+            src: url('https://cdn.jsdelivr.net/gh/zaheerk/jameel-noori-nastaleeq@master/Jameel%20Noori%20Nastaleeq.ttf') format('truetype');
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
+            font-family: 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif;
+            background-color: #f0f4f1;
             margin: 0;
-            padding: 20px;
+            padding: 15px;
             direction: rtl;
         }
+
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
             background: #ffffff;
-            padding: 25px;
+            padding: 20px;
             border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
         }
+
         h1 {
             color: #1b5e20;
+            text-align: center;
+            font-size: 28px;
             margin-bottom: 20px;
         }
-        .controls {
-            margin-bottom: 25px;
+
+        .controls-card {
+            background: #e8f5e9;
+            padding: 18px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #c8e6c9;
         }
-        select, button {
-            padding: 10px 15px;
-            font-size: 16px;
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        label {
+            font-size: 14px;
+            color: #2e7d32;
+            font-weight: bold;
+        }
+
+        select, input, button {
+            padding: 8px 12px;
+            font-size: 15px;
             border-radius: 6px;
-            border: 1px solid #ccc;
-            margin: 5px;
+            border: 1px solid #a5d6a7;
+            font-family: inherit;
         }
+
         button {
             background-color: #2e7d32;
             color: white;
             border: none;
             cursor: pointer;
-            transition: background 0.3s;
+            font-weight: bold;
+            padding: 9px 20px;
+            transition: 0.2s;
+            margin-top: 18px;
         }
+
         button:hover {
             background-color: #1b5e20;
         }
+
+        .player-bar {
+            position: sticky;
+            top: 10px;
+            background: #1b5e20;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .player-controls button {
+            background: #ffffff;
+            color: #1b5e20;
+            margin: 0 5px;
+            padding: 5px 12px;
+        }
+
         .ayah-card {
-            border-bottom: 1px solid #eee;
-            padding: 15px 0;
-            text-align: right;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            background: #fafafa;
+            transition: all 0.3s ease;
         }
-        .arabic {
-            font-size: 26px;
-            color: #2c3e50;
-            line-height: 1.8;
-            margin-bottom: 8px;
+
+        .ayah-card.playing {
+            border: 2px solid #2e7d32;
+            background-color: #f1f8e9;
+            box-shadow: 0 0 10px rgba(46, 125, 50, 0.2);
         }
-        .urdu {
-            font-size: 18px;
-            color: #555;
-            line-height: 1.6;
+
+        .meta-tag {
+            font-size: 12px;
+            color: #2e7d32;
+            background: #e8f5e9;
+            padding: 3px 8px;
+            border-radius: 4px;
+            display: inline-block;
             margin-bottom: 10px;
         }
-        audio {
-            width: 100%;
-            margin-top: 5px;
-            height: 35px;
+
+        .arabic {
+            font-family: 'Amiri', 'Traditional Arabic', serif;
+            font-size: 30px;
+            color: #1b5e20;
+            line-height: 2.2;
+            text-align: right;
+            margin-bottom: 12px;
+        }
+
+        .urdu {
+            font-family: 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif;
+            font-size: 20px;
+            color: #333333;
+            line-height: 2.2;
+            text-align: right;
+            border-top: 1px dashed #ddd;
+            padding-top: 10px;
+        }
+
+        .play-btn-small {
+            margin-top: 10px;
+            font-size: 13px;
+            padding: 4px 10px;
+            background: #4caf50;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>القرآن الكريم (اردو ترجمہ و آڈیو)</h1>
+    <h1>القرآن الكريم (عبد الباسط + شمشاد علی خان)</h1>
 
-    <div class="controls">
-        <label for="surahSelect">سورۃ منتخب کریں:</label>
-        <select id="surahSelect"></select>
-        <button onclick="loadSurah()">کھولیں</button>
+    <!-- Controls Panel -->
+    <div class="controls-card">
+        <div class="control-group">
+            <label>انتخاب کا طریقہ:</label>
+            <select id="modeSelect" onchange="handleModeChange()">
+                <option value="surah">سورۃ وائز</option>
+                <option value="juz">پارہ وائز</option>
+                <option value="ayah">آیت وائز</option>
+            </select>
+        </div>
+
+        <div class="control-group" id="selectionBox">
+            <label id="selectionLabel">سورۃ منتخب کریں:</label>
+            <select id="itemSelect"></select>
+        </div>
+
+        <div class="control-group" id="ayahBox" style="display: none;">
+            <label>آیت نمبر:</label>
+            <input type="number" id="ayahInput" value="1" min="1" style="width: 80px;">
+        </div>
+
+        <div class="control-group">
+            <label>آڈیو آپشن:</label>
+            <select id="audioOption">
+                <option value="both">تلاوت + اردو ترجمہ</option>
+                <option value="arabic">صرف عربی تلاوت</option>
+                <option value="urdu">صرف اردو ترجمہ</option>
+            </select>
+        </div>
+
+        <button onclick="loadContent()">لوڈ کریں</button>
     </div>
 
+    <!-- Main Player Bar -->
+    <div class="player-bar">
+        <div id="playerStatus">حالت: تیار ہے</div>
+        <div class="player-controls">
+            <button onclick="playAll()">پلے کریں ▶</button>
+            <button onclick="pauseAudio()">روکیں ⏸</button>
+        </div>
+    </div>
+
+    <!-- Ayah Content Container -->
     <div id="quranContainer">
-        <p>براہِ کرم سورۃ منتخب کر کے "کھولیں" کا بٹن دبائیں۔</p>
+        <p style="text-align:center;">براہِ کرم اپنی پسند کے مطابق آپشن منتخب کر کے "لوڈ کریں" پر کلک کریں۔</p>
     </div>
 </div>
 
+<!-- Hidden Audio Player -->
+<audio id="globalAudioPlayer"></audio>
+
 <script>
-    // سورتوں کی فہرست لوڈ کرنا
-    async function loadSurahList() {
-        const response = await fetch('https://api.alquran.cloud/v1/surah');
-        const data = await response.json();
-        const select = document.getElementById('surahSelect');
-        
-        data.data.forEach(surah => {
-            let option = document.createElement('option');
-            option.value = surah.number;
-            option.textContent = `${surah.number}. ${surah.name} (${surah.englishName})`;
-            select.appendChild(option);
+    let surahData = [];
+    let currentPlaylist = [];
+    let currentTrackIndex = 0;
+    let isArabicTurn = true;
+    let isPlayingMode = false;
+
+    const audioPlayer = document.getElementById('globalAudioPlayer');
+
+    // سورتوں اور پاروں کی لسٹ تیار کرنا
+    async function initOptions() {
+        try {
+            const res = await fetch('https://api.alquran.cloud/v1/surah');
+            const data = await res.json();
+            surahData = data.data;
+            populateSurahDropdown();
+        } catch(e) {
+            console.error("معلومات لوڈ نہ ہو سکیں", e);
+        }
+    }
+
+    function populateSurahDropdown() {
+        const select = document.getElementById('itemSelect');
+        select.innerHTML = '';
+        surahData.forEach(s => {
+            let opt = document.createElement('option');
+            opt.value = s.number;
+            opt.textContent = `${s.number}. ${s.name} (${s.englishName})`;
+            select.appendChild(opt);
         });
     }
 
-    // منتخب سورۃ کا عربی متن، اردو ترجمہ اور آڈیو لوڈ کرنا
-    async function loadSurah() {
-        const surahNumber = document.getElementById('surahSelect').value;
+    function populateJuzDropdown() {
+        const select = document.getElementById('itemSelect');
+        select.innerHTML = '';
+        for (let i = 1; i <= 30; i++) {
+            let opt = document.createElement('option');
+            opt.value = i;
+            opt.textContent = `پارہ نمبر ${i}`;
+            select.appendChild(opt);
+        });
+    }
+
+    function handleModeChange() {
+        const mode = document.getElementById('modeSelect').value;
+        const selectionBox = document.getElementById('selectionBox');
+        const ayahBox = document.getElementById('ayahBox');
+        const label = document.getElementById('selectionLabel');
+
+        if (mode === 'surah') {
+            selectionBox.style.display = 'flex';
+            ayahBox.style.display = 'none';
+            label.textContent = 'سورۃ منتخب کریں:';
+            populateSurahDropdown();
+        } else if (mode === 'juz') {
+            selectionBox.style.display = 'flex';
+            ayahBox.style.display = 'none';
+            label.textContent = 'پارہ منتخب کریں:';
+            populateJuzDropdown();
+        } else if (mode === 'ayah') {
+            selectionBox.style.display = 'flex';
+            ayahBox.style.display = 'flex';
+            label.textContent = 'سورۃ:';
+            populateSurahDropdown();
+        }
+    }
+
+    // API سے ڈیٹا لانا
+    async function loadContent() {
+        pauseAudio();
+        const mode = document.getElementById('modeSelect').value;
+        const selectedVal = document.getElementById('itemSelect').value;
         const container = document.getElementById('quranContainer');
-        container.innerHTML = '<p>لوڈ ہو رہا ہے...</p>';
+
+        container.innerHTML = '<p style="text-align:center;">ڈیٹا لوڈ ہو رہا ہے... براہِ کرم انتظار کریں۔</p>';
+
+        let url = '';
+        if (mode === 'surah') {
+            url = `https://api.alquran.cloud/v1/surah/${selectedVal}/editions/ar.abdulbasitmurattal,ur.jalandhry,ur.khan`;
+        } else if (mode === 'juz') {
+            url = `https://api.alquran.cloud/v1/juz/${selectedVal}/editions/ar.abdulbasitmurattal,ur.jalandhry,ur.khan`;
+        } else if (mode === 'ayah') {
+            const ayahNo = document.getElementById('ayahInput').value || 1;
+            url = `https://api.alquran.cloud/v1/ayah/${selectedVal}:${ayahNo}/editions/ar.abdulbasitmurattal,ur.jalandhry,ur.khan`;
+        }
 
         try {
-            // عربی، اردو ترجمہ (جالندھری) اور آڈیو (مشاری العفاسی) ایک ساتھ حاصل کریں
-            const response = await fetch(`https://api.alquran.cloud/v1/surah/${surahNumber}/editions/quran-uthmani,ur.jalandhry,ar.alafasy`);
-            const data = await response.json();
+            const res = await fetch(url);
+            const data = await res.json();
 
-            const arabicAyahs = data.data[0].ayahs;
-            const urduAyahs = data.data[1].ayahs;
-            const audioAyahs = data.data[2].ayahs;
+            let arAyahs = [], urTextAyahs = [], urAudioAyahs = [];
 
+            if (mode === 'ayah') {
+                arAyahs = [data.data[0]];
+                urTextAyahs = [data.data[1]];
+                urAudioAyahs = [data.data[2]];
+            } else {
+                arAyahs = data.data[0].ayahs;
+                urTextAyahs = data.data[1].ayahs;
+                urAudioAyahs = data.data[2].ayahs;
+            }
+
+            currentPlaylist = [];
             let html = '';
 
-            for (let i = 0; i < arabicAyahs.length; i++) {
+            for (let i = 0; i < arAyahs.length; i++) {
+                const item = {
+                    index: i,
+                    surahName: arAyahs[i].surah ? arAyahs[i].surah.name : '',
+                    ayahNo: arAyahs[i].numberInSurah,
+                    arabicText: arAyahs[i].text,
+                    urduText: urTextAyahs[i].text,
+                    arabicAudio: arAyahs[i].audio,
+                    urduAudio: urAudioAyahs[i].audio
+                };
+                currentPlaylist.push(item);
+
                 html += `
-                    <div class="ayah-card">
-                        <div class="arabic">${arabicAyahs[i].text} ﴿${arabicAyahs[i].numberInSurah}﴾</div>
-                        <div class="urdu">${urduAyahs[i].text}</div>
-                        <audio controls preload="none">
-                            <source src="${audioAyahs[i].audio}" type="audio/mpeg">
-                            آپ کا براؤزر آڈیو پلیئر کو سپورٹ نہیں کرتا۔
-                        </audio>
+                    <div class="ayah-card" id="card-${i}">
+                        <span class="meta-tag">آیت: ${item.ayahNo} ${item.surahName ? '| سورۃ ' + item.surahName : ''}</span>
+                        <div class="arabic">${item.arabicText} ﴿${item.ayahNo}﴾</div>
+                        <div class="urdu">${item.urduText}</div>
+                        <button class="play-btn-small" onclick="playSingleAyah(${i})">یہ آیت سنیں ▶</button>
                     </div>
                 `;
             }
 
             container.innerHTML = html;
-        } catch (error) {
-            container.innerHTML = '<p>لوڈ کرنے میں مسئلہ آیا ہے۔ دوبارہ کوشش کریں۔</p>';
-            console.error(error);
+            document.getElementById('playerStatus').textContent = `کُل آیات: ${currentPlaylist.length} | تیار ہے`;
+            currentTrackIndex = 0;
+
+        } catch (e) {
+            container.innerHTML = '<p style="color:red; text-align:center;">ڈیٹا حاصل کرنے میں ناکامی ہوئی۔ براہِ کرم اپنا انٹرنیٹ کنیکشن چیک کریں۔</p>';
+            console.error(e);
         }
     }
 
-    // پیج لوڈ ہوتے ہی سورتوں کی لسٹ حاصل کریں
-    loadSurahList();
+    // آڈیو پلے بیک ہینڈلر (تسلّسل اور خودکار اگلی آیت)
+    function playAll() {
+        if (currentPlaylist.length === 0) return;
+        isPlayingMode = true;
+        isArabicTurn = true;
+        playTrack();
+    }
+
+    function playSingleAyah(index) {
+        currentTrackIndex = index;
+        isPlayingMode = true;
+        isArabicTurn = true;
+        playTrack();
+    }
+
+    function playTrack() {
+        if (currentTrackIndex >= currentPlaylist.length) {
+            document.getElementById('playerStatus').textContent = "اختتام - تمام آیات مکمل ہو گئیں";
+            clearHighlights();
+            isPlayingMode = false;
+            return;
+        }
+
+        const audioOpt = document.getElementById('audioOption').value;
+        const currentItem = currentPlaylist[currentTrackIndex];
+
+        highlightCard(currentTrackIndex);
+
+        if (audioOpt === 'both') {
+            if (isArabicTurn) {
+                document.getElementById('playerStatus').textContent = `پلے ہو رہا ہے: آیت ${currentItem.ayahNo} (عربی تلاوت)`;
+                audioPlayer.src = currentItem.arabicAudio;
+            } else {
+                document.getElementById('playerStatus').textContent = `پلے ہو رہا ہے: آیت ${currentItem.ayahNo} (اردو ترجمہ)`;
+                audioPlayer.src = currentItem.urduAudio;
+            }
+        } else if (audioOpt === 'arabic') {
+            document.getElementById('playerStatus').textContent = `پلے ہو رہا ہے: آیت ${currentItem.ayahNo} (عربی تلاوت)`;
+            audioPlayer.src = currentItem.arabicAudio;
+        } else if (audioOpt === 'urdu') {
+            document.getElementById('playerStatus').textContent = `پلے ہو رہا ہے: آیت ${currentItem.ayahNo} (اردو ترجمہ)`;
+            audioPlayer.src = currentItem.urduAudio;
+        }
+
+        audioPlayer.play();
+    }
+
+    // آڈیو ختم ہونے پر اگلا سٹیپ
+    audioPlayer.onended = function() {
+        if (!isPlayingMode) return;
+
+        const audioOpt = document.getElementById('audioOption').value;
+
+        if (audioOpt === 'both') {
+            if (isArabicTurn) {
+                isArabicTurn = false; // اب اردو ترجمہ چلے گا
+                playTrack();
+            } else {
+                isArabicTurn = true; // اگلی آیت کے لیے عربی پر سوئچ کریں
+                currentTrackIndex++;
+                playTrack();
+            }
+        } else {
+            currentTrackIndex++;
+            playTrack();
+        }
+    };
+
+    function pauseAudio() {
+        audioPlayer.pause();
+        isPlayingMode = false;
+        document.getElementById('playerStatus').textContent = "آڈیو روکی گئی ہے";
+    }
+
+    function highlightCard(index) {
+        clearHighlights();
+        const card = document.getElementById(`card-${index}`);
+        if (card) {
+            card.classList.add('playing');
+            card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
+
+    function clearHighlights() {
+        document.querySelectorAll('.ayah-card').forEach(c => c.classList.remove('playing'));
+    }
+
+    // صفحہ لوڈ ہوتے ہی لسٹ بنانا
+    initOptions();
 </script>
 
 </body>
