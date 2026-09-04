@@ -1,24 +1,12 @@
 <!DOCTYPE html>
 <html lang="ur">
 <head>
- <style>
- <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="google-site-verification" content="ly5HyX_ZnbZ-4T6HvsPRUWhi_TE07kNJyTjY-Vbf7NE" />
-    <!-- یہ 3 لائنیں گوگل سرچ کے لیے ہیں -->
-    <title>القرآن الکریم - تلاوت و اردو ترجمہ | Quran2586</title>
-    <meta name="description" content="آن لائن القرآن الکریم سنیں، پارہ وائز تلاوت اور اردو ترجمہ کے ساتھ۔">
-    <meta name="robots" content="index, follow">
-
-   
-  <!-- آپ کا باقی پرانا CSS اور Styling کا کوڈ ویسے ہی رہے گا -->
- </head>
-
-    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>القرآن الكريم - المكتبة الرقمية</title>
+    
+    <!-- Google Search Console وریفیکیشن ٹیگ (اگر ہو تو یہاں لگائیں) -->
+
     <!-- Scheherazade New (Bold) & Noto Nastaliq Urdu Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -40,6 +28,7 @@
             color: var(--text-dark);
             margin: 0;
             padding: 12px;
+            padding-bottom: 90px; /* نچلی پلے بار کی وجہ سے آخری آیت چھپنے سے بچانے کا پیڈنگ */
             direction: rtl;
         }
 
@@ -134,21 +123,26 @@
             color: var(--primary-emerald);
         }
 
-        /* Sticky Player Bar */
+        /* Fixed Bottom Audio Player Bar */
         .player-bar {
-            position: sticky;
-            top: 10px;
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 900px;
             background: var(--primary-emerald);
             border: 1px solid var(--accent-gold);
+            border-bottom: none;
             color: #ffffff;
             padding: 12px 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
+            border-radius: 16px 16px 0 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            z-index: 1000;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+            z-index: 9999;
+            box-shadow: 0 -6px 25px rgba(0, 0, 0, 0.25);
+            box-sizing: border-box;
         }
 
         .player-status {
@@ -287,7 +281,7 @@
         <button class="btn-load" onclick="loadContent()">لوڈ کریں</button>
     </div>
 
-    <!-- Sticky Audio Player -->
+    <!-- Fixed Bottom Audio Player Bar -->
     <div class="player-bar">
         <div class="player-status" id="playerStatus">حالت: تیار ہے</div>
         <div class="player-controls">
