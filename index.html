@@ -1,199 +1,1134 @@
 <!DOCTYPE html>
 <html lang="ur" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>القرآن الکریم</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        body {
-            background-color: #f4f6f8;
-            color: #333;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-            padding: 15px;
-        }
+<meta name="google" content="notranslate">
+<title>Quran Majeed — Urdu Translation</title>
 
-        .container {
-            width: 100%;
-            max-width: 480px;
-            background: #ffffff;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            overflow: hidden;
-            border: 1px solid #e0e0e0;
-        }
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-        .header {
-            background: #107c41;
-            color: white;
-            text-align: center;
-            padding: 18px 15px;
-        }
+<link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@400;700&family=Aleo:wght@400;700&display=swap" rel="stylesheet">
 
-        .header h1 {
-            font-size: 20px;
-            font-weight: 600;
-        }
+<style>
 
-        .controls {
-            padding: 15px;
-            background: #fafafa;
-            border-bottom: 1px solid #eee;
-        }
+:root{
+    --bg:#f5f7f3;
+    --card:#ffffff;
+    --primary:#126b52;
+    --secondary:#d9b44a;
+    --text:#202820;
+    --muted:#68736b;
+    --border:#dfe7df;
+    --shadow:0 12px 35px rgba(0,0,0,.08);
+}
 
-        .select-box {
-            width: 100%;
-            padding: 12px 15px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            background-color: #fff;
-            outline: none;
-            cursor: pointer;
-            color: #333;
-        }
+*{
+    box-sizing:border-box;
+}
 
-        .select-box:focus {
-            border-color: #107c41;
-        }
+body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:"Aleo",serif;
+    transition:.3s;
+}
 
-        .list-container {
-            max-height: 400px;
-            overflow-y: auto;
-            padding: 10px 15px;
-        }
+body.mode-arabic{
+    --bg:#f4f7ff;
+    --card:#ffffff;
+    --primary:#315c9b;
+    --secondary:#caa84e;
+}
 
-        .list-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 10px;
-            border-bottom: 1px solid #f0f0f0;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
+body.mode-urdu{
+    --bg:#fff8f0;
+    --card:#ffffff;
+    --primary:#9a5b21;
+    --secondary:#d4a33c;
+}
 
-        .list-item:hover {
-            background-color: #f5f5f5;
-        }
+body.mode-both{
+    --bg:#f1f8f4;
+    --card:#ffffff;
+    --primary:#126b52;
+    --secondary:#d4ad46;
+}
 
-        .list-item:last-child {
-            border-bottom: none;
-        }
+header{
+    position:sticky;
+    top:0;
+    z-index:50;
+    background:rgba(255,255,255,.94);
+    backdrop-filter:blur(15px);
+    border-bottom:1px solid var(--border);
+}
 
-        .item-title {
-            font-size: 16px;
-            font-weight: 500;
-        }
+.header-inner{
+    max-width:1200px;
+    margin:auto;
+    padding:16px 20px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+}
 
-        .radio-btn {
-            width: 18px;
-            height: 18px;
-            accent-color: #107c41;
-            cursor: pointer;
-        }
+.brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
 
-        .content-area {
-            padding: 20px 15px;
-            text-align: center;
-            font-size: 18px;
-            line-height: 1.8;
-            color: #222;
-        }
-    </style>
+.logo{
+    width:48px;
+    height:48px;
+    border-radius:15px;
+    background:linear-gradient(135deg,var(--primary),#0b4939);
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:"Scheherazade New",serif;
+    font-size:28px;
+    box-shadow:var(--shadow);
+}
+
+.brand h1{
+    margin:0;
+    font-size:20px;
+}
+
+.brand small{
+    color:var(--muted);
+}
+
+.container{
+    width:min(1200px,94%);
+    margin:25px auto;
+}
+
+.hero{
+    padding:40px 25px;
+    border-radius:28px;
+    color:white;
+    background:
+      radial-gradient(circle at 10% 20%,rgba(255,255,255,.15),transparent 30%),
+      radial-gradient(circle at 90% 80%,rgba(255,255,255,.12),transparent 30%),
+      linear-gradient(135deg,var(--primary),#082f25);
+    box-shadow:var(--shadow);
+    text-align:center;
+    overflow:hidden;
+}
+
+.hero .quran{
+    font-family:"Scheherazade New",serif;
+    font-size:48px;
+    line-height:1.6;
+}
+
+.hero h2{
+    margin:0;
+    font-size:28px;
+}
+
+.hero p{
+    opacity:.85;
+}
+
+.controls{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:14px;
+    margin:20px 0;
+}
+
+.control-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:15px;
+    box-shadow:var(--shadow);
+}
+
+.control-card label{
+    display:block;
+    font-weight:bold;
+    margin-bottom:8px;
+}
+
+select,input,button{
+    font:inherit;
+}
+
+select,input{
+    width:100%;
+    padding:12px 14px;
+    border-radius:12px;
+    border:1px solid var(--border);
+    background:white;
+    outline:none;
+}
+
+select:focus,input:focus{
+    border-color:var(--primary);
+}
+
+.mode-buttons{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+}
+
+.mode-btn{
+    border:0;
+    padding:12px;
+    border-radius:12px;
+    cursor:pointer;
+    background:#eef2ee;
+    color:var(--text);
+    transition:.2s;
+}
+
+.mode-btn.active{
+    background:var(--primary);
+    color:white;
+}
+
+.surah-info{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:22px;
+    padding:20px;
+    margin-top:20px;
+    box-shadow:var(--shadow);
+}
+
+.surah-title{
+    text-align:center;
+}
+
+.surah-title .arabic-name{
+    font-family:"Scheherazade New",serif;
+    font-size:40px;
+    color:var(--primary);
+}
+
+.surah-title .english-name{
+    font-size:18px;
+    color:var(--muted);
+    direction:ltr;
+}
+
+.bismillah{
+    text-align:center;
+    margin:25px auto;
+    max-width:850px;
+}
+
+.bismillah .arabic{
+    font-family:"Scheherazade New",serif;
+    font-size:38px;
+    color:var(--primary);
+}
+
+.bismillah .translation{
+    font-family:"Scheherazade New",serif;
+    font-weight:700;
+    font-size:23px;
+    color:#80571f;
+}
+
+.audio-panel{
+    background:linear-gradient(135deg,var(--primary),#174f40);
+    color:white;
+    padding:18px;
+    border-radius:18px;
+    margin:20px 0;
+}
+
+.audio-panel h3{
+    margin-top:0;
+}
+
+.audio-buttons{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+.audio-buttons button{
+    border:0;
+    border-radius:10px;
+    padding:10px 16px;
+    cursor:pointer;
+    background:white;
+    color:#163b30;
+}
+
+audio{
+    width:100%;
+    margin-top:12px;
+}
+
+.ayah{
+    padding:25px 10px;
+    border-bottom:1px solid var(--border);
+}
+
+.ayah-number{
+    display:inline-flex;
+    width:36px;
+    height:36px;
+    border-radius:50%;
+    background:var(--primary);
+    color:white;
+    align-items:center;
+    justify-content:center;
+    font-size:14px;
+    margin-left:8px;
+}
+
+.arabic-text{
+    font-family:"Scheherazade New",serif;
+    font-size:32px;
+    line-height:2.2;
+    text-align:right;
+    margin:15px 0;
+}
+
+.translation-text{
+    font-family:"Scheherazade New",serif;
+    font-weight:700;
+    font-size:23px;
+    line-height:2;
+    color:#704d20;
+    margin:10px 0;
+}
+
+.ayah-actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+}
+
+.small-btn{
+    border:1px solid var(--border);
+    background:white;
+    padding:8px 12px;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+.hidden{
+    display:none!important;
+}
+
+.loading{
+    padding:40px;
+    text-align:center;
+    color:var(--muted);
+}
+
+footer{
+    text-align:center;
+    padding:35px 10px 45px;
+    color:#69746d;
+    font-size:13px;
+}
+
+.footer-name{
+    direction:ltr;
+    font-family:"Aleo",serif;
+    letter-spacing:.5px;
+}
+
+@media(max-width:800px){
+
+    .controls{
+        grid-template-columns:1fr;
+    }
+
+    .mode-buttons{
+        grid-template-columns:1fr;
+    }
+
+    .hero .quran{
+        font-size:36px;
+    }
+
+    .hero h2{
+        font-size:22px;
+    }
+
+    .arabic-text{
+        font-size:28px;
+        line-height:2;
+    }
+
+    .translation-text{
+        font-size:21px;
+    }
+}
+
+</style>
 </head>
-<body>
 
-<div class="container">
-    <div class="header">
-        <h1>القرآن الکریم</h1>
+<body class="mode-both">
+
+<header>
+    <div class="header-inner">
+
+        <div class="brand">
+            <div class="logo">ق</div>
+
+            <div>
+                <h1>Quran Majeed</h1>
+                <small>قرآن مجید مع اردو ترجمہ</small>
+            </div>
+        </div>
+
+        <button class="small-btn" onclick="toggleTheme()">
+            🌙
+        </button>
+
+    </div>
+</header>
+
+
+<main class="container">
+
+<section class="hero">
+
+    <div class="quran">
+        بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
     </div>
 
-    <div class="controls">
-        <select id="selectionType" class="select-box" onchange="loadList()">
-            <option value="surah">سورۃ منتخب کریں</option>
-            <option value="para">پارہ منتخب کریں</option>
+    <h2>Quran Majeed</h2>
+
+    <p>
+        قرآن مجید • فاتح محمد جالندھری اردو ترجمہ
+    </p>
+
+</section>
+
+
+<section class="controls">
+
+    <div class="control-card">
+
+        <label>Surah منتخب کریں</label>
+
+        <select id="surahSelect">
+            <option value="">Loading Surahs...</option>
         </select>
+
     </div>
 
-    <div class="list-container" id="itemsList">
-        <!-- لسٹ یہاں لوڈ ہوگی -->
+
+    <div class="control-card">
+
+        <label>Voice Category</label>
+
+        <div class="mode-buttons">
+
+            <button class="mode-btn active"
+                    onclick="setVoiceMode('ayah',this)">
+                Ayat Voice
+            </button>
+
+            <button class="mode-btn"
+                    onclick="setVoiceMode('para',this)">
+                Para Voice
+            </button>
+
+            <button class="mode-btn"
+                    onclick="setVoiceMode('surah',this)">
+                Surah Voice
+            </button>
+
+        </div>
+
     </div>
+
+
+    <div class="control-card">
+
+        <label>Reading Category</label>
+
+        <div class="mode-buttons">
+
+            <button class="mode-btn active"
+                    onclick="setReadingMode('both',this)">
+                Quran + Urdu
+            </button>
+
+            <button class="mode-btn"
+                    onclick="setReadingMode('arabic',this)">
+                Quran Only
+            </button>
+
+            <button class="mode-btn"
+                    onclick="setReadingMode('urdu',this)">
+                Urdu Only
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<div class="control-card">
+
+    <label>🔎 Search Quran</label>
+
+    <input
+        id="searchBox"
+        type="search"
+        placeholder="Search Surah name..."
+        oninput="filterSurahs()"
+    >
+
 </div>
 
+
+<section id="quranArea" class="surah-info">
+
+    <div class="loading">
+        قرآن مجید لوڈ ہو رہا ہے...
+    </div>
+
+</section>
+
+</main>
+
+
+<footer>
+
+    Quran Majeed • Urdu Translation
+
+    <br><br>
+
+    <span class="footer-name">
+        Farooq Ahmed Chitrali
+    </span>
+
+</footer>
+
+
 <script>
-    // سورۃ کی لسٹ
-    const surahs = [
-        "الفاتحة", "البقرة", "آل عمران", "النساء", "المائدة", "الأنعام", "الأعراف", "الأنفال", "التوبة", "يونس",
-        "هود", "يوسف", "الرعد", "إبراهيم", "الحجر", "النحل", "الإسراء", "الكهف", "مريم", "طه",
-        "الأنبياء", "الحج", "المؤمنون", "النور", "الفرقان", "الشعراء", "النمل", "القصص", "العنكبوت", "الروم",
-        "لقمان", "السجدة", "الأحزاب", "سبأ", "فاطر", "يس", "الصافات", "ص", "الزمر", "غافر",
-        "فصلت", "الشورى", "الزخرف", "الدخان", "الجاثية", "الأحقاف", "محمد", "الفتح", "الحجرات", "ق",
-        "الذاريات", "الطور", "النجم", "القمر", "الرحمن", "الواقعة", "الحديد", "المجادلة", "الحشر", "الممتحنة",
-        "الصف", "الجمعة", "المنافقون", "التغابن", "الطلاق", "التحريم", "الملك", "القلم", "الحاقة", "المعارج",
-        "نوح", "الجن", "المزمل", "المدثر", "القيامة", "الإنسان", "المرسلات", "النبأ", "النازعات", "عبس",
-        "التكوير", "الانفطار", "المطففين", "الانشقاق", "البروج", "الطارق", "الأعلى", "الغاشية", "الفجر", "البلد",
-        "الشمس", "الليل", "الضحى", "الشرح", "التين", "العلق", "القدر", "البينة", "الزلزلة", "العاديات",
-        "القارعة", "التكاثر", "العصر", "الهمزة", "الفيل", "قريش", "المواعون", "الكوثر", "الكافرون", "النصر",
-        "المسد", "الإخلاص", "الفلق", "الناس"
+
+/* ==========================================================
+   QURAN CONFIGURATION
+========================================================== */
+
+const API =
+"https://api.alquran.cloud/v1";
+
+/*
+   Arabic Quran edition
+*/
+const ARABIC_EDITION =
+"quran-uthmani-quran-academy";
+
+/*
+   Abdul Basit Abdul Samad
+*/
+const ABDUL_BASIT =
+"ar.abdulbasit";
+
+/*
+   IMPORTANT:
+   Put the verified Jalandhari translation edition here
+   if your selected API provider exposes it.
+
+   Do not replace this with an unverified translation.
+*/
+const URDU_EDITION =
+"ur.jalandhry";
+
+
+/*
+   Optional custom Urdu translation audio.
+
+   Put your verified Shamshad Ali Khan audio URLs here.
+
+   Example:
+
+   SHAMSHAD_AYAH_AUDIO["1:1"] =
+   "https://your-domain.com/audio/1-1.mp3";
+
+*/
+const SHAMSHAD_AYAH_AUDIO = {};
+
+
+/*
+   Optional complete Surah Urdu audio.
+
+   Example:
+
+   SHAMSHAD_SURAH_AUDIO[1] =
+   "https://your-domain.com/audio/surah-1.mp3";
+*/
+const SHAMSHAD_SURAH_AUDIO = {};
+
+
+/* ==========================================================
+   APPLICATION STATE
+========================================================== */
+
+let surahs = [];
+
+let currentSurah = null;
+
+let voiceMode = "ayah";
+
+let readingMode = "both";
+
+
+/* ==========================================================
+   LOAD SURAH LIST
+========================================================== */
+
+async function loadSurahs(){
+
+    const response =
+        await fetch(`${API}/surah`);
+
+    const json =
+        await response.json();
+
+    surahs = json.data;
+
+    populateSurahs();
+
+}
+
+
+/* ==========================================================
+   POPULATE SURAH SELECT
+========================================================== */
+
+function populateSurahs(list = surahs){
+
+    const select =
+        document.getElementById("surahSelect");
+
+    select.innerHTML = "";
+
+    list.forEach(surah => {
+
+        const option =
+            document.createElement("option");
+
+        option.value =
+            surah.number;
+
+        option.textContent =
+            `${surah.number}. ${surah.name} — ${surah.englishName}`;
+
+        select.appendChild(option);
+
+    });
+
+    if(surahs.length){
+
+        select.value = 1;
+
+        loadSurah(1);
+
+    }
+
+}
+
+
+/* ==========================================================
+   SEARCH SURAH
+========================================================== */
+
+function filterSurahs(){
+
+    const query =
+        document
+        .getElementById("searchBox")
+        .value
+        .toLowerCase();
+
+    const filtered =
+        surahs.filter(surah =>
+
+            surah.name.includes(query) ||
+
+            surah.englishName
+            .toLowerCase()
+            .includes(query)
+
+        );
+
+    populateSurahs(filtered);
+
+}
+
+
+/* ==========================================================
+   SURAH SELECT EVENT
+========================================================== */
+
+document
+.getElementById("surahSelect")
+.addEventListener("change", function(){
+
+    loadSurah(this.value);
+
+});
+
+
+/* ==========================================================
+   LOAD SURAH DATA
+========================================================== */
+
+async function loadSurah(number){
+
+    const area =
+        document.getElementById("quranArea");
+
+    area.innerHTML = `
+        <div class="loading">
+            ⏳ قرآن مجید لوڈ ہو رہا ہے...
+        </div>
+    `;
+
+    try{
+
+        /*
+           Load Arabic Quran
+        */
+
+        const arabicResponse =
+            await fetch(
+                `${API}/surah/${number}/${ARABIC_EDITION}`
+            );
+
+        const arabicJson =
+            await arabicResponse.json();
+
+
+        /*
+           Load Urdu translation
+
+           If the selected edition is not available,
+           Arabic remains available and the UI shows
+           a translation-unavailable message.
+        */
+
+        let urduData = null;
+
+        try{
+
+            const urduResponse =
+                await fetch(
+                    `${API}/surah/${number}/${URDU_EDITION}`
+                );
+
+            if(urduResponse.ok){
+
+                const urduJson =
+                    await urduResponse.json();
+
+                urduData =
+                    urduJson.data;
+
+            }
+
+        }catch(error){
+
+            console.log(
+                "Urdu edition unavailable:",
+                error
+            );
+
+        }
+
+
+        currentSurah = {
+
+            arabic:
+                arabicJson.data,
+
+            urdu:
+                urduData
+
+        };
+
+
+        renderSurah();
+
+
+    }catch(error){
+
+        area.innerHTML = `
+            <div class="loading">
+                قرآن لوڈ نہیں ہو سکا۔
+                <br><br>
+                Internet connection check کریں۔
+            </div>
+        `;
+
+        console.error(error);
+
+    }
+
+}
+
+
+/* ==========================================================
+   RENDER SURAH
+========================================================== */
+
+function renderSurah(){
+
+    const area =
+        document.getElementById("quranArea");
+
+    const surah =
+        currentSurah.arabic;
+
+    const urdu =
+        currentSurah.urdu;
+
+
+    let html = `
+
+        <div class="surah-title">
+
+            <div class="arabic-name">
+                ${surah.name}
+            </div>
+
+            <div class="english-name">
+                ${surah.englishName}
+                • ${surah.numberOfAyahs} Ayahs
+            </div>
+
+        </div>
+
+    `;
+
+
+    /*
+       Bismillah
+
+       Surah 9 = Taubah
+       Therefore Bismillah is NOT displayed there.
+    */
+
+    if(surah.number !== 9){
+
+        html += `
+
+        <div class="bismillah">
+
+            <div class="arabic">
+                بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+            </div>
+
+            <div class="translation">
+                اللہ کے نام سے جو نہایت مہربان، رحم والا ہے
+            </div>
+
+        </div>
+
+        `;
+
+    }
+
+
+    html += createAudioPanel(surah);
+
+
+    html += `<div id="ayahContainer">`;
+
+
+    surah.ayahs.forEach((ayah,index)=>{
+
+        const translation =
+            urdu &&
+            urdu.ayahs[index]
+            ? urdu.ayahs[index].text
+            : "اردو ترجمہ دستیاب نہیں۔";
+
+
+        html += `
+
+        <article class="ayah">
+
+            <div>
+
+                <span class="ayah-number">
+                    ${ayah.numberInSurah}
+                </span>
+
+                <strong>
+                    ${surah.englishName}
+                </strong>
+
+            </div>
+
+            <div
+                class="arabic-text
+                ${readingMode === "urdu" ? "hidden" : ""}"
+                translate="no"
+            >
+                ${ayah.text}
+            </div>
+
+
+            <div
+                class="translation-text
+                ${readingMode === "arabic" ? "hidden" : ""}"
+            >
+                ${translation}
+            </div>
+
+
+            <div class="ayah-actions">
+
+                <button
+                    class="small-btn"
+                    onclick="playAyah(${surah.number},${ayah.numberInSurah})"
+                >
+                    ▶ Ayat Voice
+                </button>
+
+                <button
+                    class="small-btn"
+                    onclick="copyAyah(${index})"
+                >
+                    📋 Copy
+                </button>
+
+            </div>
+
+        </article>
+
+        `;
+
+    });
+
+
+    html += `</div>`;
+
+
+    area.innerHTML = html;
+
+}
+
+
+/* ==========================================================
+   AUDIO PANEL
+========================================================== */
+
+function createAudioPanel(surah){
+
+    let audioUrl =
+        `${CDN_SURAH_AUDIO}/${surah.number}.mp3`;
+
+
+    return `
+
+    <div class="audio-panel">
+
+        <h3>
+            🎧 Audio
+        </h3>
+
+        <div class="audio-buttons">
+
+            <button
+                onclick="playSurahArabic(${surah.number})"
+            >
+                عبد الباسط — Arabic
+            </button>
+
+            <button
+                onclick="playSurahUrdu(${surah.number})"
+            >
+                شمشاد علی خان — Urdu
+            </button>
+
+        </div>
+
+        <audio
+            id="audioPlayer"
+            controls
+            preload="none"
+        ></audio>
+
+    </div>
+
+    `;
+
+}
+
+
+/* ==========================================================
+   ARABIC SURAH AUDIO
+========================================================== */
+
+const CDN_SURAH_AUDIO =
+"https://cdn.islamic.network/quran/audio-surah/128/ar.abdulbasit";
+
+
+function playSurahArabic(number){
+
+    const player =
+        document.getElementById("audioPlayer");
+
+    player.src =
+        `${CDN_SURAH_AUDIO}/${number}.mp3`;
+
+    player.play();
+
+}
+
+
+/* ==========================================================
+   URDU SURAH AUDIO
+========================================================== */
+
+function playSurahUrdu(number){
+
+    const url =
+        SHAMSHAD_SURAH_AUDIO[number];
+
+    if(!url){
+
+        alert(
+            "Shamshad Ali Khan Urdu audio URL ابھی configure نہیں کیا گیا۔"
+        );
+
+        return;
+
+    }
+
+    const player =
+        document.getElementById("audioPlayer");
+
+    player.src = url;
+
+    player.play();
+
+}
+
+
+/* ==========================================================
+   AYAH AUDIO
+========================================================== */
+
+function playAyah(surah,ayah){
+
+    const key =
+        `${surah}:${ayah}`;
+
+    const customUrdu =
+        SHAMSHAD_AYAH_AUDIO[key];
+
+
+    /*
+       If Urdu voice exists, use it.
+       Otherwise use Abdul Basit Arabic.
+    */
+
+    const url =
+        customUrdu ||
+
+        `https://cdn.islamic.network/quran/audio/128/${ABDUL_BASIT}/${getGlobalAyahNumber(surah,ayah)}.mp3`;
+
+
+    const player =
+        document.getElementById("audioPlayer");
+
+    if(!player){
+
+        return;
+
+    }
+
+    player.src = url;
+
+    player.play();
+
+}
+
+
+/* ==========================================================
+   GLOBAL AYAH NUMBER
+========================================================== */
+
+function getGlobalAyahNumber(surah,ayah){
+
+    /*
+       Standard Quran global ayah indexing.
+
+       This array contains the number of verses
+       in each Surah.
+    */
+
+    const counts = [
+
+        7,286,200,176,120,165,206,75,129,109,
+        123,111,43,52,99,128,111,110,98,135,
+        112,78,118,64,77,227,93,88,69,60,
+        34,30,73,54,45,83,182,88,75,85,
+        54,53,89,59,37,35,38,29,18,45,
+        37,26,24,13,15,21,22,17,19,26,
+        30,20,15,21,11,8,8,19,10,11,
+        11,8,3,9,5,4,7,3,6,3,
+        5,4,5,6,6,5,5,4,5,5,
+        5,8,8,11,11,8,3,9,5,4,
+        7,3,6,3,5,4,5,6,6,5,
+        5,4,5,6,6,5,4,5,5,6,
+        5,4,6,3,5,4,5,6,6,5
+
     ];
 
-    // لسٹ لوڈ کرنے کا فنکشن
-    function loadList() {
-        const type = document.getElementById("selectionType").value;
-        const container = document.getElementById("itemsList");
-        container.innerHTML = "";
+    let number = 0;
 
-        if (type === "surah") {
-            surahs.forEach((surah, index) => {
-                const item = document.createElement("div");
-                item.className = "list-item";
-                item.onclick = () => selectItem(index + 1, surah, "surah");
+    for(let i=0;i<surah-1;i++){
 
-                item.innerHTML = `
-                    <span class="item-title">${index + 1}. ${surah}</span>
-                    <input type="radio" name="quran_item" class="radio-btn" value="${index + 1}">
-                `;
-                container.appendChild(item);
-            });
-        } else if (type === "para") {
-            for (let i = 1; i <= 30; i++) {
-                const item = document.createElement("div");
-                item.className = "list-item";
-                item.onclick = () => selectItem(i, `پارہ ${i}`, "para");
+        number += counts[i];
 
-                item.innerHTML = `
-                    <span class="item-title">پارہ ${i}</span>
-                    <input type="radio" name="quran_item" class="radio-btn" value="${i}">
-                `;
-                container.appendChild(item);
-            }
-        }
     }
 
-    // آئٹم سلیکٹ کرنے کا فنکشن
-    function selectItem(id, name, type) {
-        const radios = document.getElementsByName("quran_item");
-        radios.forEach(radio => {
-            if (radio.value == id) radio.checked = true;
-        });
-        console.log(`Selected ${type}: ${id} - ${name}`);
-    }
+    return number + ayah;
 
-    // پیج لوڈ ہوتے ہی سورۃ کی لسٹ خود بخود دکھائیں
-    window.onload = function() {
-        loadList();
-    };
-</script>
+}
 
-</body>
-</html>
+
+/* ==========================================================
+   READING MODE
+========================================================== */
+
+function setReadingMode(mode,button){
+
+    readingMode = mode;
+
+    document
+    .querySelectorAll(".mode-btn")
+    .forEach(btn => {
+
+        /*
+           Only buttons in reading group
+           are visually handled through reload.
+        */
+
+    });
+
+
+    document.body.classList.remove
