@@ -106,10 +106,16 @@
             font-size: 14px;
             border-radius: 8px;
             border: 1px solid #cbd5e1;
-            background-color: #f8fafc;
+            background-color: #ffffff;
+            color: #1f2937;
             font-family: inherit;
             outline: none;
             transition: border 0.2s;
+        }
+
+        option {
+            background-color: #ffffff;
+            color: #1f2937;
         }
 
         select:focus, input:focus {
@@ -464,7 +470,6 @@
             currentPlaylist = [];
             let html = '';
 
-            // سورۃ التوبہ (سورۃ 9) اور سورۃ 1 (جس کی آیت 1 بسم اللہ ہے) کے علاوہ تمام سورتوں کی پلے لسٹ میں بسم اللہ آڈیو شامل کریں
             const shouldAddBismillah = (mode === 'surah' && selectedVal != '9' && selectedVal != '1') || 
                                        (mode === 'ayah' && selectedVal != '9' && selectedVal != '1' && document.getElementById('ayahInput').value == '1');
 
@@ -487,17 +492,11 @@
                         <button class="play-btn-small" onclick="playSingleAyah(0)">بسم اللہ سنیں ▶</button>
                     </div>
                 `;
-            } else if (selectedVal == '1') {
-                // سورۃ الفاتحہ کے لیے بصری بلاک
-                html += `
-                    <div class="bismillah-card" id="card-bismillah-fatiha" style="display:none;"></div>
-                `;
             }
 
             for (let i = 0; i < arAyahs.length; i++) {
                 let arabicText = arAyahs[i].text;
                 
-                // متن میں سے ڈبل بسم اللہ ہٹائیں
                 if (selectedVal != '1' && i === 0 && arabicText.startsWith("بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ")) {
                     arabicText = arabicText.replace("بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ", "").trim();
                 }
@@ -557,4 +556,12 @@
             document.getElementById('playerStatus').textContent = "مکمل ہو گیا";
             clearHighlights();
             isPlayingMode = false;
-            r
+            return;
+        }
+
+        const audioOpt = document.getElementById('audioOption').value;
+        const currentItem = currentPlaylist[currentTrackIndex];
+
+        highlightCard(currentTrackIndex);
+
+        const titleText = currentItem.isBismillah ? "تسمیہ (بسم اللہ الرحمن الرحیم)" : `آیت ${currentItem.
