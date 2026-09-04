@@ -26,25 +26,11 @@
             margin: 0;
             padding: 12px;
             direction: rtl;
-            position: relative;
         }
 
         .container {
             max-width: 900px;
             margin: 0 auto;
-            position: relative;
-        }
-
-        /* Top Right Credit Name */
-        .top-credit-name {
-            position: absolute;
-            top: -5px;
-            right: 5px;
-            font-size: 11px;
-            color: var(--primary-emerald);
-            font-weight: bold;
-            opacity: 0.85;
-            z-index: 10;
         }
 
         /* Header Banner */
@@ -52,12 +38,11 @@
             background: linear-gradient(135deg, #0e3b2e 0%, #175241 100%);
             color: var(--accent-gold);
             text-align: center;
-            padding: 28px 15px 22px 15px;
+            padding: 25px 15px;
             border-radius: 16px;
             border: 2px solid var(--accent-gold);
             box-shadow: 0 10px 25px rgba(14, 59, 46, 0.15);
             margin-bottom: 20px;
-            margin-top: 22px;
         }
 
         .header-banner h1 {
@@ -177,35 +162,6 @@
             background: #ffffff;
         }
 
-        /* Bismillah Card (عربی + اردو ترجمہ) */
-        .bismillah-card {
-            background: linear-gradient(135deg, #fcf8ec 0%, #f4e8c1 100%);
-            border: 2px solid var(--accent-gold);
-            border-radius: 14px;
-            padding: 18px 15px;
-            text-align: center;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.15);
-        }
-
-        .bismillah-arabic {
-            font-family: 'Scheherazade New', serif;
-            font-size: 32px;
-            font-weight: 700;
-            color: var(--primary-emerald);
-            line-height: 1.8;
-        }
-
-        .bismillah-urdu {
-            font-family: 'Noto Nastaliq Urdu', serif;
-            font-size: 16px;
-            color: #334155;
-            margin-top: 8px;
-            border-top: 1px dashed rgba(212, 175, 55, 0.5);
-            padding-top: 8px;
-            line-height: 1.8;
-        }
-
         /* Ayah Cards */
         .ayah-card {
             background: var(--card-white);
@@ -272,26 +228,11 @@
             background: var(--primary-emerald);
             color: #ffffff;
         }
-
-        /* Footer Credit */
-        .footer-credit {
-            margin-top: 30px;
-            padding-top: 15px;
-            border-top: 1px solid var(--light-gold);
-            text-align: left;
-            font-size: 14px;
-            color: var(--primary-emerald);
-            font-weight: bold;
-            opacity: 0.85;
-        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- Top Right Small Name Credit -->
-    <div class="top-credit-name">(فاروق احمد چترالی)</div>
-
     <!-- Header -->
     <div class="header-banner">
         <h1>القرآن الكريم</h1>
@@ -343,11 +284,6 @@
     <!-- Quran Content -->
     <div id="quranContainer">
         <p style="text-align:center; color: #64748b; margin-top: 30px;">براہِ کرم اپنی پسند کے مطابق آپشن منتخب کر کے "لوڈ کریں" پر کلک کریں۔</p>
-    </div>
-
-    <!-- Footer Credit -->
-    <div class="footer-credit">
-        مرتب: (فاروق احمد چترالی)
     </div>
 </div>
 
@@ -457,28 +393,12 @@
             currentPlaylist = [];
             let html = '';
 
-            // سورۃ التوبہ (سورۃ 9) کے علاوہ ہر سورۃ کے آغاز میں عربی اور اردو ترجمہ کے ساتھ بسم اللہ شامل کریں
-            if ((mode === 'surah' && selectedVal != '9') || (mode === 'ayah' && selectedVal != '9' && document.getElementById('ayahInput').value == '1')) {
-                html += `
-                    <div class="bismillah-card">
-                        <div class="bismillah-arabic">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>
-                        <div class="bismillah-urdu">شروع اللہ کے نام سے جو بے حد مہربان، نہایت رحم کرنے والا ہے۔</div>
-                    </div>
-                `;
-            }
-
             for (let i = 0; i < arAyahs.length; i++) {
-                let arabicText = arAyahs[i].text;
-                
-                if (selectedVal != '1' && i === 0 && arabicText.startsWith("بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ")) {
-                    arabicText = arabicText.replace("بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ", "").trim();
-                }
-
                 const item = {
                     index: i,
                     surahName: arAyahs[i].surah ? arAyahs[i].surah.name : '',
                     ayahNo: arAyahs[i].numberInSurah,
-                    arabicText: arabicText,
+                    arabicText: arAyahs[i].text,
                     urduText: urTextAyahs[i].text,
                     arabicAudio: arAyahs[i].audio,
                     urduAudio: urAudioAyahs[i].audio
@@ -563,4 +483,40 @@
             if (isArabicTurn) {
                 isArabicTurn = false;
                 playTrack();
-            
+            } else {
+                isArabicTurn = true;
+                currentTrackIndex++;
+                playTrack();
+            }
+        } else {
+            currentTrackIndex++;
+            playTrack();
+        }
+    };
+
+    function pauseAudio() {
+        audioPlayer.pause();
+        isPlayingMode = false;
+        document.getElementById('playerStatus').textContent = "آڈیو روک دی گئی ہے";
+    }
+
+    function highlightCard(index) {
+        clearHighlights();
+        const card = document.getElementById(`card-${index}`);
+        if (card) {
+            card.classList.add('playing');
+            card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
+
+    function clearHighlights() {
+        document.querySelectorAll('.ayah-card').forEach(c => c.classList.remove('playing'));
+    }
+
+    window.onload = function() {
+        populateSurahs();
+    };
+</script>
+
+</body>
+</html>
