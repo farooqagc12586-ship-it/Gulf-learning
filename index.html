@@ -4,25 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>القرآن الكريم - المكتبة الرقمية</title>
-    <!-- Scheherazade New (Bold) Font -->
+    <!-- Scheherazade New (Bold) & Noto Nastaliq Urdu Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
 
     <style>
         :root {
             --primary-emerald: #0e3b2e;
             --accent-gold: #d4af37;
             --light-gold: #f4e8c1;
-            --bg-light-orange: #fff0e6; /* ہلکا اورنج بیک گراؤنڈ */
+            --bg-cream: #faf8f5;
             --card-white: #ffffff;
             --text-dark: #1f2937;
         }
 
         body {
-            font-family: 'Scheherazade New', serif;
-            font-weight: 700;
-            background-color: var(--bg-light-orange);
+            font-family: 'Noto Nastaliq Urdu', 'Scheherazade New', serif;
+            background-color: var(--bg-cream);
             color: var(--text-dark);
             margin: 0;
             padding: 12px;
@@ -48,7 +47,7 @@
 
         .header-banner h1 {
             font-family: 'Scheherazade New', serif;
-            font-size: 36px;
+            font-size: 34px;
             margin: 0;
             font-weight: 700;
             letter-spacing: 1px;
@@ -57,7 +56,7 @@
 
         .header-banner p {
             color: #e0e0e0;
-            font-size: 15px;
+            font-size: 14px;
             margin: 8px 0 0 0;
         }
 
@@ -67,10 +66,10 @@
             border-radius: 14px;
             padding: 20px;
             margin-bottom: 20px;
-            border: 1px solid #ffd8be;
+            border: 1px solid #e5e7eb;
             box-shadow: 0 4px 15px rgba(0,0,0,0.03);
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 15px;
             align-items: flex-end;
         }
@@ -82,19 +81,18 @@
         }
 
         label {
-            font-size: 14px;
+            font-size: 13px;
             color: var(--primary-emerald);
             font-weight: bold;
         }
 
         select, input {
             padding: 10px;
-            font-size: 15px;
+            font-size: 14px;
             border-radius: 8px;
             border: 1px solid #cbd5e1;
             background-color: #f8fafc;
-            font-family: 'Scheherazade New', serif;
-            font-weight: 700;
+            font-family: inherit;
             outline: none;
             transition: border 0.2s;
         }
@@ -103,19 +101,13 @@
             border-color: var(--accent-gold);
         }
 
-        optgroup {
-            font-weight: bold;
-            color: var(--primary-emerald);
-        }
-
         .btn-load {
             background: linear-gradient(135deg, #0e3b2e 0%, #175241 100%);
             color: var(--accent-gold);
             border: 1px solid var(--accent-gold);
             padding: 11px;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: bold;
-            font-family: 'Scheherazade New', serif;
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -127,7 +119,7 @@
             color: var(--primary-emerald);
         }
 
-        /* Sticky Audio Player */
+        /* Sticky Player Bar */
         .player-bar {
             position: sticky;
             top: 10px;
@@ -145,7 +137,7 @@
         }
 
         .player-status {
-            font-size: 15px;
+            font-size: 14px;
             color: var(--light-gold);
         }
 
@@ -159,9 +151,8 @@
             color: var(--primary-emerald);
             border: none;
             padding: 6px 16px;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: bold;
-            font-family: 'Scheherazade New', serif;
             border-radius: 6px;
             cursor: pointer;
             transition: 0.2s;
@@ -177,23 +168,23 @@
             border-radius: 12px;
             padding: 22px;
             margin-bottom: 16px;
-            border: 1px solid #ffe3d1;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            border: 1px solid #eaeaea;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
             transition: all 0.3s ease;
             position: relative;
         }
 
         .ayah-card.playing {
             border: 2px solid var(--accent-gold);
-            background-color: #fffcf7;
-            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.25);
+            background-color: #fcf9f2;
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.2);
         }
 
         .meta-tag {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--primary-emerald);
             background: var(--light-gold);
-            padding: 3px 12px;
+            padding: 3px 10px;
             border-radius: 20px;
             display: inline-block;
             margin-bottom: 12px;
@@ -210,23 +201,20 @@
             margin-bottom: 14px;
         }
 
-        /* اردو ترجمہ: Scheherazade Bold اور مکمل Black Color */
         .urdu {
-            font-family: 'Scheherazade New', serif;
-            font-size: 24px;
-            font-weight: 700;
-            color: #000000; /* مکمل بلیک کلر */
+            font-family: 'Noto Nastaliq Urdu', serif;
+            font-size: 18px;
+            color: #334155;
             line-height: 2.2;
             text-align: right;
-            border-top: 1px dashed #ffd8be;
+            border-top: 1px dashed #e2e8f0;
             padding-top: 12px;
         }
 
         .play-btn-small {
             margin-top: 12px;
-            font-size: 13px;
-            padding: 5px 14px;
-            font-family: 'Scheherazade New', serif;
+            font-size: 12px;
+            padding: 5px 12px;
             background: transparent;
             color: var(--primary-emerald);
             border: 1px solid var(--primary-emerald);
@@ -267,10 +255,10 @@
             <select id="itemSelect" onchange="handleItemChange()"></select>
         </div>
 
-        <!-- Dynamic Ruku Dropdown -->
-        <div class="control-group" id="rukuBox">
-            <label>رکوع منتخب کریں:</label>
-            <select id="rukuSelect"></select>
+        <!-- اضافی نئی لائن: رکوع / چھوٹی سورۃ نام کا ظاہر ہونا -->
+        <div class="control-group" id="subBox">
+            <label id="subLabel">تفصیل / رکوع:</label>
+            <select id="subSelect"></select>
         </div>
 
         <div class="control-group" id="ayahBox" style="display: none;">
@@ -294,14 +282,14 @@
     <div class="player-bar">
         <div class="player-status" id="playerStatus">حالت: تیار ہے</div>
         <div class="player-controls">
-            <button id="btnPlayAll" onclick="playAll()">پلے کریں ▶</button>
-            <button id="btnPause" onclick="pauseAudio()">روکیں ⏸</button>
+            <button onclick="playAll()">پلے کریں ▶</button>
+            <button onclick="pauseAudio()">روکیں ⏸</button>
         </div>
     </div>
 
     <!-- Quran Content -->
     <div id="quranContainer">
-        <p style="text-align:center; color: #7c2d12; margin-top: 30px;">براہِ کرم اپنی پسند کے مطابق آپشن منتخب کر کے "لوڈ کریں" پر کلک کریں۔</p>
+        <p style="text-align:center; color: #64748b; margin-top: 30px;">براہِ کرم اپنی پسند کے مطابق آپشن منتخب کر کے "لوڈ کریں" پر کلک کریں۔</p>
     </div>
 </div>
 
@@ -330,7 +318,7 @@
 
     const audioPlayer = document.getElementById('globalAudioPlayer');
 
-    // 1 رکوع والی چھوٹی سورتوں کی پہچان (سورۃ 1، اور سورۃ 80 سے 114)
+    // 1 رکوع والی چھوٹی سورتوں کی تشخیص
     function isSmallSurah(surahId) {
         const id = parseInt(surahId);
         return id === 1 || id >= 80;
@@ -339,28 +327,12 @@
     function populateSurahs() {
         const select = document.getElementById('itemSelect');
         select.innerHTML = '';
-
-        const groupBig = document.createElement('optgroup');
-        groupBig.label = "بڑی سورتیں (رکوع وائز)";
-
-        const groupSmall = document.createElement('optgroup');
-        groupSmall.label = "چھوٹی سورتیں (مکمل سورۃ)";
-
         SURAHS.forEach((name, index) => {
-            const surahId = index + 1;
             let opt = document.createElement('option');
-            opt.value = surahId;
+            opt.value = index + 1;
             opt.textContent = name;
-
-            if (isSmallSurah(surahId)) {
-                groupSmall.appendChild(opt);
-            } else {
-                groupBig.appendChild(opt);
-            }
+            select.appendChild(opt);
         });
-
-        select.appendChild(groupBig);
-        select.appendChild(groupSmall);
     }
 
     function populateJuzs() {
@@ -376,44 +348,43 @@
 
     async function handleItemChange() {
         const mode = document.getElementById('modeSelect').value;
-        const surahId = document.getElementById('itemSelect').value;
-        const rukuBox = document.getElementById('rukuBox');
-        const rukuSelect = document.getElementById('rukuSelect');
+        const selectedVal = document.getElementById('itemSelect').value;
+        const subBox = document.getElementById('subBox');
+        const subLabel = document.getElementById('subLabel');
+        const subSelect = document.getElementById('subSelect');
 
-        if (mode !== 'surah' || !surahId) return;
+        if (mode !== 'surah' || !selectedVal) {
+            subBox.style.display = 'none';
+            return;
+        }
 
-        // اگر چھوٹی سورۃ منتخب ہو تو رکوع ڈراپ ڈاؤن چھپا دیں
-        if (isSmallSurah(surahId)) {
-            rukuBox.style.display = 'none';
-            rukuSelect.innerHTML = '<option value="all">مکمل سورۃ</option>';
+        subBox.style.display = 'flex';
+
+        if (isSmallSurah(selectedVal)) {
+            // چھوٹی سورۃ: یہاں صرف سورت کا نام دکھایا جائے گا
+            const surahName = SURAHS[selectedVal - 1];
+            subLabel.textContent = "چھوٹی سورۃ (مکمل):";
+            subSelect.innerHTML = `<option value="all">${surahName}</option>`;
         } else {
-            // بڑی سورت کے لیے رکوع ڈراپ ڈاؤن دکھائیں اور رکوع بھریں
-            rukuBox.style.display = 'flex';
-            rukuSelect.innerHTML = '<option>رکوع لوڈ ہو رہے ہیں...</option>';
+            // بڑی سورۃ: رکوع ظاہر ہوں گے
+            subLabel.textContent = "بڑی سورۃ (رکوع):";
+            subSelect.innerHTML = '<option value="all">تمام رکوع (مکمل سورۃ)</option>';
 
             try {
-                const res = await fetch(`https://api.alquran.cloud/v1/surah/${surahId}`);
+                const res = await fetch(`https://api.alquran.cloud/v1/surah/${selectedVal}`);
                 const data = await res.json();
-                
                 const ayahs = data.data.ayahs;
                 const rukuSet = [...new Set(ayahs.map(a => a.ruku))];
 
-                rukuSelect.innerHTML = '';
-
+                subSelect.innerHTML = '<option value="all">تمام رکوع (مکمل سورۃ)</option>';
                 rukuSet.forEach((rukuGlobalId, index) => {
                     let opt = document.createElement('option');
                     opt.value = rukuGlobalId;
                     opt.textContent = `رکوع ${index + 1}`;
-                    rukuSelect.appendChild(opt);
+                    subSelect.appendChild(opt);
                 });
-                
-                let allOpt = document.createElement('option');
-                allOpt.value = 'all';
-                allOpt.textContent = 'مکمل سورۃ (تمام رکوع)';
-                rukuSelect.appendChild(allOpt);
-
             } catch (e) {
-                rukuSelect.innerHTML = '<option value="all">تمام رکوع</option>';
+                console.error(e);
             }
         }
     }
@@ -422,7 +393,7 @@
         const mode = document.getElementById('modeSelect').value;
         const label = document.getElementById('selectionLabel');
         const ayahBox = document.getElementById('ayahBox');
-        const rukuBox = document.getElementById('rukuBox');
+        const subBox = document.getElementById('subBox');
 
         if (mode === 'surah') {
             label.textContent = 'سورۃ منتخب کریں:';
@@ -432,12 +403,12 @@
         } else if (mode === 'juz') {
             label.textContent = 'پارہ منتخب کریں:';
             ayahBox.style.display = 'none';
-            rukuBox.style.display = 'none';
+            subBox.style.display = 'none';
             populateJuzs();
         } else if (mode === 'ayah') {
             label.textContent = 'سورۃ:';
             ayahBox.style.display = 'flex';
-            rukuBox.style.display = 'none';
+            subBox.style.display = 'none';
             populateSurahs();
         }
     }
@@ -446,8 +417,7 @@
         pauseAudio();
         const mode = document.getElementById('modeSelect').value;
         const selectedVal = document.getElementById('itemSelect').value;
-        const rukuSelect = document.getElementById('rukuSelect');
-        const rukuVal = rukuSelect ? rukuSelect.value : 'all';
+        const subVal = document.getElementById('subSelect') ? document.getElementById('subSelect').value : 'all';
         const container = document.getElementById('quranContainer');
 
         if (!selectedVal) return;
@@ -456,10 +426,10 @@
 
         let url = '';
         if (mode === 'surah') {
-            if (isSmallSurah(selectedVal) || rukuVal === 'all' || !rukuVal) {
-                url = `https://api.alquran.cloud/v1/surah/${selectedVal}/editions/ar.abdulbasitmurattal,ur.jalandhry,ur.khan`;
+            if (subVal && subVal !== 'all') {
+                url = `https://api.alquran.cloud/v1/ruku/${subVal}/editions/ar.abdulbasitmurattal,ur.jalandhry,ur.khan`;
             } else {
-                url = `https://api.alquran.cloud/v1/ruku/${rukuVal}/editions/ar.abdulbasitmurattal,ur.jalandhry,ur.khan`;
+                url = `https://api.alquran.cloud/v1/surah/${selectedVal}/editions/ar.abdulbasitmurattal,ur.jalandhry,ur.khan`;
             }
         } else if (mode === 'juz') {
             url = `https://api.alquran.cloud/v1/juz/${selectedVal}/editions/ar.abdulbasitmurattal,ur.jalandhry,ur.khan`;
@@ -555,4 +525,29 @@
                 audioPlayer.src = currentItem.arabicAudio;
             } else {
                 document.getElementById('playerStatus').textContent = `پلے ہو رہا ہے: آیت ${currentItem.ayahNo} (اردو ترجمہ)`;
-                audioPlayer.sr
+                audioPlayer.src = currentItem.urduAudio;
+            }
+        } else if (audioOpt === 'arabic') {
+            document.getElementById('playerStatus').textContent = `پلے ہو رہا ہے: آیت ${currentItem.ayahNo} (عربی تلاوت)`;
+            audioPlayer.src = currentItem.arabicAudio;
+        } else if (audioOpt === 'urdu') {
+            document.getElementById('playerStatus').textContent = `پلے ہو رہا ہے: آیت ${currentItem.ayahNo} (اردو ترجمہ)`;
+            audioPlayer.src = currentItem.urduAudio;
+        }
+
+        audioPlayer.play().catch(err => console.error(err));
+    }
+
+    audioPlayer.onended = function() {
+        if (!isPlayingMode) return;
+
+        const audioOpt = document.getElementById('audioOption').value;
+
+        if (audioOpt === 'both') {
+            if (isArabicTurn) {
+                isArabicTurn = false;
+                playTrack();
+            } else {
+                isArabicTurn = true;
+                currentTrackIndex++;
+                playTrack(
