@@ -1,1 +1,371 @@
-https://github.com/farooqagc12586-ship-it/Gulf-learning/blob/main/Download-the-complete-HTML-exam-website
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Grammar Exam | Classes 6–8</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:linear-gradient(135deg,#eef6ff,#f8fbff);
+  color:#172033;
+}
+.container{max-width:1000px;margin:auto;padding:20px}
+.hero{
+  background:linear-gradient(135deg,#155eef,#6b5cff);
+  color:white;padding:28px;border-radius:20px;
+  margin-bottom:20px;
+}
+.hero h1{margin:0 0 8px;font-size:clamp(26px,5vw,42px)}
+.card{
+  background:white;border:1px solid #dbe5f2;
+  border-radius:18px;padding:22px;margin-bottom:18px;
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:14px;
+}
+label{font-weight:bold;display:block;margin-bottom:6px}
+input,select{
+  width:100%;padding:12px;border:1px solid #b9c8dc;
+  border-radius:10px;font-size:15px;
+}
+.question{
+  border:1px solid #e1e8f2;border-radius:14px;
+  padding:16px;margin:14px 0;background:#fbfdff;
+}
+.question h3{font-size:16px;margin:0 0 12px}
+.option{
+  display:block;padding:9px 10px;margin:6px 0;
+  border-radius:8px;cursor:pointer;
+}
+.option:hover{background:#eef5ff}
+.option input{width:auto;margin-right:8px}
+button{
+  border:0;border-radius:10px;padding:13px 18px;
+  font-size:15px;font-weight:bold;cursor:pointer;
+}
+.primary{background:#155eef;color:white}
+.secondary{background:#e8eef8;color:#172033}
+.actions{
+  display:flex;flex-wrap:wrap;gap:8px;
+  justify-content:center;margin-top:18px;
+}
+.timer{font-weight:bold;color:#b42318}
+.result{
+  display:none;text-align:center;border-radius:16px;
+  padding:22px;background:#eff8ff;
+  border:2px solid #84adff;margin-top:20px;
+}
+.score{font-size:42px;font-weight:800;color:#155eef}
+.review{margin-top:20px;text-align:left}
+.review-item{padding:12px;border-radius:10px;margin:8px 0}
+.correct{background:#e9f8ef;border-left:5px solid #12b76a}
+.wrong{background:#fff0ef;border-left:5px solid #f04438}
+.small{font-size:13px;color:#667085}
+footer{text-align:center;color:#667085;padding:15px}
+
+@media(max-width:600px){
+  .container{padding:12px}
+  .hero,.card{padding:16px}
+  button{width:100%}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<section class="hero">
+<h1>English Grammar Examination</h1>
+<p>Classes 6–8 • Multiple Choice Questions</p>
+<p>Test your knowledge of English grammar, vocabulary and sentence structure.</p>
+</section>
+
+<section class="card">
+<div class="grid">
+
+<div>
+<label for="studentName">Student Name</label>
+<input id="studentName" type="text" placeholder="Enter your name">
+</div>
+
+<div>
+<label for="studentClass">Class</label>
+<select id="studentClass">
+<option value="">Select class</option>
+<option>Class 6</option>
+<option>Class 7</option>
+<option>Class 8</option>
+</select>
+</div>
+
+<div>
+<label>Time</label>
+<div class="timer" id="timer">30:00</div>
+<div class="small">The exam will submit automatically when time ends.</div>
+</div>
+
+</div>
+</section>
+
+<form id="examForm" class="card">
+
+<h2>Instructions</h2>
+
+<ul>
+<li>Read every question carefully.</li>
+<li>Select one correct answer for each question.</li>
+<li>There are 30 questions. Each question carries 1 mark.</li>
+<li>Click “Submit Exam” when you finish.</li>
+</ul>
+
+<hr>
+
+<div id="questions"></div>
+
+<div class="actions">
+<button type="submit" class="primary">Submit Exam</button>
+<button type="button" class="secondary" id="resetBtn">Reset Exam</button>
+</div>
+
+</form>
+
+<section id="result" class="result">
+
+<h2>Exam Result</h2>
+
+<p id="studentResult"></p>
+
+<div class="score" id="scoreText"></div>
+
+<p id="gradeText"></p>
+
+<div class="actions">
+<button class="primary" id="printBtn">Print Result</button>
+<button class="secondary" id="retryBtn">Try Again</button>
+</div>
+
+<div class="review" id="review"></div>
+
+</section>
+
+<footer>
+English Grammar Exam Website • Designed for Classes 6–8
+</footer>
+
+</div>
+
+<script>
+
+const questions = [
+
+{q:"Which word is a noun?",o:["Beautiful","Happiness","Quickly","Run"],a:1,e:"Happiness is a noun because it names a feeling."},
+
+{q:"Choose the correct article: He is ___ honest man.",o:["a","an","the","no article"],a:1,e:"Use 'an' before a vowel sound in 'honest'."},
+
+{q:"What is the past tense of 'go'?",o:["Goed","Gone","Went","Going"],a:2,e:"The past tense of go is went."},
+
+{q:"Which sentence is in the present continuous tense?",o:["She writes a letter.","She wrote a letter.","She is writing a letter.","She has written a letter."],a:2,e:"Present continuous uses is/am/are + verb-ing."},
+
+{q:"Choose the correct pronoun: Ali and Ahmed are friends. ___ play together.",o:["He","They","We","It"],a:1,e:"They refers to two or more people."},
+
+{q:"Which word is an adjective?",o:["Slowly","Kindness","Beautiful","Sing"],a:2,e:"Beautiful describes a noun."},
+
+{q:"Choose the correct preposition: The book is ___ the table.",o:["in","on","at","by"],a:1,e:"A book resting on a surface is 'on' the table."},
+
+{q:"What is the plural of 'child'?",o:["Childs","Childes","Children","Childrens"],a:2,e:"The irregular plural of child is children."},
+
+{q:"Choose the correct conjunction: I was tired, ___ I completed my homework.",o:["but","because","or","so"],a:0,e:"But shows contrast."},
+
+{q:"Which sentence is correct?",o:["She don't like tea.","She doesn't likes tea.","She doesn't like tea.","She not like tea."],a:2,e:"After does not, use the base form like."},
+
+{q:"What is the synonym of 'happy'?",o:["Sad","Joyful","Angry","Weak"],a:1,e:"Joyful means happy."},
+
+{q:"What is the antonym of 'ancient'?",o:["Old","Modern","Historic","Past"],a:1,e:"Modern is the opposite of ancient."},
+
+{q:"Choose the correct comparative form: This road is ___ than that road.",o:["wide","wider","widest","more wide"],a:1,e:"The comparative form is wider."},
+
+{q:"Which punctuation mark ends a question?",o:["Full stop","Comma","Question mark","Colon"],a:2,e:"A question ends with a question mark."},
+
+{q:"Choose the correct spelling.",o:["Enviroment","Environment","Envirnment","Environmant"],a:1,e:"The correct spelling is Environment."},
+
+{q:"Which is an interrogative sentence?",o:["Please close the door.","Where do you live?","What a beautiful day!","I live in Riyadh."],a:1,e:"An interrogative sentence asks a question."},
+
+{q:"Choose the correct helping verb: They ___ playing football.",o:["is","am","are","be"],a:2,e:"They takes the helping verb are."},
+
+{q:"What is the subject in this sentence: 'The boys are reading.'",o:["are","reading","The boys","The"],a:2,e:"The boys is the subject."},
+
+{q:"Choose the correct possessive form.",o:["This is Ali book.","This is Alis book.","This is Ali's book.","This is Alies book."],a:2,e:"Use apostrophe + s for singular possession."},
+
+{q:"Which word is an adverb?",o:["Careful","Carefully","Care","Caring"],a:1,e:"Carefully describes how an action is done."},
+
+{q:"Change into negative: 'He can swim.'",o:["He can not swims.","He cannot swim.","He does not can swim.","He not can swim."],a:1,e:"The correct negative is He cannot swim."},
+
+{q:"Choose the correct passive voice: 'The teacher praised Sara.'",o:["Sara praised the teacher.","Sara was praised by the teacher.","Sara is praised the teacher.","The teacher was praised by Sara."],a:1,e:"Object Sara becomes the subject in passive voice."},
+
+{q:"Which sentence uses a proper noun?",o:["The city is large.","Lahore is a large city.","The boy is clever.","My school is nearby."],a:1,e:"Lahore is a proper noun."},
+
+{q:"Choose the correct form: If it rains, we ___ at home.",o:["stay","stayed","will stay","staying"],a:2,e:"This first conditional uses will + base verb."},
+
+{q:"What is the meaning of 'generous'?",o:["Willing to give","Very angry","Unable to walk","Always late"],a:0,e:"Generous means willing to give or share."},
+
+{q:"Choose the correct reported speech: He said, 'I am tired.'",o:["He said that I am tired.","He said that he was tired.","He says he tired.","He said that he is tired yesterday."],a:1,e:"In reported speech, am changes to was."},
+
+{q:"Which word is a conjunction?",o:["And","Very","House","Bright"],a:0,e:"And joins words or clauses."},
+
+{q:"Choose the correct sentence.",o:["There is many students.","There are many students.","There have many students.","There be many students."],a:1,e:"Many students is plural, so use there are."},
+
+{q:"What is the superlative form of 'good'?",o:["Goodest","Gooder","Best","More good"],a:2,e:"The superlative form of good is best."},
+
+{q:"Choose the correct modal verb: You ___ obey traffic rules.",o:["should","might to","can to","must to"],a:0,e:"Should expresses advice or duty."}
+
+];
+
+const questionsBox=document.getElementById("questions");
+
+questions.forEach((item,i)=>{
+
+const div=document.createElement("div");
+div.className="question";
+
+div.innerHTML=`<h3>${i+1}. ${item.q}</h3>`+
+
+item.o.map((option,j)=>`
+
+<label class="option">
+<input type="radio" name="q${i}" value="${j}">
+${String.fromCharCode(65+j)}. ${option}
+</label>
+
+`).join("");
+
+questionsBox.appendChild(div);
+
+});
+
+let remaining=1800;
+let timerInterval;
+let submitted=false;
+
+function updateTimer(){
+
+const min=String(Math.floor(remaining/60)).padStart(2,"0");
+const sec=String(remaining%60).padStart(2,"0");
+
+document.getElementById("timer").textContent=`${min}:${sec}`;
+
+if(remaining<=0){
+
+clearInterval(timerInterval);
+submitExam();
+
+}
+
+remaining--;
+
+}
+
+timerInterval=setInterval(updateTimer,1000);
+updateTimer();
+
+function submitExam(){
+
+if(submitted)return;
+
+submitted=true;
+clearInterval(timerInterval);
+
+let score=0;
+const review=[];
+
+questions.forEach((item,i)=>{
+
+const selected=document.querySelector(`input[name="q${i}"]:checked`);
+
+const selectedValue=selected?Number(selected.value):-1;
+
+if(selectedValue===item.a)score++;
+
+review.push({item,selectedValue});
+
+});
+
+const name=document.getElementById("studentName").value.trim()||"Student";
+const cls=document.getElementById("studentClass").value||"Not selected";
+
+document.getElementById("studentResult").textContent=
+`Name: ${name} | Class: ${cls}`;
+
+document.getElementById("scoreText").textContent=
+`${score} / ${questions.length}`;
+
+const percent=Math.round(score/questions.length*100);
+
+let grade=percent>=80?"Excellent!":
+percent>=60?"Good effort!":
+percent>=40?"Keep practicing!":
+"Needs improvement.";
+
+document.getElementById("gradeText").textContent=
+`Percentage: ${percent}% — ${grade}`;
+
+const reviewBox=document.getElementById("review");
+
+reviewBox.innerHTML="<h3>Answer Review</h3>";
+
+review.forEach((r,i)=>{
+
+const ok=r.selectedValue===r.item.a;
+
+const selectedText=r.selectedValue>=0?
+r.item.o[r.selectedValue]:"Not answered";
+
+const div=document.createElement("div");
+
+div.className=`review-item ${ok?"correct":"wrong"}`;
+
+div.innerHTML=`<strong>${i+1}. ${r.item.q}</strong><br>
+Your answer: ${selectedText}<br>
+Correct answer: ${r.item.o[r.item.a]}<br>
+<span class="small">${r.item.e}</span>`;
+
+reviewBox.appendChild(div);
+
+});
+
+document.getElementById("examForm").style.display="none";
+document.getElementById("result").style.display="block";
+
+window.scrollTo({top:0,behavior:"smooth"});
+
+}
+
+document.getElementById("examForm").addEventListener("submit",e=>{
+
+e.preventDefault();
+submitExam();
+
+});
+
+document.getElementById("resetBtn").addEventListener("click",()=>{
+
+if(confirm("Are you sure you want to reset the exam?")){
+location.reload();
+}
+
+});
+
+document.getElementById("retryBtn").addEventListener("click",()=>location.reload());
+
+document.getElementById("printBtn").addEventListener("click",()=>window.print());
+
+</script>
+
+</body>
+  </html>
