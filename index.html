@@ -1,1 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Grammar Online Examination</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
 
+    <div id="registration-container" class="container">
+        <header class="app-header">
+            <h1>English Grammar Online Examination</h1>
+            <p>Classes 6, 7 & 8 | Standard Evaluation Portal</p>
+        </header>
+
+        <main class="card registration-card">
+            <h2>Student Registration</h2>
+            <p class="subtitle">Please enter your information accurately before starting the exam.</p>
+            
+            <form id="registration-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="studentName">Student Full Name <span class="required">*</span></label>
+                        <input type="text" id="studentName" placeholder="Enter your full name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerNumber">Register Number <span class="required">*</span></label>
+                        <input type="text" id="registerNumber" placeholder="e.g., REG-2026-0891" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="whatsappNumber">WhatsApp Number <span class="required">*</span></label>
+                        <input type="tel" id="whatsappNumber" placeholder="e.g., +1234567890" pattern="[0-9\+\-\s]{8,15}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="classCategory">Class Category <span class="required">*</span></label>
+                        <select id="classCategory" required>
+                            <option value="">Select Class</option>
+                            <option value="Class 6">Class 6</option>
+                            <option value="Class 7">Class 7</option>
+                            <option value="Class 8">Class 8</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subject">Subject <span class="required">*</span></label>
+                        <select id="subject" required readonly>
+                            <option value="English Grammar" selected>English Grammar</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="previousRecord">Previous Record / Grade <span class="required">*</span></label>
+                        <input type="text" id="previousRecord" placeholder="e.g., Grade A / 85% in Last Term" required>
+                    </div>
+                </div>
+
+                <div class="instructions-section">
+                    <h3>Examination Rules & Instructions</h3>
+                    <ul class="instructions-list">
+                        <li><strong>Duration:</strong> Exactly 3 Hours (180 Minutes). The countdown begins immediately upon start.</li>
+                        <li><strong>Total Questions:</strong> 100 Multiple Choice Questions (1 mark each). Passing mark is 40.</li>
+                        <li><strong>Lock Rule:</strong> Once an answer is selected, it is saved instantly and **cannot be changed or edited**.</li>
+                        <li><strong>Navigation:</strong> You can jump between unanswered questions freely using the panel grid.</li>
+                        <li><strong>Auto-Submit:</strong> The examination auto-submits when the timer hits 00:00:00. Unanswered questions earn 0 marks.</li>
+                        <li><strong>Data Persistence:</strong> If you accidentally refresh, your progress and timer will remain intact.</li>
+                    </ul>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="instructionsCheckbox">
+                        <label for="instructionsCheckbox">I have read and understood all the examination instructions.</label>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" id="startExamBtn" class="btn btn-primary" disabled>Start Examination</button>
+                </div>
+            </form>
+        </main>
+    </div>
+
+    <div id="exam-container" class="container hidden">
+        <header class="exam-header card">
+            <div class="student-meta">
+                <div><span class="meta-label">Student:</span> <strong id="headerStudentName">-</strong></div>
+                <div><span class="meta-label">Reg No:</span> <span id="headerRegNo">-</span></div>
+                <div><span class="meta-label">Class:</span> <span id="headerClass">-</span></div>
+            </div>
+            
+            <div class="exam-status-bar">
+                <div class="counter-box">
+                    <span>Answered:</span>
+                    <strong id="answeredCount">0</strong> / 100
+                </div>
+                <div class="timer-box" id="timerBox">
+                    <span class="timer-icon">⏱️</span>
+                    <span id="timerDisplay">03:00:00</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="exam-body">
+            <section class="card question-card">
+                <div class="question-header">
+                    <span class="question-number-badge" id="questionBadge">Question 1</span>
+                    <span class="question-status-pill" id="questionStatusPill">Unanswered</span>
+                </div>
+
+                <div class="question-text" id="questionText">Loading question...</div>
+
+                <div class="options-container" id="optionsContainer">
+                    </div>
+
+                <div class="question-footer">
+                    <button id="prevBtn" class="btn btn-secondary">Previous</button>
+                    <button id="nextBtn" class="btn btn-secondary">Next</button>
+                    <button id="manualSubmitBtn" class="btn btn-danger">Submit Examination</button>
+                </div>
+            </section>
+
+            <aside class="card navigation-card">
+                <h3>Question Palette</h3>
+                <div class="grid-legend">
+                    <div class="legend-item"><span class="badge badge-current"></span> Current</div>
+                    <div class="legend-item"><span class="badge badge-answered"></span> Answered</div>
+                    <div class="legend-item"><span class="badge badge-unanswered"></span> Unanswered</div>
+                </div>
+
+                <div class="question-grid" id="questionGrid">
+                    </div>
+            </aside>
+        </div>
+    </div>
+
+    <div id="result-container" class="container hidden">
+        <main class="card result-card">
+            <div class="result-header" id="resultHeaderBanner">
+                <h2 id="resultTitle">Examination Result</h2>
+                <p id="resultSubtitle">Summary of your performance</p>
+            </div>
+
+            <div class="result-details-grid">
+                <div class="detail-item"><strong>Student Name:</strong> <span id="resName"></span></div>
+                <div class="detail-item"><strong>Register Number:</strong> <span id="resRegNo"></span></div>
+                <div class="detail-item"><strong>Class Category:</strong> <span id="resClass"></span></div>
+                <div class="detail-item"><strong>Subject:</strong> <span>English Grammar</span></div>
+                <div class="detail-item"><strong>WhatsApp Number:</strong> <span id="resPhone"></span></div>
+                <div class="detail-item"><strong>Previous Record:</strong> <span id="resPrevRec"></span></div>
+            </div>
+
+            <div class="score-summary-box">
+                <div class="score-metric">
+                    <span class="metric-label">Total Questions</span>
+                    <span class="metric-value">100</span>
+                </div>
+                <div class="score-metric">
+                    <span class="metric-label">Attempted</span>
+                    <span class="metric-value" id="resAttempted">0</span>
+                </div>
+                <div class="score-metric">
+                    <span class="metric-label">Correct</span>
+                    <span class="metric-value text-success" id="resCorrect">0</span>
+                </div>
+                <div class="score-metric">
+                    <span class="metric-label">Incorrect / Skipped</span>
+                    <span class="metric-value text-danger" id="resIncorrect">0</span>
+                </div>
+                <div class="score-metric">
+                    <span class="metric-label">Total Score</span>
+                    <span class="metric-value"><strong id="resScore">0</strong> / 100</span>
+                </div>
+                <div class="score-metric">
+                    <span class="metric-label">Percentage</span>
+                    <span class="metric-value" id="resPercentage">0%</span>
+                </div>
+            </div>
+
+            <div class="status-banner" id="statusBanner">
+                STATUS: <span id="resStatusText">PASS</span>
+            </div>
+
+            <div class="result-actions no-print">
+                <button onclick="window.print()" class="btn btn-primary">Print Result</button>
+                <button onclick="resetAndStartNew()" class="btn btn-secondary">Start New Exam</button>
+            </div>
+        </main>
+    </div>
+
+    <div id="confirmModal" class="modal-overlay hidden">
+        <div class="modal-card">
+            <h3>Confirm Submission</h3>
+            <p>Are you sure you want to submit your examination? Once submitted, your answers cannot be changed.</p>
+            <div class="modal-actions">
+                <button id="confirmSubmitBtn" class="btn btn-danger">Confirm Submission</button>
+                <button id="cancelSubmitBtn" class="btn btn-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+      </html>
+      /* CSS Variables & Global Styles */
+:root {
+    --primary-blue: #1e3a8a;
+    --primary-blue-hover: #1e40af;
+    --accent-green: #059669;
+    --accent-green-hover: #047857;
+    --danger-red: #dc2626;
+    --danger-red-hover: #b91c1c;
+    --bg-light: #f8fafc;
+    --card-bg: #ffffff;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --border-color: #e2e8f0;
+    --font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --radius: 8px;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.5;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Card layout */
+.card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 24px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 20px;
+}
+
+/* Headers */
+.app-header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.app-header h1 {
+    color: var(--primary-blue);
+    font-size: 2rem;
+}
+
+.app-header p {
+    color: var(--text-muted);
+}
+
+/* Buttons */
+.btn {
+    padding: 10px 20px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border-radius: var(--radius);
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-primary { background: var(--primary-blue); color: white; }
+.btn-primary:hover:not(:disabled) { background: var(--primary-blue-hover); }
+
+.btn-secondary { background: #e2e8f0; color: #334155; }
+.btn-secondary:hover:not(:disabled) { background: #cbd5e1; }
+
+.btn-danger { background: var(--danger-red); color: white; }
+.btn-danger:hover:not(:disabled) { background: var(--danger-red-hover); }
+
+/* Registration Form */
+.registration-card h2 {
+    color: var(--primary-blue);
+    margin-bottom: 6px;
+}
+
+.registration-card .subtitle {
+    color: var(--text-muted);
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-weight: 500;
+    margin-bottom: 6px;
+    font-size: 0.9rem;
+}
+
+.required { color: var(--danger-red); }
+
+.form-group input, .form-group select {
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    font-size: 0.95rem;
+}
+
+.instructions-section {
+    background-color: #f1f5f9;
+    padding: 16px;
+    border-radius: var(--radius);
+    margin-bottom: 24px;
+}
+
+.instructions-section h3 {
+    margin-bottom: 10px;
+    color: var(--primary-blue);
+    font-size: 1.05rem;
+}
+
+.instructions-list {
+    margin-left: 20px;
+    margin-bottom: 16px;
+    font-size: 0.9rem;
+}
+
+.instructions-list li { margin-bottom: 6px; }
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+}
+
+/* Exam Layout */
+.exam-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 16px 24px;
+}
+
+.student-meta {
+    display: flex;
+    gap: 20px;
+    font-size: 0.95rem;
+    flex-wrap: wrap;
+}
+
+.meta-label { color: var(--text-muted); }
+
+.exam-status-bar {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.timer-box {
+    background: #fef2f2;
+    color: var(--danger-red);
+    border: 1px solid #fecaca;
+    padding: 8px 16px;
+    border-radius: var(--radius);
+    font-weight: 700;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.counter-box {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.exam-body {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 20px;
+}
+
+/* Question Workspace */
+.question-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.question-number-badge {
+    background: var(--primary-blue);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.question-status-pill {
+    font-size: 0.8rem;
+    padding: 4px 10px;
+    border-radius: 12px;
+    background: #e2e8f0;
+    color: #475569;
+    font-weight: 600;
+}
+
+.question-status-pill.submitted {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.question-text {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-bottom: 24px;
+    color: var(--text-main);
+    line-height: 1.6;
+}
+
+.options-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.option-btn {
+    text-align: left;
+    padding: 14px 18px;
+    border: 1px solid var(--border-color);
+    background: #f8fafc;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.option-btn:hover:not(:disabled) {
+    background: #e0f2fe;
+    border-color: #38bdf8;
+}
+
+.option-btn.selected {
+    background: #1e3a8a !important;
+    color: white !important;
+    border-color: #1e3a8a !important;
+}
+
+.option-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.9;
+}
+
+.option-prefix {
+    font-weight: 700;
+    width: 24px;
+    height: 24px;
+    background: #cbd5e1;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    color: #334155;
+}
+
+.option-btn.selected .option-prefix {
+    background: white;
+    color: var(--primary-blue);
+}
+
+.question-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-color);
+}
+
+/* Question Palette Navigation */
+.navigation-card h3 {
+    margin-bottom: 12px;
+    font-size: 1rem;
+    color: var(--text-main);
+}
+
+.grid-legend {
+    display: flex;
+    gap: 12px;
+    font-size: 0.75rem;
+    margin-bottom: 16px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.badge {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    display: inline-block;
+}
+
+.badge-current { background: #3b82f6; }
+.badge-answered { background: var(--accent-green); }
+.badge-unanswered { background: #e2e8f0; }
+
+.question-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.grid-btn {
+    padding: 8px 0;
+    border: 1px solid var(--border-color);
+    background: #f1f5f9;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.grid-btn.answered {
+    background: var(--accent-green);
+    color: white;
+    border-color: var(--accent-green);
+}
+
+.grid-btn.current {
+    border: 2px solid #1e3a8a;
+    font-weight: 800;
+}
+
+/* Result Screen */
+.result-card {
+    max-width: 800px;
+    margin: 20px auto;
+}
+
+.result-header {
+    text-align: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 20px;
+}
+
+.result-details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+    background: #f8fafc;
+    padding: 16px;
+    border-radius: var(--radius);
+}
+
+.score-summary-box {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.score-metric {
+    background: #f1f5f9;
+    padding: 12px;
+    border-radius: var(--radius);
+    display: flex;
+    flex-direction: column;
+}
+
+.metric-label { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px;}
+.metric-value { font-size: 1.25rem; font-weight: 700; }
+.text-success { color: var(--accent-green); }
+.text-danger { color: var(--danger-red); }
+
+.status-banner {
+    text-align: center;
+    padding: 16px;
+    font-size: 1.5rem;
+    font-weight: 800;
+    border-radius: var(--radius);
+    margin-bottom: 24px;
+}
+
+.status-banner.pass { background: #dcfce7; color: #15803d; }
+.status-banner.fail { background: #fee2e2; color: #b91c1c; }
+
+.result-actions {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+}
+
+/* Modal Overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(15, 23, 42, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-card {
+    background: white;
+    padding: 24px;
+    border-radius: var(--radius);
+    max-width: 450px;
+    width: 90%;
+    box-shadow: var(--shadow);
+}
+
+.modal-card h3 { margin-bottom: 12px; color: var(--primary-blue); }
+.modal-card p { margin-bottom: 20px; font-size: 0.95rem; color: var(--text-muted); }
+.modal-actions { display: flex; justify-content: flex-end; gap: 12px; }
+
+/* Responsive Adjustments */
+@media (max-width: 850px) {
+    .exam-body { grid-template-columns: 1fr; }
+    .question-grid { grid-template-columns: repeat(10, 1fr); }
+}
+
+/* Print Rules */
+@media print {
+    .no-print, .app-header, .navigation-card, .question-footer, .exam-status-bar {
+        display: none !important;
+    }
+    body { background: white; padding: 0; }
+    .card { box-shadow: none; border: none; }
+}
+/**
+ * ENGLISH GRAMMAR ONLINE EXAMINATION SYSTEM
+ * 100 Curriculum Questions for Classes 6-8
+ */
+
+// --- 100 GRAMMAR QUESTIONS DATASET ---
+const questionsData = [
+    // Nouns, Pronouns & Adjectives (1-10)
+    { id: 1, text: "Which of the following is a proper noun in the sentence: 'The Ganges is a sacred river in India.'?", options: ["sacred", "river", "Ganges", "sacred river"], answer: 2 },
+    { id: 2, text: "Identify the abstract noun: 'Honesty is always appreciated by teachers.'", options: ["Teachers", "Honesty", "Appreciated", "Always"], answer: 1 },
+    { id: 3, text: "Choose the correct collective noun: A _______ of wolves was hunting in the forest.", options: ["flock", "pack", "herd", "swarm"], answer: 1 },
+    { id: 4, text: "Select the correct reflexive pronoun: 'She solved the entire test paper _______.'", options: ["himself", "herself", "itself", "myself"], answer: 1 },
+    { id: 5, text: "Identify the demonstrative pronoun: 'These are the books I borrowed yesterday.'", options: ["These", "Books", "Borrowed", "Yesterday"], answer: 0 },
+    { id: 6, text: "Which sentence contains a relative pronoun?", options: ["Who told you that story?", "The girl who won the race is my cousin.", "Is anyone standing outside?", "What are you doing today?"], answer: 1 },
+    { id: 7, text: "Choose the correct comparative degree: 'Mount Everest is _______ than K2.'", options: ["high", "higher", "highest", "more high"], answer: 1 },
+    { id: 8, text: "What is the superlative form of 'Good'?", options: ["Gooder", "Best", "Better", "Most Good"], answer: 1 },
+    { id: 9, text: "Identify the possessive pronoun: 'That blue bicycle is mine.'", options: ["That", "Blue", "Bicycle", "mine"], answer: 3 },
+    { id: 10, text: "Choose the uncountable noun from the options below:", options: ["Apple", "Information", "Chair", "Student"], answer: 1 },
+
+    // Verbs and Tenses (11-30)
+    { id: 11, text: "Identify the main verb: 'The children have finished their homework.'", options: ["have", "finished", "their", "homework"], answer: 1 },
+    { id: 12, text: "Identify the helping verb: 'They are playing basketball in the courtyard.'", options: ["are", "playing", "basketball", "courtyard"], answer: 0 },
+    { id: 13, text: "Which verb is transitive? 'She wrote a long letter to her grandmother.'", options: ["wrote", "letter", "grandmother", "long"], answer: 0 },
+    { id: 14, text: "Choose the intransitive verb from this sentence: 'The baby cried loudly.'", options: ["baby", "cried", "loudly", "The"], answer: 1 },
+    { id: 15, text: "What is the past participle of the irregular verb 'Break'?", options: ["Broke", "Breaked", "Broken", "Breaking"], answer: 2 },
+    { id: 16, text: "Choose the simple present tense: 'Rohan _______ to school every morning.'", options: ["walks", "walked", "is walking", "has walked"], answer: 0 },
+    { id: 17, text: "Identify the tense: 'We were watching a movie when the power went out.'", options: ["Past Simple", "Past Continuous", "Past Perfect", "Present Continuous"], answer: 1 },
+    { id: 18, text: "Fill in with Present Perfect tense: 'I _______ my dinner already.'", options: ["ate", "have eaten", "am eating", "will eat"], answer: 1 },
+    { id: 19, text: "Fill in with Future Continuous tense: 'At 5 PM tomorrow, we _______ for the exam.'", options: ["will study", "will be studying", "are studying", "have studied"], answer: 1 },
+    { id: 20, text: "Which sentence is in the Past Perfect Tense?", options: ["He had left before I arrived.", "He left before I arrived.", "He was leaving when I arrived.", "He has left before I arrived."], answer: 0 },
+    { id: 21, text: "Choose the past form of the irregular verb 'Sing':", options: ["Singed", "Sang", "Sung", "Song"], answer: 1 },
+    { id: 22, text: "Choose the correct auxiliary verb: '_______ you know the answer to this question?'", options: ["Does", "Do", "Is", "Has"], answer: 1 },
+    { id: 23, text: "Fill in the blank: 'The sun _______ in the east.'", options: ["rise", "rises", "rising", "rose"], answer: 1 },
+    { id: 24, text: "Identify the correct tense: 'They have been living here for five years.'", options: ["Present Perfect", "Present Perfect Continuous", "Past Continuous", "Future Simple"], answer: 1 },
+    { id: 25, text: "Complete the sentence: 'Last night, I _______ a terrible noise.'", options: ["hear", "heard", "have heard", "am hearing"], answer: 1 },
+    { id: 26, text: "Which verb is regular?", options: ["Go", "Jump", "Fly", "Eat"], answer: 1 },
+    { id: 27, text: "Identify the past participle of 'Freeze':", options: ["Froze", "Freezed", "Frozen", "Freezing"], answer: 2 },
+    { id: 28, text: "Choose the simple future form: 'She _______ sixteen next week.'", options: ["is", "was", "will be", "has been"], answer: 2 },
+    { id: 29, text: "Fill in the correct option: 'Water _______ at 100 degrees Celsius.'", options: ["boil", "boils", "boiling", "is boiling"], answer: 1 },
+    { id: 30, text: "What is the past tense of 'Catch'?", options: ["Catched", "Caught", "Cought", "Cot"], answer: 1 },
+
+    // Subject-Verb Agreement (31-35)
+    { id: 31, text: "Choose the correct verb: 'Neither of the answers _______ correct.'", options: ["are", "is", "were", "have"], answer: 1 },
+    { id: 32, text: "Fill in the blank: 'Bread and butter _______ his daily breakfast.'", options: ["are", "is", "were", "have been"], answer: 1 },
+    { id: 33, text: "Choose the correct verb form: 'Each of the students _______ a gift.'", options: ["receive", "receives", "are receiving", "were receiving"], answer: 1 },
+    { id: 34, text: "Complete the sentence: 'The captain, along with his team members, _______ present.'", options: ["was", "were", "are", "have"], answer: 0 },
+    { id: 35, text: "Select the correct option: 'Ten kilometers _______ a long distance to walk.'", options: ["are", "is", "were", "be"], answer: 1 },
+
+    // Articles and Prepositions (36-45)
+    { id: 36, text: "Fill in the correct article: 'He is _______ honest officer.'", options: ["a", "an", "the", "no article"], answer: 1 },
+    { id: 37, text: "Fill in the article: '_______ Amazon is one of the longest rivers in the world.'", options: ["A", "An", "The", "No article"], answer: 2 },
+    { id: 38, text: "Choose the correct preposition: 'The cat jumped _______ the table.'", options: ["onto", "in", "at", "underneath"], answer: 0 },
+    { id: 39, text: "Fill in the blank: 'She has been studying _______ 8 o'clock this morning.'", options: ["for", "since", "from", "at"], answer: 1 },
+    { id: 40, text: "Choose the correct preposition: 'Divide these sweets _______ the four brothers.'", options: ["between", "among", "with", "into"], answer: 1 },
+    { id: 41, text: "Select the correct preposition: 'He is proficient _______ English.'", options: ["at", "in", "with", "on"], answer: 1 },
+    { id: 42, text: "Fill in the article: 'I saw _______ European tourist near the museum.'", options: ["a", "an", "the", "no article"], answer: 0 },
+    { id: 43, text: "Choose the correct preposition: 'The meeting was postponed _______ Monday.'", options: ["to", "until", "for", "on"], answer: 1 },
+    { id: 44, text: "Fill in the blank: 'Beware _______ pickpockets in crowded areas.'", options: ["from", "of", "with", "about"], answer: 1 },
+    { id: 45, text: "Choose the correct preposition: 'The plane flew _______ the clouds.'", options: ["above", "on", "in", "at"], answer: 0 },
+
+    // Conjunctions and Adverbs (46-55)
+    { id: 46, text: "Identify the coordinating conjunction: 'He tried hard, but he failed.'", options: ["tried", "hard", "but", "failed"], answer: 2 },
+    { id: 47, text: "Choose the correct subordinating conjunction: 'Wait here _______ I return.'", options: ["until", "and", "but", "or"], answer: 0 },
+    { id: 48, text: "Identify the adverb of manner: 'The soldier fought bravely in the battle.'", options: ["soldier", "fought", "bravely", "battle"], answer: 2 },
+    { id: 49, text: "Identify the adverb of frequency: 'She seldom arrives late for class.'", options: ["She", "seldom", "arrives", "late"], answer: 1 },
+    { id: 50, text: "Which of the following is an adverb of degree?", options: ["Quickly", "Very", "Yesterday", "Everywhere"], answer: 1 },
+    { id: 51, text: "Fill in with a correlative conjunction: 'Either come in _______ go out.'", options: ["and", "nor", "or", "but"], answer: 2 },
+    { id: 52, text: "Identify the adverb of place: 'Please sit inside.'", options: ["Please", "sit", "inside", "No adverb"], answer: 2 },
+    { id: 53, text: "Choose the correct conjunction: 'Work hard _______ you will fail.'", options: ["and", "otherwise", "because", "so"], answer: 1 },
+    { id: 54, text: "Identify the adverb: 'He ran fast to catch the bus.'", options: ["ran", "fast", "catch", "bus"], answer: 1 },
+    { id: 55, text: "Choose the proper conjunction: 'She did not attend school _______ she was ill.'", options: ["so", "because", "but", "although"], answer: 1 },
+
+    // Voice and Speech (56-65)
+    { id: 56, text: "Convert to Passive: 'The boy kicked the ball.'", options: ["The ball was kicked by the boy.", "The ball is kicked by the boy.", "The ball had been kicked by the boy.", "The ball kicked the boy."], answer: 0 },
+    { id: 57, text: "Convert to Active: 'A song was sung by Mary.'", options: ["Mary sings a song.", "Mary sang a song.", "Mary is singing a song.", "Mary has sung a song."], answer: 1 },
+    { id: 58, text: "Change to indirect speech: 'He said, \"I am busy.\"'", options: ["He said that I was busy.", "He said that he is busy.", "He said that he was busy.", "He says that he was busy."], answer: 2 },
+    { id: 59, text: "Change to indirect speech: 'She said, \"Where are you going?\"'", options: ["She asked where I was going.", "She asked where was I going.", "She told where I am going.", "She asked where I am going."], answer: 0 },
+    { id: 60, text: "Identify the passive sentence:", options: ["The cat killed the mouse.", "The mouse was killed by the cat.", "The cat is chasing the mouse.", "The cat has caught a mouse."], answer: 1 },
+    { id: 61, text: "Convert to Passive: 'She opens the door.'", options: ["The door was opened by her.", "The door is opened by her.", "The door is being opened by her.", "The door had opened."], answer: 1 },
+    { id: 62, text: "Indirect speech of: 'Teacher said, \"The Earth revolves around the Sun.\"'", options: ["Teacher said that Earth revolved around Sun.", "Teacher said that the Earth revolves around the Sun.", "Teacher says Earth is revolving.", "Teacher said Earth was revolving."], answer: 1 },
+    { id: 63, text: "Passive form of: 'They are playing cricket.'", options: ["Cricket is played by them.", "Cricket was played by them.", "Cricket is being played by them.", "Cricket was being played by them."], answer: 2 },
+    { id: 64, text: "Indirect speech: 'Rohan said to me, \"I can help you.\"'", options: ["Rohan told me that he could help me.", "Rohan said me that he can help me.", "Rohan told me that I could help him.", "Rohan told me he can help me."], answer: 0 },
+    { id: 65, text: "Convert to Active: 'The thief was arrested by the police.'", options: ["Police arrested the thief.", "The police arrested the thief.", "The police arrest the thief.", "Police was arresting thief."], answer: 1 },
+
+    // Sentence Structure & Types (66-75)
+    { id: 66, text: "Identify the subject in the sentence: 'Down came the rain.'", options: ["Down", "came", "the rain", "the"], answer: 2 },
+    { id: 67, text: "What type of sentence is this? 'What a beautiful flower this is!'", options: ["Declarative", "Imperative", "Interrogative", "Exclamatory"], answer: 3 },
+    { id: 68, text: "Identify the predicate: 'The old man walked slowly across the street.'", options: ["The old man", "walked slowly across the street", "walked slowly", "across the street"], answer: 1 },
+    { id: 69, text: "Choose the correct Question Tag: 'She is a great painter, _______?'", options: ["isn't she", "is she", "doesn't she", "hasn't she"], answer: 0 },
+    { id: 70, text: "Choose the correct Question Tag: 'They haven't finished the task, _______?'", options: ["have they", "haven't they", "did they", "do they"], answer: 0 },
+    { id: 71, text: "What type of sentence is this? 'Please close the window.'", options: ["Assertive", "Imperative", "Interrogative", "Exclamatory"], answer: 1 },
+    { id: 72, text: "Change into negative: 'He is always punctual.'", options: ["He is not always late.", "He is never late.", "He is always not late.", "He was never late."], answer: 1 },
+    { id: 73, text: "Identify the sentence type: 'Will you attend the class today?'", options: ["Imperative", "Declarative", "Interrogative", "Exclamatory"], answer: 2 },
+    { id: 74, text: "Choose the complete subject: 'The dark clouds covered the sky.'", options: ["The dark clouds", "clouds", "covered the sky", "covered"], answer: 0 },
+    { id: 75, text: "Select the imperative sentence:", options: ["Where do you live?", "Stand up immediately.", "I love reading books.", "How glorious the sunrise is!"], answer: 1 },
+
+    // Punctuation and Capitalization (76-80)
+    { id: 76, text: "Which sentence has correct punctuation?", options: ["Whose book is this.", "Whose book is this?", "Whose book, is this?", "whose book is this!"], answer: 1 },
+    { id: 77, text: "Choose the sentence with correct apostrophe usage:", options: ["The dogs tail was wagging.", "The dog's tail was wagging.", "The dogs's tail was wagging.", "The dog tail's was wagging."], answer: 1 },
+    { id: 78, text: "Select the sentence with proper capitalization:", options: ["we visited London last summer with uncle John.", "We visited london last Summer with Uncle John.", "We visited London last summer with Uncle John.", "we visited london last summer with uncle john."], answer: 2 },
+    { id: 79, text: "Where should the comma be inserted? 'Yes I will join you for lunch.'", options: ["After 'Yes'", "After 'will'", "After 'join'", "No comma needed"], answer: 0 },
+    { id: 80, text: "Which mark of punctuation is used to enclose direct speech?", options: ["Commas", "Hyphens", "Quotation marks", "Apostrophes"], answer: 2 },
+
+    // Vocabulary: Synonyms, Antonyms, Homophones (81-90)
+    { id: 81, text: "What is the synonym of 'Enormous'?", options: ["Tiny", "Huge", "Weak", "Narrow"], answer: 1 },
+    { id: 82, text: "Choose the antonym of 'Ancient':", options: ["Old", "Modern", "Historic", "Past"], answer: 1 },
+    { id: 83, text: "Select the correct homophone: 'The knight rode his _______ into battle.'", options: ["hoarse", "horse", "house", "hose"], answer: 1 },
+    { id: 84, text: "Choose the prefix that means 'not' in 'Unhappy':", options: ["Un", "Hap", "Py", "None"], answer: 0 },
+    { id: 85, text: "What is the suffix in the word 'Careful'?", options: ["Care", "ful", "ul", "are"], answer: 1 },
+    { id: 86, text: "Find the synonym of 'Courageous':", options: ["Brave", "Cowardly", "Shy", "Timid"], answer: 0 },
+    { id: 87, text: "Find the antonym of 'Expand':", options: ["Grow", "Contract", "Increase", "Stretch"], answer: 1 },
+    { id: 88, text: "Choose the correct homophone: 'I need to buy a new _______ of shoes.'", options: ["pear", "pair", "pare", "pay"], answer: 1 },
+    { id: 89, text: "What does the prefix 'Re-' mean in 'Rewrite'?", options: ["Before", "Again", "Not", "Under"], answer: 1 },
+    { id: 90, text: "Choose the meaning of 'Antonym':", options: ["Words with same sound", "Words with same meaning", "Words with opposite meaning", "Words with same spelling"], answer: 2 },
+
+    // Mixed Grammar Practice & Sentence Correction (91-100)
+    { id: 91, text: "Find the grammatically correct sentence:", options: ["She do not likes tea.", "She does not likes tea.", "She does not like tea.", "She don't like tea."], answer: 2 },
+    { id: 92, text: "Identify the error: 'He is more taller than his brother.'", options: ["He is", "more taller", "than his", "brother"], answer: 1 },
+    { id: 93, text: "Fill in the blank: 'Neither Rohit nor his friends _______ attending the party.'", options: ["is", "are", "was", "has"], answer: 1 },
+    { id: 94, text: "Choose the correct sentence:", options: ["One of my friend is a doctor.", "One of my friends is a doctor.", "One of my friends are a doctor.", "One of my friend are a doctor."], answer: 1 },
+    { id: 95, text: "Identify the interjection in: 'Hurrah! We won the match.'", options: ["Hurrah", "We", "won", "match"], answer: 0 },
+    { id: 96, text: "Select the sentence with correct word usage:", options: ["The weather affected my travel plans.", "The weather effected my travel plans.", "The whether affected my travel plans.", "The weather affect my travel plans."], answer: 0 },
+    { id: 97, text: "Spot the error: 'They has been playing since morning.'", options: ["They has", "been playing", "since", "morning"], answer: 0 },
+    { id: 98, text: "Fill in the correct option: 'If it rains, we _______ the match.'", options: ["cancel", "will cancel", "would cancel", "cancelled"], answer: 1 },
+    { id: 99, text: "Choose the correct option: 'This is the _______ day of my life.'", options: ["happiest", "happy", "happier", "more happy"], answer: 0 },
+    { id: 100, text: "Identify the plural of 'Child':", options: ["Childs", "Childrens", "Children", "Childies"], answer: 2 }
+];
+
+// --- APP STATE CONTROL ---
+const TOTAL_QUESTIONS = 100;
+const EXAM_DURATION_MS = 3 * 60 * 60 * 1000; // 3 Hours
+
+let currentIdx = 0;
+let userAnswers = {}; // Format: { questionIdx: selectedOptionIdx }
+let examStartTime = null;
+let timerInterval = null;
+let isExamSubmitted = false;
+let studentDetails = {};
+
+// --- DOM ELEMENTS ---
+const regContainer = document.getElementById('registration-container');
+const examContainer = document.getElementById('exam-container');
+const resultContainer = document.getElementById('result-container');
+
+const regForm = document.getElementById('registration-form');
+const startBtn = document.getElementById('startExamBtn');
+const instructionsCb = document.getElementById('instructionsCheckbox');
+
+const timerDisplay = document.getElementById('timerDisplay');
+const answeredCount = document.getElementById('answeredCount');
+const questionGrid = document.getElementById('questionGrid');
+
+const qBadge = document.getElementById('questionBadge');
+const qStatusPill = document.getElementById('questionStatusPill');
+const qText = document.getElementById('questionText');
+const optionsContainer = document.getElementById('optionsContainer');
+
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const manualSubmitBtn = document.getElementById('manualSubmitBtn');
+
+const confirmModal = document.getElementById('confirmModal');
+const confirmSubmitBtn = document.getElementById('confirmSubmitBtn');
+const cancelSubmitBtn = document.getElementById('cancelSubmitBtn');
+
+// --- INITIALIZATION & RECOVERY ---
+window.addEventListener('DOMContentLoaded', () => {
+    instructionsCb.addEventListener('change', (e) => {
+        startBtn.disabled = !e.target.checked;
+    });
+
+    startBtn.addEventListener('click', handleStartExam);
+    prevBtn.addEventListener('click', () => navigateQuestion(currentIdx - 1));
+    nextBtn.addEventListener('click', () => navigateQuestion(currentIdx + 1));
+    
+    manualSubmitBtn.addEventListener('click', () => confirmModal.classList.remove('hidden'));
+    cancelSubmitBtn.addEventListener('click', () => confirmModal.classList.add('hidden'));
+    confirmSubmitBtn.addEventListener('click', () => {
+        confirmModal.classList.add('hidden');
+        submitExam("Manual submission by student.");
+    });
+
+    // Check existing state in LocalStorage
+    restoreExamState();
+});
+
+// --- REGISTRATION & START LOGIC ---
+function handleStartExam() {
+    if (!regForm.checkValidity()) {
+        regForm.reportValidity();
+        return;
+    }
+
+    studentDetails = {
+        name: document.getElementById('studentName').value.trim(),
+        regNo: document.getElementById('registerNumber').valu
