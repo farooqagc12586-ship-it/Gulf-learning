@@ -78,7 +78,49 @@ footer{text-align:center;color:#667085;padding:15px}
 }
 </style>
 </head>
+<script>
+  // 1. 100 ایکسس کوڈز کی لسٹ
+  const VALID_CODES = [
+    "MSK-101", "MSK-102", "MSK-103", "MSK-104", "MSK-105",
+    "MSK-106", "MSK-107", "MSK-108", "MSK-109", "MSK-110",
+    "MSK-111", "MSK-112", "MSK-113", "MSK-114", "MSK-115",
+    "MSK-116", "MSK-117", "MSK-118", "MSK-119", "MSK-120",
+    "MSK-121", "MSK-122", "MSK-123", "MSK-124", "MSK-125"
+    // باقی تمام 100 کوڈز یہاں شامل کریں...
+  ];
 
+  // 2. آپ کے امتحان کے سوالات
+  const questions = [
+    {q:"Which word is a noun?",o:["Beautiful","Happiness","Quickly","Run"],a:1,e:"Happiness is a noun because it names a feeling."},
+    {q:"Choose the correct article: He is ___ honest man.",o:["a","an","the","no article"],a:1,e:"Use 'an' before a vowel sound in 'honest'."},
+    {q:"What is the past tense of 'go'?",o:["Goed","Gone","Went","Going"],a:2,e:"The past tense of go is went."}
+  ];
+
+  // 3. شروع میں امتحان چھپانے کا فنکشن
+  document.addEventListener("DOMContentLoaded", function() {
+    const examArea = document.getElementById("exam-container");
+    if(examArea) {
+      examArea.style.display = "none";
+    }
+  });
+
+  // 4. پاس کوڈ چیک کرنے کا فنکشن
+  function checkPasscode() {
+    const inputCode = document.getElementById("passcode-input").value.trim();
+    const errorMsg = document.getElementById("error-msg");
+    const examArea = document.getElementById("exam-container");
+
+    if (VALID_CODES.includes(inputCode)) {
+      document.getElementById("access-box").style.display = "none";
+      if(examArea) {
+        examArea.style.display = "block";
+      }
+    } else {
+      errorMsg.style.display = "block";
+    }
+  }
+     </script>
+  
 <body>
 
 <div class="container">
@@ -164,7 +206,6 @@ English Grammar Exam Website • Designed for Classes 6–8
 </div>
 
 <script>
-<script>
   // 100 منفرد کوڈز کی فہرست (آپ ان میں سے ایک ایک کر کے طالب علم کو دیں)
   const VALID_CODES = [
     "MSK-101", "MSK-102", "MSK-103", "MSK-104", "MSK-105",
@@ -211,6 +252,16 @@ English Grammar Exam Website • Designed for Classes 6–8
       errorMsg.style.display = "block";
     }
   }
+</script>
+  <!-- ❌ اگر اس طرح بغیر script ٹیگ کے لکھا ہوگا تو اسکرین پر نظر آئے گا -->
+
+<!-- ✅ اسے ہمیشہ اس طرح <script> کے اندر ہونا چاہیے -->
+<script>
+  const questions = [ 
+    {q:"Which word is a noun?",o:["Beautiful","Happiness","Quickly","Run"],a:1,e:"Happiness is a noun because it names a feeling."},
+    {q:"Choose the correct article: He is ___ honest man.",o:["a","an","the","no article"],a:1,e:"Use 'an' before a vowel sound in 'honest'."},
+    {q:"What is the past tense of 'go'?",o:["Goed","Gone","Went","Going"],a:2,e:"The past tense of go is went."}
+  ];
 </script>
   
   
