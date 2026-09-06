@@ -164,7 +164,56 @@ English Grammar Exam Website • Designed for Classes 6–8
 </div>
 
 <script>
+<script>
+  // 100 منفرد کوڈز کی فہرست (آپ ان میں سے ایک ایک کر کے طالب علم کو دیں)
+  const VALID_CODES = [
+    "MSK-101", "MSK-102", "MSK-103", "MSK-104", "MSK-105",
+    "MSK-106", "MSK-107", "MSK-108", "MSK-109", "MSK-110",
+    "MSK-111", "MSK-112", "MSK-113", "MSK-114", "MSK-115",
+    "MSK-116", "MSK-117", "MSK-118", "MSK-119", "MSK-120",
+    "MSK-121", "MSK-122", "MSK-123", "MSK-124", "MSK-125",
+    "MSK-126", "MSK-127", "MSK-128", "MSK-129", "MSK-130",
+    "MSK-131", "MSK-132", "MSK-133", "MSK-134", "MSK-135",
+    "MSK-136", "MSK-137", "MSK-138", "MSK-139", "MSK-140",
+    "MSK-141", "MSK-142", "MSK-143", "MSK-144", "MSK-145",
+    "MSK-146", "MSK-147", "MSK-148", "MSK-149", "MSK-150",
+    "MSK-151", "MSK-152", "MSK-153", "MSK-154", "MSK-155",
+    "MSK-156", "MSK-157", "MSK-158", "MSK-159", "MSK-160",
+    "MSK-161", "MSK-162", "MSK-163", "MSK-164", "MSK-165",
+    "MSK-166", "MSK-167", "MSK-168", "MSK-169", "MSK-170",
+    "MSK-171", "MSK-172", "MSK-173", "MSK-174", "MSK-175",
+    "MSK-176", "MSK-177", "MSK-178", "MSK-179", "MSK-180",
+    "MSK-181", "MSK-182", "MSK-183", "MSK-184", "MSK-185",
+    "MSK-186", "MSK-187", "MSK-188", "MSK-189", "MSK-190",
+    "MSK-191", "MSK-192", "MSK-193", "MSK-194", "MSK-195",
+    "MSK-196", "MSK-197", "MSK-198", "MSK-199", "MSK-200"
+  ];
 
+  document.addEventListener("DOMContentLoaded", function() {
+    const examContainer = document.getElementById("exam-container");
+    if(examContainer) {
+      examContainer.style.display = "none";
+    }
+  });
+
+  function checkPasscode() {
+    const inputCode = document.getElementById("passcode-input").value.trim();
+    const errorMsg = document.getElementById("error-msg");
+    const examContainer = document.getElementById("exam-container");
+
+    // اگر ان پٹ کوڈ لسٹ میں موجود ہے
+    if (VALID_CODES.includes(inputCode)) {
+      document.getElementById("access-box").style.display = "none";
+      if(examContainer) {
+        examContainer.style.display = "block";
+      }
+    } else {
+      errorMsg.style.display = "block";
+    }
+  }
+</script>
+  
+  
 const questions = [
 
 {q:"Which word is a noun?",o:["Beautiful","Happiness","Quickly","Run"],a:1,e:"Happiness is a noun because it names a feeling."},
