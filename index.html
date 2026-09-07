@@ -1,228 +1,513 @@
 <!DOCTYPE html>
-<html lang="ur" dir="rtl">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Al-Quran Majeed - Farooq Ahmed Chitrali</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        @font-face {
-            font-family: 'QPC_Uthmanic';
-            src: url('https://fonts.gstatic.com/s/amiri/v26/J7afpE98nkS_GHlxV04pXw.woff2'); /* Fallback to Amiri for web demo */
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Quran Majeed - Mobile</title>
+  <!-- Fonts: Amiri (Arabic), Scheherazade (Urdu), Inter (UI) -->
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Scheherazade+New:wght@400;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome 6 (free) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f5f0e8;
+      color: #1a1a1a;
+      padding: 10px 12px 20px;
+      min-height: 100vh;
+    }
+    /* Mobile-first compact design */
+    .app {
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    /* Header - very minimal */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #0a2e36;
+      padding: 10px 14px;
+      border-radius: 16px;
+      color: #fff;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .header h1 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      font-family: 'Amiri', serif;
+    }
+    .header h1 span { color: #c9a84c; }
+    .header small {
+      font-size: 0.55rem;
+      opacity: 0.7;
+      letter-spacing: 0.3px;
+    }
+    .header small strong { color: #e8d5a3; font-weight: 600; }
 
-        :root {
-            --primary-color: #065f46;
-            --bg-color: #f0fdf4;
-        }
+    /* Controls - compact two rows */
+    .controls {
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(6px);
+      border-radius: 16px;
+      padding: 8px 12px;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 10px;
+      border: 1px solid rgba(255,255,255,0.5);
+    }
+    .controls .group {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+    .controls .group-label {
+      font-size: 0.55rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #1a5c6e;
+      opacity: 0.6;
+      margin-right: 2px;
+    }
+    .controls button {
+      background: transparent;
+      border: 1.5px solid rgba(10,46,54,0.15);
+      padding: 4px 10px;
+      border-radius: 30px;
+      font-size: 0.6rem;
+      font-weight: 600;
+      color: #1a1a1a;
+      cursor: pointer;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+    .controls button i { font-size: 0.65rem; }
+    .controls button.active {
+      background: #c9a84c;
+      border-color: #c9a84c;
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(201,168,76,0.3);
+    }
+    /* theme colors for active audio mode */
+    .theme-ayat .controls button[data-mode="ayat"] { background: #2a6f8f; border-color: #2a6f8f; color:#fff; }
+    .theme-para .controls button[data-mode="para"] { background: #2d8f5a; border-color: #2d8f5a; color:#fff; }
+    .theme-surah .controls button[data-mode="surah"] { background: #a8872e; border-color: #a8872e; color:#fff; }
 
-        body {
-            font-family: 'Scheherazade New', serif;
-            background-color: var(--bg-color);
-            transition: all 0.5s ease;
-        }
+    /* Surah selector */
+    .surah-selector {
+      margin-bottom: 10px;
+    }
+    .surah-selector select {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 14px;
+      border: 2px solid rgba(10,46,54,0.1);
+      background: #fff;
+      font-size: 0.85rem;
+      font-weight: 600;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%230a2e36' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 40px;
+    }
+    .surah-selector select:focus { outline: none; border-color: #c9a84c; }
+    .surah-info {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 4px 12px;
+      padding: 6px 12px;
+      background: rgba(255,255,255,0.5);
+      border-radius: 12px;
+      margin-top: 6px;
+      font-size: 0.7rem;
+    }
+    .surah-info .surah-name-ar {
+      font-family: 'Amiri', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #0a2e36;
+    }
+    .surah-info .surah-name-ur {
+      font-family: 'Scheherazade New', serif;
+      font-size: 0.95rem;
+      color: #1a1a1a;
+    }
+    .surah-info .meta {
+      margin-left: auto;
+      display: flex;
+      gap: 8px;
+      font-size: 0.6rem;
+      color: #1a5c6e;
+      opacity: 0.7;
+    }
+    .surah-info .meta span { background: rgba(10,46,54,0.06); padding: 2px 10px; border-radius: 30px; }
 
-        .quran-arabic {
-            font-family: 'QPC_Uthmanic', serif;
-            font-size: 2.5rem;
-            line-height: 4rem;
-            word-spacing: 5px;
-        }
+    /* Quran display - compact */
+    .quran-display {
+      background: #fff;
+      border-radius: 16px;
+      padding: 12px 10px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+      min-height: 300px;
+      border: 1px solid rgba(201,168,76,0.1);
+    }
+    .loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 0;
+      color: #1a5c6e;
+      gap: 8px;
+    }
+    .loading i { font-size: 1.8rem; color: #c9a84c; animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading span { font-size: 0.8rem; opacity: 0.6; }
 
-        .urdu-text {
-            font-family: 'Scheherazade New', serif;
-            font-weight: 700;
-            font-size: 1.5rem;
-            color: #374151;
-        }
+    /* Bismillah */
+    .bismillah {
+      text-align: center;
+      padding: 12px 0 8px;
+      font-family: 'Amiri', serif;
+      font-size: 1.6rem;
+      color: #0a2e36;
+      border-bottom: 1.5px dashed rgba(201,168,76,0.2);
+      margin-bottom: 12px;
+    }
+    .bismillah .bismillah-ur {
+      font-family: 'Scheherazade New', serif;
+      font-size: 0.8rem;
+      color: #1a5c6e;
+      display: block;
+      margin-top: 2px;
+    }
+    .bismillah .bismillah-audio {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 6px;
+    }
+    .bismillah .bismillah-audio button {
+      background: rgba(10,46,54,0.05);
+      border: none;
+      padding: 3px 12px;
+      border-radius: 30px;
+      font-size: 0.6rem;
+      font-weight: 600;
+      color: #1a5c6e;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .bismillah .bismillah-audio button:active { background: #c9a84c; color: #fff; }
 
-        .category-card {
-            transition: transform 0.3s ease;
-            cursor: pointer;
-        }
+    /* Verses */
+    .verses {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .verse {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 8px 6px;
+      border-radius: 10px;
+      border-bottom: 1px solid rgba(0,0,0,0.03);
+    }
+    .verse:active { background: rgba(201,168,76,0.05); }
+    .verse-number {
+      font-size: 0.55rem;
+      font-weight: 700;
+      color: #a8872e;
+      background: rgba(201,168,76,0.12);
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      border: 1px solid rgba(201,168,76,0.15);
+      margin-top: 2px;
+    }
+    .verse-content { flex: 1; min-width: 0; }
+    .verse-arabic {
+      font-family: 'Amiri', serif;
+      font-size: 1.2rem;
+      line-height: 1.8;
+      text-align: right;
+      direction: rtl;
+      color: #1a1a1a;
+      word-spacing: 1px;
+    }
+    .verse-urdu {
+      font-family: 'Scheherazade New', serif;
+      font-size: 0.9rem;
+      line-height: 1.7;
+      text-align: right;
+      direction: rtl;
+      color: #1a5c6e;
+      margin-top: 2px;
+      border-top: 1px solid rgba(0,0,0,0.03);
+      padding-top: 2px;
+    }
+    .verse-audio {
+      flex-shrink: 0;
+      background: rgba(10,46,54,0.04);
+      border: none;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      color: #1a5c6e;
+      font-size: 0.7rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.2s;
+      margin-top: 2px;
+    }
+    .verse-audio:active { background: #c9a84c; color: #fff; }
+    .verse-audio.playing {
+      background: #c9a84c;
+      color: #fff;
+      animation: pulse 1s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(201,168,76,0.4); }
+      50% { box-shadow: 0 0 0 8px rgba(201,168,76,0); }
+    }
 
-        .category-card:hover {
-            transform: translateY(-5px);
-        }
+    /* display modes */
+    .mode-no-translation .verse-urdu { display: none; }
+    .mode-only-translation .verse-arabic { display: none; }
+    .mode-only-translation .verse-number { background: rgba(42,111,143,0.1); color: #1a5c6e; }
 
-        /* Color Themes */
-        .theme-both { --primary-color: #065f46; --bg-color: #f0fdf4; }
-        .theme-arabic { --primary-color: #1e40af; --bg-color: #eff6ff; }
-        .theme-urdu { --primary-color: #92400e; --bg-color: #fffbeb; }
-
-        .sticky-audio {
-            box-shadow: 0 -4px 15px rgba(0,0,0,0.1);
-        }
-    </style>
+    /* footer */
+    .footer {
+      text-align: center;
+      padding: 16px 0 4px;
+      font-size: 0.55rem;
+      color: rgba(10,46,54,0.3);
+      border-top: 1px solid rgba(10,46,54,0.05);
+      margin-top: 14px;
+    }
+    .footer strong { color: rgba(10,46,54,0.5); font-weight: 600; }
+  </style>
 </head>
-<body class="theme-both">
+<body>
+<div class="app" id="app">
+  <!-- Header -->
+  <header class="header">
+    <h1>القرآن <span>المجيد</span></h1>
+    <small><strong>Farooq Ahmed Chitrali</strong></small>
+  </header>
 
-    <!-- Header -->
-    <header class="bg-[var(--primary-color)] text-white p-6 shadow-lg text-center">
-        <h1 class="text-4xl mb-2">القرآن الكريم</h1>
-        <p class="text-xl opacity-90">Urdu Translation: Fateh Muhammad Jalandhari</p>
-    </header>
-
-    <!-- Category Selector 1: Voice Mode -->
-    <div class="container mx-auto mt-8 px-4">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-            <button onclick="setVoiceMode('ayat')" class="bg-white p-4 rounded-lg shadow border-b-4 border-emerald-600 hover:bg-emerald-50">Ayat Voice (Abdul Basit)</button>
-            <button onclick="setVoiceMode('para')" class="bg-white p-4 rounded-lg shadow border-b-4 border-emerald-600 hover:bg-emerald-50">Para Voice</button>
-            <button onclick="setVoiceMode('surah')" class="bg-white p-4 rounded-lg shadow border-b-4 border-emerald-600 hover:bg-emerald-50">Surah Voice</button>
-        </div>
+  <!-- Controls -->
+  <div class="controls" id="controls">
+    <div class="group">
+      <span class="group-label"><i class="fas fa-headphones"></i></span>
+      <button data-mode="ayat" class="active"><i class="fas fa-verse"></i> Ayat</button>
+      <button data-mode="para"><i class="fas fa-book-open"></i> Para</button>
+      <button data-mode="surah"><i class="fas fa-chapter"></i> Surah</button>
     </div>
-
-    <!-- Category Selector 2: Display Mode -->
-    <div class="container mx-auto mt-6 px-4">
-        <div class="flex flex-wrap justify-center gap-4">
-            <button onclick="setDisplay('both')" class="px-6 py-2 rounded-full bg-emerald-800 text-white">Quran with Urdu</button>
-            <button onclick="setDisplay('arabic')" class="px-6 py-2 rounded-full bg-blue-800 text-white">Quran Only</button>
-            <button onclick="setDisplay('urdu')" class="px-6 py-2 rounded-full bg-amber-800 text-white">Urdu Only</button>
-        </div>
+    <div class="group" style="margin-left:auto;">
+      <span class="group-label"><i class="fas fa-eye"></i></span>
+      <button data-display="full" class="active"><i class="fas fa-language"></i></button>
+      <button data-display="arabic"><i class="fas fa-arrow-right"></i></button>
+      <button data-display="urdu"><i class="fas fa-arrow-left"></i></button>
     </div>
+  </div>
 
-    <!-- Main Content -->
-    <main id="quran-container" class="container mx-auto mt-10 p-4 mb-32">
-        <div id="surah-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-            <!-- Surahs will be loaded here -->
-            <p class="text-center col-span-full">Loading Holy Quran...</p>
-        </div>
-        <div id="verses-display" class="hidden space-y-8">
-            <button onclick="showSurahList()" class="mb-4 text-emerald-700 font-bold underline">← Back to Surah List</button>
-            <div id="bismillah-area" class="text-center mb-10 hidden">
-                <div class="quran-arabic">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>
-                <div class="urdu-text mt-2">شروع اللہ کے نام سے جو بڑا مہربان نہایت رحم والا ہے</div>
-            </div>
-            <div id="content-area"></div>
-        </div>
-    </main>
+  <!-- Surah Selector -->
+  <div class="surah-selector">
+    <select id="surahSelect"></select>
+    <div class="surah-info">
+      <span class="surah-name-ar" id="surahNameAr">—</span>
+      <span class="surah-name-ur" id="surahNameUr">—</span>
+      <div class="meta">
+        <span id="metaVerses">0</span>
+        <span id="metaRevelation">مکی</span>
+      </div>
+    </div>
+  </div>
 
-    <!-- Footer -->
-    <footer class="fixed bottom-0 w-full bg-white p-2 text-center border-t">
-        <div id="audio-player-container" class="mb-2">
-            <audio id="main-audio" controls class="mx-auto w-full max-w-2xl"></audio>
-            <p id="audio-info" class="text-xs text-gray-500 mt-1">Reciter: Abdul Basit | Urdu: Shamshad Ali Khan</p>
-        </div>
-        <p class="text-[10px] text-gray-400 uppercase tracking-widest">Farooq Ahmed Chitrali</p>
-    </footer>
+  <!-- Quran Display -->
+  <div class="quran-display" id="quranDisplay">
+    <div class="loading" id="loadingIndicator">
+      <i class="fas fa-spinner"></i>
+      <span>Loading...</span>
+    </div>
+    <div id="quranContent" style="display:none;">
+      <div id="bismillahContainer"></div>
+      <div class="verses" id="versesContainer"></div>
+    </div>
+  </div>
 
-    <script>
-        let currentDisplay = 'both';
-        let voiceMode = 'ayat';
-        let allSurahs = [];
+  <div class="footer"><strong>Farooq Ahmed Chitrali</strong> · Quran Majeed</div>
+</div>
 
-        // Initialize Application
-        async function init() {
-            try {
-                const response = await fetch('https://api.alquran.cloud/v1/surah');
-                const data = await response.json();
-                allSurahs = data.data;
-                renderSurahList();
-            } catch (error) {
-                console.error("Error loading Quran:", error);
-            }
-        }
+<script>
+  // ============================================================
+  // DATA (same as before, compact)
+  // ============================================================
+  const SURAH_META = [
+    {id:1,ar:'الفاتحة',ur:'الفاتحہ',revelation:'Makkan',verses:7},
+    {id:2,ar:'البقرة',ur:'البقرہ',revelation:'Madani',verses:286},
+    {id:3,ar:'آل عمران',ur:'آل عمران',revelation:'Madani',verses:200},
+    {id:4,ar:'النساء',ur:'النساء',revelation:'Madani',verses:176},
+    {id:5,ar:'المائدة',ur:'المائدہ',revelation:'Madani',verses:120},
+    {id:6,ar:'الأنعام',ur:'الأنعام',revelation:'Makkan',verses:165},
+    {id:7,ar:'الأعراف',ur:'الأعراف',revelation:'Makkan',verses:206},
+    {id:8,ar:'الأنفال',ur:'الأنفال',revelation:'Madani',verses:75},
+    {id:9,ar:'التوبة',ur:'التوبہ',revelation:'Madani',verses:129},
+    {id:10,ar:'يونس',ur:'یونس',revelation:'Makkan',verses:109},
+    {id:11,ar:'هود',ur:'ھود',revelation:'Makkan',verses:123},
+    {id:12,ar:'يوسف',ur:'یوسف',revelation:'Makkan',verses:111},
+    {id:13,ar:'الرعد',ur:'الرعد',revelation:'Madani',verses:43},
+    {id:14,ar:'إبراهيم',ur:'ابراہیم',revelation:'Makkan',verses:52},
+    {id:15,ar:'الحجر',ur:'الحجر',revelation:'Makkan',verses:99},
+    {id:16,ar:'النحل',ur:'النحل',revelation:'Makkan',verses:128},
+    {id:17,ar:'الإسراء',ur:'الإسراء',revelation:'Makkan',verses:111},
+    {id:18,ar:'الكهف',ur:'الکہف',revelation:'Makkan',verses:110},
+    {id:19,ar:'مريم',ur:'مریم',revelation:'Makkan',verses:98},
+    {id:20,ar:'طه',ur:'طٰہٰ',revelation:'Makkan',verses:135},
+    {id:21,ar:'الأنبياء',ur:'الأنبیاء',revelation:'Makkan',verses:112},
+    {id:22,ar:'الحج',ur:'الحج',revelation:'Madani',verses:78},
+    {id:23,ar:'المؤمنون',ur:'المؤمنون',revelation:'Makkan',verses:118},
+    {id:24,ar:'النور',ur:'النور',revelation:'Madani',verses:64},
+    {id:25,ar:'الفرقان',ur:'الفرقان',revelation:'Makkan',verses:77},
+    {id:26,ar:'الشعراء',ur:'الشعراء',revelation:'Makkan',verses:227},
+    {id:27,ar:'النمل',ur:'النمل',revelation:'Makkan',verses:93},
+    {id:28,ar:'القصص',ur:'القصص',revelation:'Makkan',verses:88},
+    {id:29,ar:'العنكبوت',ur:'العنکبوت',revelation:'Makkan',verses:69},
+    {id:30,ar:'الروم',ur:'الروم',revelation:'Makkan',verses:60},
+    {id:31,ar:'لقمان',ur:'لقمان',revelation:'Makkan',verses:34},
+    {id:32,ar:'السجدة',ur:'السجدہ',revelation:'Makkan',verses:30},
+    {id:33,ar:'الأحزاب',ur:'الأحزاب',revelation:'Madani',verses:73},
+    {id:34,ar:'سبأ',ur:'سبا',revelation:'Makkan',verses:54},
+    {id:35,ar:'فاطر',ur:'فاطر',revelation:'Makkan',verses:45},
+    {id:36,ar:'يس',ur:'یٰس',revelation:'Makkan',verses:83},
+    {id:37,ar:'الصافات',ur:'الصافات',revelation:'Makkan',verses:182},
+    {id:38,ar:'ص',ur:'ص',revelation:'Makkan',verses:88},
+    {id:39,ar:'الزمر',ur:'الزمر',revelation:'Makkan',verses:75},
+    {id:40,ar:'غافر',ur:'غافر',revelation:'Makkan',verses:85},
+    {id:41,ar:'فصلت',ur:'فصلت',revelation:'Makkan',verses:54},
+    {id:42,ar:'الشورى',ur:'الشوریٰ',revelation:'Makkan',verses:53},
+    {id:43,ar:'الزخرف',ur:'الزخرف',revelation:'Makkan',verses:89},
+    {id:44,ar:'الدخان',ur:'الدخان',revelation:'Makkan',verses:59},
+    {id:45,ar:'الجاثية',ur:'الجاثیہ',revelation:'Makkan',verses:37},
+    {id:46,ar:'الأحقاف',ur:'الأحقاف',revelation:'Makkan',verses:35},
+    {id:47,ar:'محمد',ur:'محمد',revelation:'Madani',verses:38},
+    {id:48,ar:'الفتح',ur:'الفتح',revelation:'Madani',verses:29},
+    {id:49,ar:'الحجرات',ur:'الحجرات',revelation:'Madani',verses:18},
+    {id:50,ar:'ق',ur:'ق',revelation:'Makkan',verses:45},
+    {id:51,ar:'الذاريات',ur:'الذاریات',revelation:'Makkan',verses:60},
+    {id:52,ar:'الطور',ur:'الطور',revelation:'Makkan',verses:49},
+    {id:53,ar:'النجم',ur:'النجم',revelation:'Makkan',verses:62},
+    {id:54,ar:'القمر',ur:'القمر',revelation:'Makkan',verses:55},
+    {id:55,ar:'الرحمن',ur:'الرحمن',revelation:'Madani',verses:78},
+    {id:56,ar:'الواقعة',ur:'الواقعہ',revelation:'Makkan',verses:96},
+    {id:57,ar:'الحديد',ur:'الحدید',revelation:'Madani',verses:29},
+    {id:58,ar:'المجادلة',ur:'المجادلہ',revelation:'Madani',verses:22},
+    {id:59,ar:'الحشر',ur:'الحشر',revelation:'Madani',verses:24},
+    {id:60,ar:'الممتحنة',ur:'الممتحنہ',revelation:'Madani',verses:13},
+    {id:61,ar:'الصف',ur:'الصف',revelation:'Madani',verses:14},
+    {id:62,ar:'الجمعة',ur:'الجمعہ',revelation:'Madani',verses:11},
+    {id:63,ar:'المنافقون',ur:'المنافقون',revelation:'Madani',verses:11},
+    {id:64,ar:'التغابن',ur:'التغابن',revelation:'Madani',verses:18},
+    {id:65,ar:'الطلاق',ur:'الطلاق',revelation:'Madani',verses:12},
+    {id:66,ar:'التحريم',ur:'التحریم',revelation:'Madani',verses:12},
+    {id:67,ar:'الملك',ur:'الملک',revelation:'Makkan',verses:30},
+    {id:68,ar:'القلم',ur:'القلم',revelation:'Makkan',verses:52},
+    {id:69,ar:'الحاقة',ur:'الحاقہ',revelation:'Makkan',verses:52},
+    {id:70,ar:'المعارج',ur:'المعارج',revelation:'Makkan',verses:44},
+    {id:71,ar:'نوح',ur:'نوح',revelation:'Makkan',verses:28},
+    {id:72,ar:'الجن',ur:'الجن',revelation:'Makkan',verses:28},
+    {id:73,ar:'المزمل',ur:'المزمل',revelation:'Makkan',verses:20},
+    {id:74,ar:'المدثر',ur:'المدثر',revelation:'Makkan',verses:56},
+    {id:75,ar:'القيامة',ur:'القیامہ',revelation:'Makkan',verses:40},
+    {id:76,ar:'الإنسان',ur:'الانسان',revelation:'Madani',verses:31},
+    {id:77,ar:'المرسلات',ur:'المرسلات',revelation:'Makkan',verses:50},
+    {id:78,ar:'النبأ',ur:'النباء',revelation:'Makkan',verses:40},
+    {id:79,ar:'النازعات',ur:'النازعات',revelation:'Makkan',verses:46},
+    {id:80,ar:'عبس',ur:'عبس',revelation:'Makkan',verses:42},
+    {id:81,ar:'التكوير',ur:'التکویر',revelation:'Makkan',verses:29},
+    {id:82,ar:'الانفطار',ur:'الانفطار',revelation:'Makkan',verses:19},
+    {id:83,ar:'المطففين',ur:'المطففین',revelation:'Makkan',verses:36},
+    {id:84,ar:'الانشقاق',ur:'الانشقاق',revelation:'Makkan',verses:25},
+    {id:85,ar:'البروج',ur:'البروج',revelation:'Makkan',verses:22},
+    {id:86,ar:'الطارق',ur:'الطارق',revelation:'Makkan',verses:17},
+    {id:87,ar:'الأعلى',ur:'الأعلیٰ',revelation:'Makkan',verses:19},
+    {id:88,ar:'الغاشية',ur:'الغاشیہ',revelation:'Makkan',verses:26},
+    {id:89,ar:'الفجر',ur:'الفجر',revelation:'Makkan',verses:30},
+    {id:90,ar:'البلد',ur:'البلد',revelation:'Makkan',verses:20},
+    {id:91,ar:'الشمس',ur:'الشمس',revelation:'Makkan',verses:15},
+    {id:92,ar:'الليل',ur:'اللیل',revelation:'Makkan',verses:21},
+    {id:93,ar:'الضحى',ur:'الضحیٰ',revelation:'Makkan',verses:11},
+    {id:94,ar:'الشرح',ur:'الشرح',revelation:'Makkan',verses:8},
+    {id:95,ar:'التين',ur:'التین',revelation:'Makkan',verses:8},
+    {id:96,ar:'العلق',ur:'العلق',revelation:'Makkan',verses:19},
+    {id:97,ar:'القدر',ur:'القدر',revelation:'Makkan',verses:5},
+    {id:98,ar:'البينة',ur:'البینہ',revelation:'Madani',verses:8},
+    {id:99,ar:'الزلزلة',ur:'الزلزلہ',revelation:'Madani',verses:8},
+    {id:100,ar:'العاديات',ur:'العادیات',revelation:'Makkan',verses:11},
+    {id:101,ar:'القارعة',ur:'القارعہ',revelation:'Makkan',verses:11},
+    {id:102,ar:'التكاثر',ur:'التکاثر',revelation:'Makkan',verses:8},
+    {id:103,ar:'العصر',ur:'العصر',revelation:'Makkan',verses:3},
+    {id:104,ar:'الهمزة',ur:'الھمزہ',revelation:'Makkan',verses:9},
+    {id:105,ar:'الفيل',ur:'الفیل',revelation:'Makkan',verses:5},
+    {id:106,ar:'قريش',ur:'قریش',revelation:'Makkan',verses:4},
+    {id:107,ar:'الماعون',ur:'الماعون',revelation:'Makkan',verses:7},
+    {id:108,ar:'الكوثر',ur:'الکوثر',revelation:'Makkan',verses:3},
+    {id:109,ar:'الكافرون',ur:'الکافرون',revelation:'Makkan',verses:6},
+    {id:110,ar:'النصر',ur:'النصر',revelation:'Madani',verses:3},
+    {id:111,ar:'المسد',ur:'المسد',revelation:'Makkan',verses:5},
+    {id:112,ar:'الإخلاص',ur:'الإخلاص',revelation:'Makkan',verses:4},
+    {id:113,ar:'الفلق',ur:'الفلق',revelation:'Makkan',verses:5},
+    {id:114,ar:'الناس',ur:'الناس',revelation:'Makkan',verses:6}
+  ];
 
-        function renderSurahList() {
-            const listEl = document.getElementById('surah-list');
-            listEl.innerHTML = allSurahs.map(surah => `
-                <div onclick="loadSurah(${surah.number}, '${surah.name}')" class="category-card bg-white p-6 rounded-xl shadow-md text-center border border-gray-100">
-                    <div class="text-2xl font-bold text-emerald-700">${surah.number}</div>
-                    <div class="text-xl quran-arabic">${surah.name}</div>
-                    <div class="text-sm text-gray-500">${surah.englishName}</div>
-                </div>
-            `).join('');
-        }
-
-        async function loadSurah(id, name) {
-            document.getElementById('surah-list').classList.add('hidden');
-            document.getElementById('verses-display').classList.remove('hidden');
-            const contentArea = document.getElementById('content-area');
-            contentArea.innerHTML = "Loading Verses...";
-
-            // Bismillah Logic (Exclude Surah 9)
-            const bismillahArea = document.getElementById('bismillah-area');
-            if (id !== 9) {
-                bismillahArea.classList.remove('hidden');
-            } else {
-                bismillahArea.classList.add('hidden');
-            }
-
-            try {
-                // Fetch Arabic and Urdu Translation (Fateh Muhammad Jalandhari is ur.jalandhry)
-                const [arRes, urRes] = await Promise.all([
-                    fetch(`https://api.alquran.cloud/v1/surah/${id}/ar.abdulsamad`),
-                    fetch(`https://api.alquran.cloud/v1/surah/${id}/ur.jalandhry`)
-                ]);
-                
-                const arData = await arRes.json();
-                const urData = await urRes.json();
-
-                renderVerses(arData.data.ayahs, urData.data.ayahs);
-            } catch (error) {
-                contentArea.innerHTML = "Error loading content.";
-            }
-        }
-
-        function renderVerses(arAyahs, urAyahs) {
-            const contentArea = document.getElementById('content-area');
-            let html = '';
-
-            arAyahs.forEach((ayah, index) => {
-                const urText = urAyahs[index].text;
-                
-                html += `
-                    <div class="verse-block p-6 bg-white rounded-lg shadow-sm mb-4 text-right">
-                        ${currentDisplay !== 'urdu' ? `<div class="quran-arabic mb-4">${ayah.text}</div>` : ''}
-                        ${currentDisplay !== 'arabic' ? `<div class="urdu-text border-r-4 border-emerald-500 pr-4">${urText}</div>` : ''}
-                        <div class="mt-4 flex gap-2">
-                            <button onclick="playAudio('${ayah.audio}', ${ayah.number})" class="text-xs bg-emerald-100 px-3 py-1 rounded">Play Arabic</button>
-                            <button onclick="playUrduAudio(${ayah.numberInSurah}, ${arAyahs[0].surah.number})" class="text-xs bg-amber-100 px-3 py-1 rounded">Play Urdu</button>
-                        </div>
-                    </div>
-                `;
-            });
-            contentArea.innerHTML = html;
-        }
-
-        function setDisplay(type) {
-            currentDisplay = type;
-            document.body.className = `theme-${type}`;
-            // Refresh current view if verses are open
-            const visibleSurah = document.querySelector('.verse-block');
-            if(visibleSurah) {
-                // Simple logic to re-trigger current view
-                alert("View updated to " + type + ". Please re-select the Surah to apply color theme perfectly.");
-            }
-        }
-
-        function setVoiceMode(mode) {
-            voiceMode = mode;
-            alert("Voice Mode set to: " + mode.toUpperCase());
-        }
-
-        function playAudio(url) {
-            const player = document.getElementById('main-audio');
-            player.src = url;
-            player.play();
-        }
-
-        function playUrduAudio(ayahNum, surahNum) {
-            // Shamshad Ali Khan Audio API construction
-            // format: https://cdn.islamic.network/quran/audio/192/ur.khan/{ayahGlobalId}.mp3
-            const player = document.getElementById('main-audio');
-            // This is a simplified proxy for the demo.
-            // In a production app, you would calculate the Global Ayah ID.
-            alert("Playing Urdu Translation (Shamshad Ali Khan)...");
-        }
-
-        function showSurahList() {
-            document.getElementById('surah-list').classList.remove('hidden');
-            document.getElementById('verses-display').classList.add('hidden');
-        }
-
-        init();
-    </script>
-</body>
-</html>
+  const JUZ_DATA = [
+    {juz:1,surah:1,start:1,end:2,endVerse:141},
+    {juz:2,surah:2,start:142,end:2,endVerse:252},
+    {juz:3,surah:2,start:253,end:3,endVerse:92},
+    {juz:4,surah:3,start:93,end:4,endVerse:23},
+    {juz:5,surah:4,start:24,end:4,endVerse:147},
+    {juz:6,surah:4,start:148,end:5,endVerse:81},
+    {juz:7,surah:5,start:82,end:6,endVerse:110},
+    {juz:8,surah:6,start:111,end:7,endVerse:87},
+    {juz:9,surah:7,start:88,end:8,endVerse:40},
+    {juz:10,surah:8,start:41,end:9,endVerse:92},
+    {juz:11,surah:9,start:93,end:10,endVerse:109},
+    {juz:12,surah:11,start:1,end:12,endVerse:52},
+    {juz:13,surah:12,start:53,end:13,endVerse:43},
+    {juz:14,surah:15,start:1,end:16,endVerse:128},
+    {juz:15,surah:17,start:1,end:18,endVerse:74},
+    {juz:16,surah:18,start:75,end:20,endVerse:135},
+    {juz:17,surah:21,start:1,end:22,endVerse:78},
+    {juz:18,surah:23,start:1,end:25,endVerse:20},
+    {juz:19,surah:25,start:21,end:27,endVerse:55},
+    {juz:20,surah:27,start:56,end:29,endVerse:45},
+    {juz:21,surah:29,start:46,end:33,endVerse:30},
+    {juz:22,surah:33,start:31,end:36,endVerse:27},
+    {juz:23,surah:36,start:28,end:39,endVerse:31},
+    {juz:24,surah:39,start:32,end:41,endVerse:46},
+    {juz:25,surah:41,start:47,end:45,endVerse:37},
+    {juz:26,surah:46,start:1,end:51,endVerse:30},
+    {juz:27,surah:51,start:31,end:57,endVerse:29},
+    {juz:28,surah:58,start:1,end:66,endVerse:12},
+    {juz:29,surah:67,start:1,end:77,endVerse:50},
+    {juz:30,surah:78,start:1,end:114,
