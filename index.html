@@ -1,48 +1,107 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ur" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Online Examination Portal</title>
+  <title>آن لائن پیپر - اسلامی معلومات (جماعت چہارم و پنجم)</title>
+  
+  <!-- Urdu Google Fonts for clean typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
-    body { background-color: #f1f5f9; padding-top: 80px; padding-bottom: 50px; }
-
-    /* Sticky Timer Header */
-    header.timer-bar {
-      position: fixed; top: 0; left: 0; right: 0; height: 60px;
-      background: #0f172a; color: #ffffff; display: flex;
-      align-items: center; justify-content: space-between;
-      padding: 0 24px; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Noto Naskh Arabic', 'Jameel Noori Nastaliq', 'Segoe UI', Tahoma, sans-serif;
     }
-    #timer { font-size: 1.3rem; font-weight: bold; color: #38bdf8; font-family: monospace; }
 
-    .paper-container { max-width: 900px; margin: 0 auto; padding: 0 16px; }
+    body {
+      background-color: #f0f4f8;
+      padding-top: 80px;
+      padding-bottom: 50px;
+      color: #1e293b;
+    }
 
-    /* Paper Top Header & Logo Styling */
+    /* 1. Top Fixed Stopwatch / Timer Bar */
+    header.timer-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 65px;
+      background: #064e3b; /* Deep Islamic Green */
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 1000;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      border-bottom: 3px solid #f59e0b;
+    }
+
+    .timer-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .timer-display-box {
+      background: #022c22;
+      padding: 6px 16px;
+      border-radius: 8px;
+      border: 1px solid #10b981;
+    }
+
+    #timer {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #34d399;
+      font-family: monospace;
+      direction: ltr;
+      display: inline-block;
+    }
+
+    .paper-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    /* 2. Header with Right-Side Logo */
     .paper-header {
       background: #ffffff;
       border-radius: 12px;
       padding: 24px;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.06);
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 20px;
-      border-top: 5px solid #2563eb;
+      border-right: 6px solid #059669;
     }
-    .paper-title-box h1 { font-size: 1.6rem; color: #1e293b; margin-bottom: 6px; }
-    .paper-title-box p { color: #64748b; font-size: 0.95rem; }
-    
-    /* Right side logo */
+
+    .paper-title-box h1 {
+      font-size: 1.6rem;
+      color: #065f46;
+      margin-bottom: 6px;
+    }
+
+    .paper-title-box p {
+      color: #64748b;
+      font-size: 0.95rem;
+    }
+
     .organization-logo {
-      max-height: 85px;
-      max-width: 180px;
+      max-height: 80px;
+      max-width: 160px;
       object-fit: contain;
     }
 
-    /* 6 Student Fields Grid Layout */
+    /* 3. Essential 4 Student Info Fields */
     .student-info-card {
       background: #ffffff;
       border-radius: 12px;
@@ -50,178 +109,352 @@
       margin-bottom: 24px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     }
+
     .student-info-card h3 {
-      font-size: 1.1rem;
-      color: #334155;
-      margin-bottom: 16px;
+      font-size: 1.15rem;
+      color: #065f46;
+      margin-bottom: 18px;
       padding-bottom: 8px;
-      border-bottom: 1px solid #e2e8f0;
+      border-bottom: 2px solid #e2e8f0;
     }
+
     .info-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 16px;
     }
+
     .field-group {
       display: flex;
       flex-direction: column;
       gap: 6px;
     }
+
     .field-group label {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: #475569;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    .field-group input {
-      padding: 10px 12px;
-      border: 1px solid #cbd5e1;
-      border-radius: 6px;
       font-size: 0.95rem;
+      font-weight: 700;
+      color: #334155;
+    }
+
+    .field-group input, .field-group select {
+      padding: 10px 14px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 1rem;
       outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-    .field-group input:focus {
-      border-color: #2563eb;
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+      transition: all 0.2s;
+      background-color: #f8fafc;
     }
 
-    /* Question Cards Styling */
+    .field-group input:focus, .field-group select:focus {
+      border-color: #059669;
+      background-color: #ffffff;
+      box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15);
+    }
+
+    /* 4. Question Cards */
     .question-card {
-      background: #ffffff; padding: 20px; border-radius: 8px;
-      margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
     }
-    .question-title { font-weight: 600; margin-bottom: 12px; color: #0f172a; line-height: 1.4; }
-    .options-list { list-style: none; }
-    .option-item { margin-bottom: 8px; }
+
+    .question-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 14px;
+      color: #0f172a;
+      line-height: 1.6;
+    }
+
+    .options-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+    }
+
     .option-item label {
-      display: flex; align-items: center; gap: 12px;
-      padding: 10px 14px; border: 1px solid #e2e8f0; border-radius: 6px;
-      cursor: pointer; transition: background 0.2s, border-color 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+      background: #f8fafc;
     }
-    .option-item label:hover { background-color: #f8fafc; border-color: #cbd5e1; }
-    input[type="radio"] { accent-color: #2563eb; width: 18px; height: 18px; }
 
-    /* Submit Button & Results */
+    .option-item label:hover {
+      background-color: #ecfdf5;
+      border-color: #10b981;
+    }
+
+    input[type="radio"] {
+      accent-color: #059669;
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+
+    /* 5. Bottom Action Buttons (Submit & Retake) */
+    .action-buttons-wrapper {
+      display: flex;
+      gap: 16px;
+      margin-top: 24px;
+      margin-bottom: 30px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 14px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      text-align: center;
+    }
+
+    .btn:active {
+      transform: scale(0.99);
+    }
+
     #submit-btn {
-      width: 100%; padding: 16px; background: #2563eb; color: #ffffff;
-      border: none; border-radius: 8px; font-size: 1.1rem; font-weight: bold;
-      cursor: pointer; margin-top: 10px; transition: background 0.2s;
+      background: #059669;
+      color: #ffffff;
     }
-    #submit-btn:hover { background: #1d4ed8; }
-    #submit-btn:disabled { background: #94a3b8; cursor: not-allowed; }
 
-    .hidden { display: none !important; }
-    
-    #result-box {
-      background: #1e293b; color: #ffffff; padding: 28px;
-      border-radius: 12px; text-align: center; margin-bottom: 24px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    #submit-btn:hover {
+      background: #047857;
     }
-    #result-box h2 { font-size: 1.8rem; color: #38bdf8; margin-bottom: 8px; }
-    #student-summary { margin-top: 12px; font-size: 1rem; color: #cbd5e1; line-height: 1.6; }
+
+    #retake-btn {
+      background: #d97706;
+      color: #ffffff;
+    }
+
+    #retake-btn:hover {
+      background: #b45309;
+    }
+
+    .btn:disabled {
+      background: #94a3b8 !important;
+      cursor: not-allowed;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Result Box */
+    #result-box {
+      background: #064e3b;
+      color: #ffffff;
+      padding: 28px;
+      border-radius: 12px;
+      text-align: center;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      border: 2px solid #34d399;
+    }
+
+    #result-box h2 {
+      font-size: 1.8rem;
+      color: #fbbf24;
+      margin-bottom: 8px;
+    }
+
+    #score-text {
+      font-size: 1.6rem;
+      font-weight: bold;
+      margin-top: 8px;
+      color: #34d399;
+    }
+
+    #student-summary {
+      margin-top: 14px;
+      font-size: 1rem;
+      color: #e2e8f0;
+      line-height: 1.8;
+      border-top: 1px solid #047857;
+      padding-top: 12px;
+    }
+
+    @media (max-width: 600px) {
+      .paper-header {
+        flex-direction: column-reverse;
+        text-align: center;
+      }
+      .action-buttons-wrapper {
+        flex-direction: column;
+      }
+    }
   </style>
 </head>
 <body>
 
-  <!-- Top Sticky Countdown Timer Header -->
+  <!-- 1. Top Fixed Stopwatch / Countdown Timer -->
   <header class="timer-bar">
-    <h2>Online Examination</h2>
-    <div>Remaining Time: <span id="timer">03:00:00</span></div>
+    <div class="timer-title">آن لائن اسلامی معلومات ٹیسٹ</div>
+    <div class="timer-display-box">
+      بقیہ وقت: <span id="timer">03:00:00</span>
+    </div>
   </header>
 
   <div class="paper-container">
 
-    <!-- Paper Header with Right-Side Logo -->
+    <!-- Header Section with Organization Logo on Right -->
     <div class="paper-header">
       <div class="paper-title-box">
-        <h1>Official Examination Paper</h1>
-        <p>100 Questions | Total Time: 3 Hours</p>
+        <h1>اسلامی معلومات (معروضی پیپر)</h1>
+        <p>جماعت: چہارم و پنجم (Class 4th & 5th) | کل وقت: 3 گھنٹے</p>
       </div>
-      <!-- Replace 'logo.png' with your actual image file URL -->
-      <img src="logo.png" alt="Organization Logo" class="organization-logo" onerror="this.src='https://via.placeholder.com/150x60?text=YOUR+LOGO'">
+      <!-- لوگو کی تصویر کا لنک یہاں تبدیل کریں -->
+      <img src="logo.png" alt="لوگو" class="organization-logo" onerror="this.src='https://via.placeholder.com/150x70/059669/ffffff?text=لوگو'">
     </div>
 
-    <!-- Result Banner (Hidden until submitted) -->
+    <!-- Result Banner (Hidden initially) -->
     <div id="result-box" class="hidden">
-      <h2>Exam Submitted Successfully</h2>
-      <p id="score-text" style="font-size: 1.6rem; font-weight: bold; margin-top: 8px; color: #4ade80;"></p>
+      <h2>پیپر کامیابی سے جمع ہو گیا ہے!</h2>
+      <div id="score-text"></div>
       <div id="student-summary"></div>
     </div>
 
     <!-- Exam Form -->
     <form id="exam-form">
 
-      <!-- 6 Top Student Information Fields -->
+      <!-- 4 Essential Student Information Fields -->
       <div class="student-info-card">
-        <h3>Student Details</h3>
+        <h3>طالب علم کی معلومات (ضروری فیلڈز)</h3>
         <div class="info-grid">
           
           <div class="field-group">
-            <label for="student_name">1. Student Name</label>
-            <input type="text" id="student_name" name="student_name" placeholder="Enter full name" required>
+            <label for="student_name">1. طالب علم کا نام:</label>
+            <input type="text" id="student_name" name="student_name" placeholder="پورا نام لکھیں" required>
           </div>
 
           <div class="field-group">
-            <label for="reg_number">2. Registration Number</label>
-            <input type="text" id="reg_number" name="reg_number" placeholder="Enter registration no." required>
+            <label for="reg_number">2. رجسٹریشن نمبر:</label>
+            <input type="text" id="reg_number" name="reg_number" placeholder="رجسٹریشن نمبر درج کریں" required>
           </div>
 
           <div class="field-group">
-            <label for="roll_number">3. Roll / ID Number</label>
-            <input type="text" id="roll_number" name="roll_number" placeholder="Enter roll number" required>
+            <label for="exam_category">3. کیٹیگری / کلاس:</label>
+            <select id="exam_category" name="exam_category" required>
+              <option value="">کلاس منتخب کریں</option>
+              <option value="جماعت چہارم (Class 4th)">جماعت چہارم (Class 4th)</option>
+              <option value="جماعت پنجم (Class 5th)">جماعت پنجم (Class 5th)</option>
+            </select>
           </div>
 
           <div class="field-group">
-            <label for="student_class">4. Class</label>
-            <input type="text" id="student_class" name="student_class" placeholder="Enter class/grade" required>
-          </div>
-
-          <div class="field-group">
-            <label for="exam_category">5. Exam Category</label>
-            <input type="text" id="exam_category" name="exam_category" placeholder="e.g. Final / Midterm / Quiz" required>
-          </div>
-
-          <div class="field-group">
-            <label for="whatsapp_no">6. WhatsApp Number</label>
-            <input type="tel" id="whatsapp_no" name="whatsapp_no" placeholder="Enter WhatsApp number" required>
+            <label for="whatsapp_no">4. واٹس ایپ نمبر:</label>
+            <input type="tel" id="whatsapp_no" name="whatsapp_no" placeholder="03xx-xxxxxxx" required>
           </div>
 
         </div>
       </div>
 
-      <!-- Container for dynamically rendered questions -->
+      <!-- MCQs Questions Container -->
       <div id="questions-wrapper"></div>
 
-      <!-- Submission Button -->
-      <button type="submit" id="submit-btn">Submit Paper</button>
+      <!-- Bottom Action Buttons: Submit & Retake -->
+      <div class="action-buttons-wrapper">
+        <button type="submit" id="submit-btn" class="btn">پیپر جمع کروائیں (Submit)</button>
+        <button type="button" id="retake-btn" class="btn">دوبارہ پیپر دیں (Retake)</button>
+      </div>
+
     </form>
 
   </div>
 
   <script>
-    // Sample Question Data Structure (Expand to 100 questions)
+    // چوتھی اور پانچویں جماعت کے اسلامی معلومات کے ایم سی کیوز کا ڈیٹا سیٹ
     const questionsData = [
-      { id: 1, text: "Which HTML element is used to capture single-select choices?", options: ["<checkbox>", "<input type='radio'>", "<select-one>", "<button>"], answer: 1 },
-      { id: 2, text: "Which CSS rule locks the stopwatch header at the top during scrolling?", options: ["position: absolute", "position: fixed", "display: flex", "float: top"], answer: 1 }
+      {
+        id: 1,
+        text: "اسلام کے بنیادی ارکان کتنے ہیں؟",
+        options: ["چار (4)", "پانچ (5)", "چھ (6)", "سات (7)"],
+        answer: 1
+      },
+      {
+        id: 2,
+        text: "ہمارے پیارے نبی حضرت محمد رسول اللہ خاتم النبیین صلی اللہ علیہ وعلی آلہ واصحابہ وسلم کس شہر میں پیدا ہوئے؟",
+        options: ["مدینہ منورہ", "طائف", "مکہ مکرمہ", "جدہ"],
+        answer: 2
+      },
+      {
+        id: 3,
+        text: "اللہ تعالیٰ کی آخری نازل کردہ آسمانی کتاب کون سی ہے؟",
+        options: ["تورات", "زبور", "انجیل", "قرآن مجید"],
+        answer: 3
+      },
+      {
+        id: 4,
+        text: "ایک دن اور رات میں کل کتنی فرض نمازیں ہیں؟",
+        options: ["تین (3)", "پانچ (5)", "چھ (6)", "چار (4)"],
+        answer: 1
+      },
+      {
+        id: 5,
+        text: "قرآن مجید کی سب سے پہلی نازل ہونے والی آیات کس سورت کی ہیں؟",
+        options: ["سورۃ العلق", "سورۃ الفاتحہ", "سورۃ الاخلاص", "سورۃ البقرہ"],
+        answer: 0
+      },
+      {
+        id: 6,
+        text: "مسلمانوں کے پہلے خلیفہ راشد کون ہیں؟",
+        options: ["حضرت عمر فاروق رضی اللہ عنہ", "حضرت ابوبکر صدیق رضی اللہ عنہ", "حضرت عثمان غنی رضی اللہ عنہ", "حضرت علی مرتضیٰ رضی اللہ عنہ"],
+        answer: 1
+      },
+      {
+        id: 7,
+        text: "نماز پڑھنے سے پہلے جسم اور کپڑوں کا پاک ہونا اور ...... کرنا ضروری ہے؟",
+        options: ["وضو", "سونا", "کھانا کھانا", "کھیلنا"],
+        answer: 0
+      },
+      {
+        id: 8,
+        text: "روزہ کس اسلامی مہینے میں رکھا جاتا ہے؟",
+        options: ["محرم الحرام", "رجب", "رمضان المبارک", "ذی الحجہ"],
+        answer: 2
+      },
+      {
+        id: 9,
+        text: "خانہ کعبہ کس شہر میں واقع ہے؟",
+        options: ["مکہ مکرمہ", "مدینہ منورہ", "بیت المقدس", "دمشق"],
+        answer: 0
+      },
+      {
+        id: 10,
+        text: "تمام انسانوں اور کائنات کو پیدا کرنے والا کون ہے؟",
+        options: ["فرشتے", "اللہ تعالیٰ", "انسان", "سورج"],
+        answer: 1
+      }
+      // آپ یہاں اسی طرز پر مزید 100 سوالات کا اضافہ کر سکتے ہیں
     ];
 
-    let totalSeconds = 3 * 60 * 60; // 3 Hours (10,800 seconds)
+    const TOTAL_TIME_SECONDS = 3 * 60 * 60; // 3 Hours (10,800 Seconds)
+    let totalSeconds = TOTAL_TIME_SECONDS;
     let timerInterval = null;
 
-    // Render questions into the DOM
+    // 1. Render MCQs Questions into DOM
     function renderExam() {
       const wrapper = document.getElementById('questions-wrapper');
       wrapper.innerHTML = questionsData.map((q, qIndex) => `
         <div class="question-card">
-          <p class="question-title">Q${qIndex + 1}. ${q.text}</p>
+          <p class="question-title">سوال ${qIndex + 1}: ${q.text}</p>
           <ul class="options-list">
             ${q.options.map((opt, oIndex) => `
               <li class="option-item">
                 <label for="q${q.id}_opt${oIndex}">
                   <input type="radio" id="q${q.id}_opt${oIndex}" name="q${q.id}" value="${oIndex}">
-                  ${opt}
+                  <span>${opt}</span>
                 </label>
               </li>
             `).join('')}
@@ -230,13 +463,14 @@
       `).join('');
     }
 
-    // Stopwatch Timer Functionality
+    // 2. Stopwatch Counter Logic
     function startTimer() {
+      clearInterval(timerInterval);
       timerInterval = setInterval(() => {
         if (totalSeconds <= 0) {
           clearInterval(timerInterval);
           finishExam();
-          alert("Time is up! Your paper is being submitted automatically.");
+          alert("وقت ختم ہو گیا ہے! آپ کا پیپر خود بخود جمع کر دیا گیا ہے۔");
           return;
         }
         totalSeconds--;
@@ -250,14 +484,13 @@
       }, 1000);
     }
 
-    // Submit & Grade Exam
+    // 3. Submit Exam & Calculate Score
     function finishExam() {
       clearInterval(timerInterval);
       
       const form = document.getElementById('exam-form');
       const formData = new FormData(form);
       
-      // Calculate Score
       let score = 0;
       questionsData.forEach((q) => {
         const selected = formData.get(`q${q.id}`);
@@ -266,44 +499,68 @@
         }
       });
 
-      // Extract Student Info
-      const sName = formData.get('student_name') || 'N/A';
-      const sReg = formData.get('reg_number') || 'N/A';
-      const sClass = formData.get('student_class') || 'N/A';
-      const sCat = formData.get('exam_category') || 'N/A';
-      const sWa = formData.get('whatsapp_no') || 'N/A';
+      // Extract Student Details
+      const sName = formData.get('student_name') || 'درج نہیں کیا گیا';
+      const sReg = formData.get('reg_number') || 'درج نہیں کیا گیا';
+      const sCat = formData.get('exam_category') || 'درج نہیں کیا گیا';
+      const sWa = formData.get('whatsapp_no') || 'درج نہیں کیا گیا';
 
-      // Disable all inputs to lock paper
-      const allInputs = form.querySelectorAll('input');
+      // Lock All Inputs
+      const allInputs = form.querySelectorAll('input, select');
       allInputs.forEach(input => input.disabled = true);
       document.getElementById('submit-btn').disabled = true;
 
-      // Display Result & Summary
+      // Display Score Result
       const resultBox = document.getElementById('result-box');
       const scoreText = document.getElementById('score-text');
       const summaryBox = document.getElementById('student-summary');
 
       const percentage = ((score / questionsData.length) * 100).toFixed(1);
-      scoreText.textContent = `Score: ${score} / ${questionsData.length} (${percentage}%)`;
+      scoreText.textContent = `حاصل کردہ نمبر: ${score} / ${questionsData.length} (${percentage}%)`;
       
       summaryBox.innerHTML = `
-        <p><strong>Student:</strong> ${sName} | <strong>Reg No:</strong> ${sReg}</p>
-        <p><strong>Class:</strong> ${sClass} | <strong>Category:</strong> ${sCat} | <strong>WhatsApp:</strong> ${sWa}</p>
+        <p><strong>طالب علم:</strong> ${sName} | <strong>رجسٹریشن نمبر:</strong> ${sReg}</p>
+        <p><strong>کیٹیگری/کلاس:</strong> ${sCat} | <strong>واٹس ایپ نمبر:</strong> ${sWa}</p>
       `;
 
       resultBox.classList.remove('hidden');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Form Event Listener
+    // 4. Retake Exam Function
+    function retakeExam() {
+      if (confirm("کیا آپ واقعی پیپر دوبارہ شروع کرنا چاہتے ہیں؟ تمام پرانے جوابات صاف ہو جائیں گے۔")) {
+        // Reset Timer
+        totalSeconds = TOTAL_TIME_SECONDS;
+        
+        // Reset Form & Enable Inputs
+        const form = document.getElementById('exam-form');
+        form.reset();
+        
+        const allInputs = form.querySelectorAll('input, select');
+        allInputs.forEach(input => input.disabled = false);
+        document.getElementById('submit-btn').disabled = false;
+
+        // Hide Result Box
+        document.getElementById('result-box').classList.add('hidden');
+
+        // Restart Timer & Scroll to Top
+        startTimer();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    // Event Listeners
     document.getElementById('exam-form').addEventListener('submit', (e) => {
       e.preventDefault();
-      if (confirm("Are you sure you want to submit your exam paper?")) {
+      if (confirm("کیا آپ پیپر جمع کروانا چاہتے ہیں؟")) {
         finishExam();
       }
     });
 
-    // Start on Page Load
+    document.getElementById('retake-btn').addEventListener('click', retakeExam);
+
+    // Initialize Page
     window.onload = () => {
       renderExam();
       startTimer();
