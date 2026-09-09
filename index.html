@@ -1,522 +1,313 @@
 <!DOCTYPE html>
-<html lang="ur">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>القرآن الكريم - المكتبة الرقمية</title>
-    <!-- Scheherazade New (Bold) &  Scheherazade bold-->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Online Examination Portal</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+    body { background-color: #f1f5f9; padding-top: 80px; padding-bottom: 50px; }
 
-    <style>
-        :root {
-            --primary-emerald: #0e3b2e;
-            --accent-gold: #d4af37;
-            --light-gold: #f4e8c1;
-            --bg-cream: #faf8f5;
-            --card-white: #ffffff;
-            --text-dark: #1f2937;
-        }
+    /* Sticky Timer Header */
+    header.timer-bar {
+      position: fixed; top: 0; left: 0; right: 0; height: 60px;
+      background: #0f172a; color: #ffffff; display: flex;
+      align-items: center; justify-content: space-between;
+      padding: 0 24px; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    }
+    #timer { font-size: 1.3rem; font-weight: bold; color: #38bdf8; font-family: monospace; }
 
-        body {
-            font-family: 'Noto Nastaliq Urdu', 'Scheherazade New', serif;
-            background-color: var(--bg-cream);
-            color: var(--text-dark);
-            margin: 0;
-            padding: 12px;
-            direction: rtl;
-        }
+    .paper-container { max-width: 900px; margin: 0 auto; padding: 0 16px; }
 
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-        }
+    /* Paper Top Header & Logo Styling */
+    .paper-header {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      border-top: 5px solid #2563eb;
+    }
+    .paper-title-box h1 { font-size: 1.6rem; color: #1e293b; margin-bottom: 6px; }
+    .paper-title-box p { color: #64748b; font-size: 0.95rem; }
+    
+    /* Right side logo */
+    .organization-logo {
+      max-height: 85px;
+      max-width: 180px;
+      object-fit: contain;
+    }
 
-        /* Header Banner */
-        .header-banner {
-            background: linear-gradient(135deg, #0e3b2e 0%, #175241 100%);
-            color: var(--accent-gold);
-            text-align: center;
-            padding: 25px 15px;
-            border-radius: 16px;
-            border: 2px solid var(--accent-gold);
-            box-shadow: 0 10px 25px rgba(14, 59, 46, 0.15);
-            margin-bottom: 20px;
-        }
+    /* 6 Student Fields Grid Layout */
+    .student-info-card {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .student-info-card h3 {
+      font-size: 1.1rem;
+      color: #334155;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+    }
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .field-group label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .field-group input {
+      padding: 10px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .field-group input:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
 
-        .header-banner h1 {
-            font-family: 'Scheherazade New', serif;
-            font-size: 34px;
-            margin: 0;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
+    /* Question Cards Styling */
+    .question-card {
+      background: #ffffff; padding: 20px; border-radius: 8px;
+      margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    .question-title { font-weight: 600; margin-bottom: 12px; color: #0f172a; line-height: 1.4; }
+    .options-list { list-style: none; }
+    .option-item { margin-bottom: 8px; }
+    .option-item label {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 14px; border: 1px solid #e2e8f0; border-radius: 6px;
+      cursor: pointer; transition: background 0.2s, border-color 0.2s;
+    }
+    .option-item label:hover { background-color: #f8fafc; border-color: #cbd5e1; }
+    input[type="radio"] { accent-color: #2563eb; width: 18px; height: 18px; }
 
-        .header-banner p {
-            color: #e0e0e0;
-            font-size: 14px;
-            margin: 8px 0 0 0;
-        }
+    /* Submit Button & Results */
+    #submit-btn {
+      width: 100%; padding: 16px; background: #2563eb; color: #ffffff;
+      border: none; border-radius: 8px; font-size: 1.1rem; font-weight: bold;
+      cursor: pointer; margin-top: 10px; transition: background 0.2s;
+    }
+    #submit-btn:hover { background: #1d4ed8; }
+    #submit-btn:disabled { background: #94a3b8; cursor: not-allowed; }
 
-        /* Controls Card */
-        .controls-card {
-            background: var(--card-white);
-            border-radius: 14px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border: 1px solid #e5e7eb;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px;
-            align-items: flex-end;
-        }
-
-        .control-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        label {
-            font-size: 13px;
-            color: var(--primary-emerald);
-            font-weight: bold;
-        }
-
-        select, input {
-            padding: 10px;
-            font-size: 14px;
-            border-radius: 8px;
-            border: 1px solid #cbd5e1;
-            background-color: #f8fafc;
-            font-family: inherit;
-            outline: none;
-            transition: border 0.2s;
-        }
-
-        select:focus, input:focus {
-            border-color: var(--accent-gold);
-        }
-
-        .btn-load {
-            background: linear-gradient(135deg, #0e3b2e 0%, #175241 100%);
-            color: var(--accent-gold);
-            border: 1px solid var(--accent-gold);
-            padding: 11px;
-            font-size: 15px;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 10px rgba(14, 59, 46, 0.2);
-        }
-
-        .btn-load:hover {
-            background: var(--accent-gold);
-            color: var(--primary-emerald);
-        }
-
-        /* Sticky Player Bar */
-        .player-bar {
-            position: sticky;
-            top: 10px;
-            background: var(--primary-emerald);
-            border: 1px solid var(--accent-gold);
-            color: #ffffff;
-            padding: 12px 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 1000;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .player-status {
-            font-size: 14px;
-            color: var(--light-gold);
-        }
-
-        .player-controls {
-            display: flex;
-            gap: 8px;
-        }
-
-        .player-controls button {
-            background: var(--accent-gold);
-            color: var(--primary-emerald);
-            border: none;
-            padding: 6px 16px;
-            font-size: 13px;
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .player-controls button:hover {
-            background: #ffffff;
-        }
-
-        /* Ayah Cards */
-        .ayah-card {
-            background: var(--card-white);
-            border-radius: 12px;
-            padding: 22px;
-            margin-bottom: 16px;
-            border: 1px solid #eaeaea;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .ayah-card.playing {
-            border: 2px solid var(--accent-gold);
-            background-color: #fcf9f2;
-            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.2);
-        }
-
-        .meta-tag {
-            font-size: 12px;
-            color: var(--primary-emerald);
-            background: var(--light-gold);
-            padding: 3px 10px;
-            border-radius: 20px;
-            display: inline-block;
-            margin-bottom: 12px;
-            font-weight: bold;
-        }
-
-        .arabic {
-            font-family: 'Scheherazade New', serif;
-            font-size: 32px;
-            font-weight: 700;
-            color: var(--primary-emerald);
-            line-height: 2.2;
-            text-align: right;
-            margin-bottom: 14px;
-        }
-
-        .urdu {
-            font-family: 'Scheherazade', serif;
-            font-size: 18px;
-            color: #334155;
-            line-height: 2.2;
-            text-align: right;
-            border-top: 1px dashed #e2e8f0;
-            padding-top: 12px;
-        }
-
-        .play-btn-small {
-            margin-top: 12px;
-            font-size: 12px;
-            padding: 5px 12px;
-            background: transparent;
-            color: var(--primary-emerald);
-            border: 1px solid var(--primary-emerald);
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.2s;
-        }
-
-        .play-btn-small:hover {
-            background: var(--primary-emerald);
-            color: #ffffff;
-        }
-    </style>
+    .hidden { display: none !important; }
+    
+    #result-box {
+      background: #1e293b; color: #ffffff; padding: 28px;
+      border-radius: 12px; text-align: center; margin-bottom: 24px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    #result-box h2 { font-size: 1.8rem; color: #38bdf8; margin-bottom: 8px; }
+    #student-summary { margin-top: 12px; font-size: 1rem; color: #cbd5e1; line-height: 1.6; }
+  </style>
 </head>
 <body>
 
-<div class="container">
-    <!-- Header -->
-    <div class="header-banner">
-        <h1>القرآن الكريم</h1>
-        <p>تلاوت: قاری عبد الباسط عبد الصمد • اردو ترجمہ صوتی: شمشاد علی خان</p>
+  <!-- Top Sticky Countdown Timer Header -->
+  <header class="timer-bar">
+    <h2>Online Examination</h2>
+    <div>Remaining Time: <span id="timer">03:00:00</span></div>
+  </header>
+
+  <div class="paper-container">
+
+    <!-- Paper Header with Right-Side Logo -->
+    <div class="paper-header">
+      <div class="paper-title-box">
+        <h1>Official Examination Paper</h1>
+        <p>100 Questions | Total Time: 3 Hours</p>
+      </div>
+      <!-- Replace 'logo.png' with your actual image file URL -->
+      <img src="logo.png" alt="Organization Logo" class="organization-logo" onerror="this.src='https://via.placeholder.com/150x60?text=YOUR+LOGO'">
     </div>
 
-    <!-- Controls -->
-    <div class="controls-card">
-        <div class="control-group">
-            <label>انتخاب کا طریقہ:</label>
-            <select id="modeSelect" onchange="handleModeChange()">
-                <option value="surah">سورۃ وائز</option>
-                <option value="juz">پارہ وائز</option>
-                <option value="ayah">آیت وائز</option>
-            </select>
-        </div>
-
-        <div class="control-group">
-            <label id="selectionLabel">سورۃ منتخب کریں:</label>
-            <select id="itemSelect"></select>
-        </div>
-
-        <div class="control-group" id="ayahBox" style="display: none;">
-            <label>آیت نمبر:</label>
-            <input type="number" id="ayahInput" value="1" min="1">
-        </div>
-
-        <div class="control-group">
-            <label>آڈیو آپشن:</label>
-            <select id="audioOption">
-                <option value="both">تلاوت + اردو ترجمہ</option>
-                <option value="arabic">صرف عربی تلاوت</option>
-                <option value="urdu">صرف اردو ترجمہ</option>
-            </select>
-        </div>
-
-        <button class="btn-load" onclick="loadContent()">لوڈ کریں</button>
+    <!-- Result Banner (Hidden until submitted) -->
+    <div id="result-box" class="hidden">
+      <h2>Exam Submitted Successfully</h2>
+      <p id="score-text" style="font-size: 1.6rem; font-weight: bold; margin-top: 8px; color: #4ade80;"></p>
+      <div id="student-summary"></div>
     </div>
 
-    <!-- Sticky Audio Player -->
-    <div class="player-bar">
-        <div class="player-status" id="playerStatus">حالت: تیار ہے</div>
-        <div class="player-controls">
-            <button onclick="playAll()">پلے کریں ▶</button>
-            <button onclick="pauseAudio()">روکیں ⏸</button>
+    <!-- Exam Form -->
+    <form id="exam-form">
+
+      <!-- 6 Top Student Information Fields -->
+      <div class="student-info-card">
+        <h3>Student Details</h3>
+        <div class="info-grid">
+          
+          <div class="field-group">
+            <label for="student_name">1. Student Name</label>
+            <input type="text" id="student_name" name="student_name" placeholder="Enter full name" required>
+          </div>
+
+          <div class="field-group">
+            <label for="reg_number">2. Registration Number</label>
+            <input type="text" id="reg_number" name="reg_number" placeholder="Enter registration no." required>
+          </div>
+
+          <div class="field-group">
+            <label for="roll_number">3. Roll / ID Number</label>
+            <input type="text" id="roll_number" name="roll_number" placeholder="Enter roll number" required>
+          </div>
+
+          <div class="field-group">
+            <label for="student_class">4. Class</label>
+            <input type="text" id="student_class" name="student_class" placeholder="Enter class/grade" required>
+          </div>
+
+          <div class="field-group">
+            <label for="exam_category">5. Exam Category</label>
+            <input type="text" id="exam_category" name="exam_category" placeholder="e.g. Final / Midterm / Quiz" required>
+          </div>
+
+          <div class="field-group">
+            <label for="whatsapp_no">6. WhatsApp Number</label>
+            <input type="tel" id="whatsapp_no" name="whatsapp_no" placeholder="Enter WhatsApp number" required>
+          </div>
+
         </div>
-    </div>
+      </div>
 
-    <!-- Quran Content -->
-    <div id="quranContainer">
-        <p style="text-align:center; color: #64748b; margin-top: 30px;">براہِ کرم اپنی پسند کے مطابق آپشن منتخب کر کے "لوڈ کریں" پر کلک کریں۔</p>
-    </div>
-</div>
+      <!-- Container for dynamically rendered questions -->
+      <div id="questions-wrapper"></div>
 
-<audio id="globalAudioPlayer"></audio>
+      <!-- Submission Button -->
+      <button type="submit" id="submit-btn">Submit Paper</button>
+    </form>
 
-<script>
-    const SURAHS = [
-        "1. الفاتحة", "2. البقرة", "3. آل عمران", "4. النساء", "5. المائدة", "6. الأنعام", "7. الأعراف", "8. الأنفال", "9. التوبة", "10. يونس",
-        "11. هود", "12. يوسف", "13. الرعد", "14. إبراهيم", "15. الحجر", "16. النحل", "17. الإسراء", "18. الكهف", "19. مريم", "20. طه",
-        "21. الأنبياء", "22. الحج", "23. المؤمنون", "24. النور", "25. الفرقان", "26. الشعراء", "27. النمل", "28. القصص", "29. العنكبوت", "30. الروم",
-        "31. لقمان", "32. السجدة", "33. الأحزاب", "34. سبأ", "35. فاطر", "36. يس", "37. الصافات", "38. ص", "39. الزمر", "40. غافر",
-        "41. فصلت", "42. الشورى", "43. الزخرف", "44. الدخان", "45. الجاثية", "46. الأحقاف", "47. محمد", "48. الفتح", "49. الحجرات", "50. ق",
-        "51. الذاريات", "52. الطور", "53. النجم", "54. القمر", "55. الرحمن", "56. الواقعة", "57. الحديد", "58. المجادلة", "59. الحشر", "60. الممتحنة",
-        "61. الصف", "62. الجمعة", "63. المنافقون", "64. التغابن", "65. الطلاق", "66. التحريم", "67. الملك", "68. القلم", "69. الحاقة", "70. المعارج",
-        "71. نوح", "72. الجن", "73. المزمل", "74. المدثر", "75. القيامة", "76. الإنسان", "77. المرسلات", "78. النبأ", "79. النازعات", "80. عبس",
-        "81. التكوير", "82. الانفطار", "83. المطففين", "84. الانشقاق", "85. البروج", "86. الطارق", "87. الأعلى", "88. الغاشية", "89. الفجر", "90. البلد",
-        "91. الشمس", "92. الليل", "93. الضحى", "94. الشرح", "95. التين", "96. العلق", "97. القدر", "98. البينة", "99. الزلزلة", "100. العاديات",
-        "101. القارعة", "102. التكاثر", "103. العصر", "104. الهمزة", "105. الفيل", "106. قريش", "107. الماعون", "108. الكوثر", "109. الكافرون", "110. النصر",
-        "111. المسد", "112. الإخلاص", "113. الفلق", "114. الناس"
+  </div>
+
+  <script>
+    // Sample Question Data Structure (Expand to 100 questions)
+    const questionsData = [
+      { id: 1, text: "Which HTML element is used to capture single-select choices?", options: ["<checkbox>", "<input type='radio'>", "<select-one>", "<button>"], answer: 1 },
+      { id: 2, text: "Which CSS rule locks the stopwatch header at the top during scrolling?", options: ["position: absolute", "position: fixed", "display: flex", "float: top"], answer: 1 }
     ];
 
-    let currentPlaylist = [];
-    let currentTrackIndex = 0;
-    let isArabicTurn = true;
-    let isPlayingMode = false;
+    let totalSeconds = 3 * 60 * 60; // 3 Hours (10,800 seconds)
+    let timerInterval = null;
 
-    const audioPlayer = document.getElementById('globalAudioPlayer');
-
-    function populateSurahs() {
-        const select = document.getElementById('itemSelect');
-        select.innerHTML = '';
-        SURAHS.forEach((name, index) => {
-            let opt = document.createElement('option');
-            opt.value = index + 1;
-            opt.textContent = name;
-            select.appendChild(opt);
-        });
+    // Render questions into the DOM
+    function renderExam() {
+      const wrapper = document.getElementById('questions-wrapper');
+      wrapper.innerHTML = questionsData.map((q, qIndex) => `
+        <div class="question-card">
+          <p class="question-title">Q${qIndex + 1}. ${q.text}</p>
+          <ul class="options-list">
+            ${q.options.map((opt, oIndex) => `
+              <li class="option-item">
+                <label for="q${q.id}_opt${oIndex}">
+                  <input type="radio" id="q${q.id}_opt${oIndex}" name="q${q.id}" value="${oIndex}">
+                  ${opt}
+                </label>
+              </li>
+            `).join('')}
+          </ul>
+        </div>
+      `).join('');
     }
 
-    function populateJuzs() {
-        const select = document.getElementById('itemSelect');
-        select.innerHTML = '';
-        for (let i = 1; i <= 30; i++) {
-            let opt = document.createElement('option');
-            opt.value = i;
-            opt.textContent = `پارہ نمبر ${i}`;
-            select.appendChild(opt);
+    // Stopwatch Timer Functionality
+    function startTimer() {
+      timerInterval = setInterval(() => {
+        if (totalSeconds <= 0) {
+          clearInterval(timerInterval);
+          finishExam();
+          alert("Time is up! Your paper is being submitted automatically.");
+          return;
         }
+        totalSeconds--;
+        
+        let h = Math.floor(totalSeconds / 3600);
+        let m = Math.floor((totalSeconds % 3600) / 60);
+        let s = totalSeconds % 60;
+        
+        document.getElementById('timer').textContent = 
+          `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+      }, 1000);
     }
 
-    function handleModeChange() {
-        const mode = document.getElementById('modeSelect').value;
-        const label = document.getElementById('selectionLabel');
-        const ayahBox = document.getElementById('ayahBox');
-
-        if (mode === 'surah') {
-            label.textContent = 'سورۃ منتخب کریں:';
-            ayahBox.style.display = 'none';
-            populateSurahs();
-        } else if (mode === 'juz') {
-            label.textContent = 'پارہ منتخب کریں:';
-            ayahBox.style.display = 'none';
-            populateJuzs();
-        } else if (mode === 'ayah') {
-            label.textContent = 'سورۃ:';
-            ayahBox.style.display = 'flex';
-            populateSurahs();
+    // Submit & Grade Exam
+    function finishExam() {
+      clearInterval(timerInterval);
+      
+      const form = document.getElementById('exam-form');
+      const formData = new FormData(form);
+      
+      // Calculate Score
+      let score = 0;
+      questionsData.forEach((q) => {
+        const selected = formData.get(`q${q.id}`);
+        if (selected !== null && parseInt(selected) === q.answer) {
+          score++;
         }
+      });
+
+      // Extract Student Info
+      const sName = formData.get('student_name') || 'N/A';
+      const sReg = formData.get('reg_number') || 'N/A';
+      const sClass = formData.get('student_class') || 'N/A';
+      const sCat = formData.get('exam_category') || 'N/A';
+      const sWa = formData.get('whatsapp_no') || 'N/A';
+
+      // Disable all inputs to lock paper
+      const allInputs = form.querySelectorAll('input');
+      allInputs.forEach(input => input.disabled = true);
+      document.getElementById('submit-btn').disabled = true;
+
+      // Display Result & Summary
+      const resultBox = document.getElementById('result-box');
+      const scoreText = document.getElementById('score-text');
+      const summaryBox = document.getElementById('student-summary');
+
+      const percentage = ((score / questionsData.length) * 100).toFixed(1);
+      scoreText.textContent = `Score: ${score} / ${questionsData.length} (${percentage}%)`;
+      
+      summaryBox.innerHTML = `
+        <p><strong>Student:</strong> ${sName} | <strong>Reg No:</strong> ${sReg}</p>
+        <p><strong>Class:</strong> ${sClass} | <strong>Category:</strong> ${sCat} | <strong>WhatsApp:</strong> ${sWa}</p>
+      `;
+
+      resultBox.classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    async function loadContent() {
-        pauseAudio();
-        const mode = document.getElementById('modeSelect').value;
-        const selectedVal = document.getElementById('itemSelect').value;
-        const container = document.getElementById('quranContainer');
+    // Form Event Listener
+    document.getElementById('exam-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (confirm("Are you sure you want to submit your exam paper?")) {
+        finishExam();
+      }
+    });
 
-        if (!selectedVal) return;
-
-        container.innerHTML = '<p style="text-align:center; color:#0e3b2e; font-weight:bold;">لوڈ ہو رہا ہے... براہِ کرم انتظار کریں۔</p>';
-
-        let url = '';
-        if (mode === 'surah') {
-            url = `https://api.alquran.cloud/v1/surah/${selectedVal}/editions/ar.abdulbasitmurattal,ur.jalandhry,ur.khan`;
-        } else if (mode === 'juz') {
-            url = `https://api.alquran.cloud/v1/juz/${selectedVal}/editions/ar.abdulbasitmurattal,ur.jalandhry,ur.khan`;
-        } else if (mode === 'ayah') {
-            const ayahNo = document.getElementById('ayahInput').value || 1;
-            url = `https://api.alquran.cloud/v1/ayah/${selectedVal}:${ayahNo}/editions/ar.abdulbasitmurattal,ur.jalandhry,ur.khan`;
-        }
-
-        try {
-            const res = await fetch(url);
-            const data = await res.json();
-
-            let arAyahs = [], urTextAyahs = [], urAudioAyahs = [];
-
-            if (mode === 'ayah') {
-                arAyahs = [data.data[0]];
-                urTextAyahs = [data.data[1]];
-                urAudioAyahs = [data.data[2]];
-            } else {
-                arAyahs = data.data[0].ayahs;
-                urTextAyahs = data.data[1].ayahs;
-                urAudioAyahs = data.data[2].ayahs;
-            }
-
-            currentPlaylist = [];
-            let html = '';
-
-            for (let i = 0; i < arAyahs.length; i++) {
-                const item = {
-                    index: i,
-                    surahName: arAyahs[i].surah ? arAyahs[i].surah.name : '',
-                    ayahNo: arAyahs[i].numberInSurah,
-                    arabicText: arAyahs[i].text,
-                    urduText: urTextAyahs[i].text,
-                    arabicAudio: arAyahs[i].audio,
-                    urduAudio: urAudioAyahs[i].audio
-                };
-                currentPlaylist.push(item);
-
-                html += `
-                    <div class="ayah-card" id="card-${i}">
-                        <span class="meta-tag">آیت: ${item.ayahNo} ${item.surahName ? '| سورۃ ' + item.surahName : ''}</span>
-                        <div class="arabic">${item.arabicText} ﴿${item.ayahNo}﴾</div>
-                        <div class="urdu">${item.urduText}</div>
-                        <button class="play-btn-small" onclick="playSingleAyah(${i})">یہ آیت سنیں ▶</button>
-                    </div>
-                `;
-            }
-
-            container.innerHTML = html;
-            document.getElementById('playerStatus').textContent = `کُل آیات: ${currentPlaylist.length} | تیار ہے`;
-            currentTrackIndex = 0;
-
-        } catch (e) {
-            container.innerHTML = '<p style="color:red; text-align:center;">ڈیٹا لوڈ کرنے میں مسئلہ آیا ہے۔ انٹرنیٹ چیک کر کے دوبارہ کوشش کریں۔</p>';
-            console.error(e);
-        }
-    }
-
-    function playAll() {
-        if (currentPlaylist.length === 0) {
-            alert("پہلے 'لوڈ کریں' کا بٹن دبا کر سورت یا پارہ لوڈ کریں۔");
-            return;
-        }
-        isPlayingMode = true;
-        isArabicTurn = true;
-        playTrack();
-    }
-
-    function playSingleAyah(index) {
-        currentTrackIndex = index;
-        isPlayingMode = true;
-        isArabicTurn = true;
-        playTrack();
-    }
-
-    function playTrack() {
-        if (currentTrackIndex >= currentPlaylist.length) {
-            document.getElementById('playerStatus').textContent = "مکمل ہو گیا";
-            clearHighlights();
-            isPlayingMode = false;
-            return;
-        }
-
-        const audioOpt = document.getElementById('audioOption').value;
-        const currentItem = currentPlaylist[currentTrackIndex];
-
-        highlightCard(currentTrackIndex);
-
-        if (audioOpt === 'both') {
-            if (isArabicTurn) {
-                document.getElementById('playerStatus').textContent = `پلے ہو رہا ہے: آیت ${currentItem.ayahNo} (عربی تلاوت)`;
-                audioPlayer.src = currentItem.arabicAudio;
-            } else {
-                document.getElementById('playerStatus').textContent = `پلے ہو رہا ہے: آیت ${currentItem.ayahNo} (اردو ترجمہ)`;
-                audioPlayer.src = currentItem.urduAudio;
-            }
-        } else if (audioOpt === 'arabic') {
-            document.getElementById('playerStatus').textContent = `پلے ہو رہا ہے: آیت ${currentItem.ayahNo} (عربی تلاوت)`;
-            audioPlayer.src = currentItem.arabicAudio;
-        } else if (audioOpt === 'urdu') {
-            document.getElementById('playerStatus').textContent = `پلے ہو رہا ہے: آیت ${currentItem.ayahNo} (اردو ترجمہ)`;
-            audioPlayer.src = currentItem.urduAudio;
-        }
-
-        audioPlayer.play().catch(err => console.error(err));
-    }
-
-    audioPlayer.onended = function() {
-        if (!isPlayingMode) return;
-
-        const audioOpt = document.getElementById('audioOption').value;
-
-        if (audioOpt === 'both') {
-            if (isArabicTurn) {
-                isArabicTurn = false;
-                playTrack();
-            } else {
-                isArabicTurn = true;
-                currentTrackIndex++;
-                playTrack();
-            }
-        } else {
-            currentTrackIndex++;
-            playTrack();
-        }
+    // Start on Page Load
+    window.onload = () => {
+      renderExam();
+      startTimer();
     };
-
-    function pauseAudio() {
-        audioPlayer.pause();
-        isPlayingMode = false;
-        document.getElementById('playerStatus').textContent = "آڈیو روک دی گئی ہے";
-    }
-
-    function highlightCard(index) {
-        clearHighlights();
-        const card = document.getElementById(`card-${index}`);
-        if (card) {
-            card.classList.add('playing');
-            card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-    }
-
-    function clearHighlights() {
-        document.querySelectorAll('.ayah-card').forEach(c => c.classList.remove('playing'));
-    }
-
-    window.onload = function() {
-        populateSurahs();
-    };
-</script>
-
+  </script>
 </body>
 </html>
