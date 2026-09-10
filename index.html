@@ -1,145 +1,69 @@
+from 
+    meta_data = [
+        [import streamlit as st
 from reportlab.lib.pagesizes import inch
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak
+import io
 
-# -------------------------------------------------------------
-# 1. ٹیگ کا سائز (Standard Tag Dimensions: 3.5 x 6.0 inches)
-# -------------------------------------------------------------
-PAGE_WIDTH = 3.5 * inch
-PAGE_HEIGHT = 6.0 * inch
+st.set_page_config(page_title="HSE Tag Generator", layout="centered")
+st.title("🔥 Fire Extinguisher Tag Generator")
 
-def generate_fire_tag(filename="Fire_Extinguisher_Tag.pdf", hotline="059-1910990", location="Building A"):
+# ویب پیج پر یوزر سے معلومات لینے کے لیے ان پٹ باکس
+location = st.text_input("Location / سائٹ کا نام", "Building A - Floor 1")
+hotline = st.text_input("Hotline Number", "059-1910990")
+
+# پی ڈی ایف جنریٹ کرنے کا فنکشن
+def create_pdf_bytes(loc, phone):
+    buffer = io.BytesIO()
     doc = SimpleDocTemplate(
-        filename,
-        pagesize=(PAGE_WIDTH, PAGE_HEIGHT),
-        leftMargin=0.15 * inch,
-        rightMargin=0.15 * inch,
-        topMargin=0.15 * inch,
-        bottomMargin=0.15 * inch
+        buffer,
+        pagesize=(3.5 * inch, 6.0 * inch),
+        leftMargin=0.15 * inch, rightMargin=0.15 * inch,
+        topMargin=0.15 * inch, bottomMargin=0.15 * inch
     )
-
     story = []
     styles = getSampleStyleSheet()
 
-    # اسٹائلز (Styles)
-    title_style = ParagraphStyle(
-        'TagTitle',
-        parent=styles['Heading1'],
-        fontSize=10,
-        leading=12,
-        textColor=colors.HexColor('#D32F2F'), # Red Theme
-        alignment=1, # Center
-        fontName='Helvetica-Bold'
-    )
+    title_style = ParagraphStyle('T', parent=styles['Heading1'], fontSize=10, textColor=colors.HexColor('#D32F2F'), alignment=1)
+    sub_style = ParagraphStyle('S', fontSize=7, fontName='Helvetica-Bold')
 
-    sub_style = ParagraphStyle(
-        'TagSub',
-        fontSize=7,
-        leading=9,
-        fontName='Helvetica-Bold'
-    )
-
-    pass_text_style = ParagraphStyle(
-        'PassText',
-        fontSize=6.5,
-        leading=8
-    )
-
-    # =============================================================
-    # SIDE 1: FRONT (HOW TO USE - P.A.S.S. INSTRUCTIONS)
-    # =============================================================
+    # Front Side
     story.append(Paragraph("HOW TO USE FIRE EXTINGUISHER", title_style))
-    story.append(Spacer(1, 4))
-
-    # لوکیشن اور ہاٹ لائن ٹیبل
-    header_data = [
-        [Paragraph(f"<b>LOCATION:</b> {location}", sub_style)],
-        [Paragraph(f"<b>HOT LINE 24/7:</b> <font color='red'><b>{hotline}</b></font>", sub_style)]
-    ]
-    header_table = Table(header_data, colWidths=[3.2 * inch])
-    header_table.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,-1), colors.HexColor('#FFF9C4')), # Light Yellow Header
-        ('ALIGN', (0,0), (-1,-1), 'CENTER'),
-        ('BOX', (0,0), (-1,-1), 1, colors.HexColor('#FBC02D')),
-        ('TOPPADDING', (0,0), (-1,-1), 2),
-        ('BOTTOMPADDING', (0,0), (-1,-1), 2),
-    ]))
-    story.append(header_table)
     story.append(Spacer(1, 5))
-
-    # P.A.S.S Steps Table
-    pass_data = [
-        [Paragraph("<font size=12 color='#D32F2F'><b>P</b></font>", styles['Normal']),
-         Paragraph("<b>PULL</b> THE 'PIN' IN THE HANDLE", pass_text_style)],
-        [Paragraph("<font size=12 color='#D32F2F'><b>A</b></font>", styles['Normal']),
-         Paragraph("<b>AIM</b> THE 'NOZZLE' AT BASE OF FIRE", pass_text_style)],
-        [Paragraph("<font size=12 color='#D32F2F'><b>S</b></font>", styles['Normal']),
-         Paragraph("<b>SQUEEZE</b> THE LEVER SLOWLY", pass_text_style)],
-        [Paragraph("<font size=12 color='#D32F2F'><b>S</b></font>", styles['Normal']),
-         Paragraph("<b>SWEEP</b> FROM SIDE TO SIDE", pass_text_style)]
-    ]
+    header_data = [[Paragraph(f"<b>LOCATION:</b> {loc}", sub_style)], [Paragraph(f"<b>HOTLINE:</b> {phone}", sub_style)]]
+    t = Table(header_data, colWidths=[3.2 * inch])
+    t.setStyle(TableStyle([('BACKGROUND', (0,0), (-1,-1), colors.HexColor('#FFF9C4')), ('ALIGN', (0,0), (-1,-1), 'CENTER'), ('BOX', (0,0), (-1,-1), 1, colors.HexColor('#FBC02D'))]))
+    story.append(t)
     
-    pass_table = Table(pass_data, colWidths=[0.4 * inch, 2.8 * inch])
-    pass_table.setStyle(TableStyle([
-        ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
-        ('GRID', (0,0), (-1,-1), 0.5, colors.HexColor('#FFCDD2')),
-        ('BACKGROUND', (0,0), (0,-1), colors.HexColor('#FFEBEE')),
-        ('TOPPADDING', (0,0), (-1,-1), 3),
-        ('BOTTOMPADDING', (0,0), (-1,-1), 3),
-    ]))
-    story.append(pass_table)
-
-    # اگلی سائیڈ پر جانے کے لیے Page Break
     story.append(PageBreak())
 
-    # =============================================================
-    # SIDE 2: BACK (INSPECTION TAG GRID)
-    # =============================================================
-    story.append(Paragraph("FIRE EXTINGUISHER<br/>INSPECTION TAG", title_style))
-    story.append(Spacer(1, 3))
-
-    meta_data = [
-        [Paragraph("<b>Extinguisher No:</b> ____________", sub_style)],
-        [Paragraph("<b>Type of Fire Extinguisher:</b> ______", sub_style)]
-    ]
-    meta_table = Table(meta_data, colWidths=[3.2 * inch])
-    meta_table.setStyle(TableStyle([
-        ('TOPPADDING', (0,0), (-1,-1), 1),
-        ('BOTTOMPADDING', (0,0), (-1,-1), 1)
-    ]))
-    story.append(meta_table)
-    story.append(Spacer(1, 4))
-
-    # 12 ماہ کا معائنہ گریڈ (Inspection Table)
-    grid_data = [["MONTH", "YEAR", "INSPECTED BY", "REMARKS"]]
-    months = ["JAN.", "FEB.", "MAR.", "APRIL", "MAY", "JUNE", "JULY", "AUG.", "SEPT.", "OCT.", "NOV.", "DEC."]
+    # Back Side
+    story.append(Paragraph("FIRE EXTINGUISHER INSPECTION TAG", title_style))
+    story.append(Spacer(1, 5))
     
-    for m in months:
+    grid_data = [["MONTH", "YEAR", "INSPECTED BY", "REMARKS"]]
+    for m in ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"]:
         grid_data.append([m, "", "", ""])
+    gt = Table(grid_data, colWidths=[0.6 * inch, 0.6 * inch, 1.1 * inch, 0.9 * inch])
+    gt.setStyle(TableStyle([('BACKGROUND', (0,0), (-1,0), colors.HexColor('#D32F2F')), ('TEXTCOLOR', (0,0), (-1,0), colors.white), ('GRID', (0,0), (-1,-1), 0.5, colors.black)]))
+    story.append(gt)
 
-    grid_table = Table(grid_data, colWidths=[0.6 * inch, 0.6 * inch, 1.1 * inch, 0.9 * inch])
-    grid_table.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,0), colors.HexColor('#D32F2F')), # Red Header for Inspection
-        ('TEXTCOLOR', (0,0), (-1,0), colors.white),
-        ('ALIGN', (0,0), (-1,-1), 'CENTER'),
-        ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
-        ('FONTSIZE', (0,0), (-1,-1), 5.5),
-        ('GRID', (0,0), (-1,-1), 0.5, colors.black),
-        ('TOPPADDING', (0,0), (-1,-1), 1.5),
-        ('BOTTOMPADDING', (0,0), (-1,-1), 1.5),
-    ]))
-    story.append(grid_table)
-
-    story.append(Spacer(1, 4))
-    warning_style = ParagraphStyle('Warn', fontSize=6.5, textColor=colors.red, alignment=1, fontName='Helvetica-Bold')
-    story.append(Paragraph("DO NOT REMOVE THIS TAG", warning_style))
-
-    # پی ڈی ایف جنیریٹ کریں
     doc.build(story)
-    print(f"File '{filename}' generated successfully!")
+    buffer.seek(0)
+    return buffer
 
-# فنکشن کال کریں
-if __name__ == "__main__":
-    generate_fire_tag()
+# ویب بٹن
+if st.button("Generate Tag PDF"):
+    pdf_data = create_pdf_bytes(location, hotline)
+    
+    # پی ڈی ایف ڈاؤن لوڈ بٹن
+    st.download_button(
+        label="📥 Download Generated PDF Tag",
+        data=pdf_data,
+        file_name="Fire_Tag.pdf",
+        mime="application/pdf"
+    )
+    st.success("PDF کامیابی سے تیار ہو گئی ہے!")
     
