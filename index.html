@@ -1,69 +1,61 @@
-from 
-    meta_data = [
-        [import streamlit as st
-from reportlab.lib.pagesizes import inch
-from reportlab.lib import colors
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak
-import io
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+  <meta charset="UTF-8">
+  <title>10 Questions Online Exam</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; direction: rtl; }
+    fieldset { margin-bottom: 15px; border-radius: 8px; border: 1px solid #ccc; }
+    legend { font-weight: bold; padding: 0 10px; }
+    button { padding: 10px 20px; background: green; color: white; border: none; cursor: pointer; font-size: 16px; }
+  </style>
+</head>
+<body>
 
-st.set_page_config(page_title="HSE Tag Generator", layout="centered")
-st.title("🔥 Fire Extinguisher Tag Generator")
+  <h2>آن لائن امتحان (10 سوالات)</h2>
+  
+  <form id="quizForm">
+    <input type="text" name="studentName" placeholder="آپ کا نام" required><br><br>
+    <input type="email" name="studentEmail" placeholder="آپ کا جیمیل (Gmail)" required><br><br>
 
-# ویب پیج پر یوزر سے معلومات لینے کے لیے ان پٹ باکس
-location = st.text_input("Location / سائٹ کا نام", "Building A - Floor 1")
-hotline = st.text_input("Hotline Number", "059-1910990")
+    <!-- Q1 -->
+    <fieldset>
+      <legend>1. He ---- to school everyday.</legend>
+      <input type="radio" name="q1" value="a"> goes <br>
+      <input type="radio" name="q1" value="b"> go <br>
+    </fieldset>
 
-# پی ڈی ایف جنریٹ کرنے کا فنکشن
-def create_pdf_bytes(loc, phone):
-    buffer = io.BytesIO()
-    doc = SimpleDocTemplate(
-        buffer,
-        pagesize=(3.5 * inch, 6.0 * inch),
-        leftMargin=0.15 * inch, rightMargin=0.15 * inch,
-        topMargin=0.15 * inch, bottomMargin=0.15 * inch
-    )
-    story = []
-    styles = getSampleStyleSheet()
+    <!-- Q2 -->
+    <fieldset>
+      <legend>2. They ---- playing football.</legend>
+      <input type="radio" name="q2" value="a"> is <br>
+      <input type="radio" name="q2" value="b"> are <br>
+    </fieldset>
 
-    title_style = ParagraphStyle('T', parent=styles['Heading1'], fontSize=10, textColor=colors.HexColor('#D32F2F'), alignment=1)
-    sub_style = ParagraphStyle('S', fontSize=7, fontName='Helvetica-Bold')
+    <!-- Q3 se Q10 tak isi tarah q3, q4... q10 banayein -->
 
-    # Front Side
-    story.append(Paragraph("HOW TO USE FIRE EXTINGUISHER", title_style))
-    story.append(Spacer(1, 5))
-    header_data = [[Paragraph(f"<b>LOCATION:</b> {loc}", sub_style)], [Paragraph(f"<b>HOTLINE:</b> {phone}", sub_style)]]
-    t = Table(header_data, colWidths=[3.2 * inch])
-    t.setStyle(TableStyle([('BACKGROUND', (0,0), (-1,-1), colors.HexColor('#FFF9C4')), ('ALIGN', (0,0), (-1,-1), 'CENTER'), ('BOX', (0,0), (-1,-1), 1, colors.HexColor('#FBC02D'))]))
-    story.append(t)
-    
-    story.append(PageBreak())
+    <button type="button" onclick="submitPaper()">امتحان جمع کروائیں</button>
+  </form>
 
-    # Back Side
-    story.append(Paragraph("FIRE EXTINGUISHER INSPECTION TAG", title_style))
-    story.append(Spacer(1, 5))
-    
-    grid_data = [["MONTH", "YEAR", "INSPECTED BY", "REMARKS"]]
-    for m in ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"]:
-        grid_data.append([m, "", "", ""])
-    gt = Table(grid_data, colWidths=[0.6 * inch, 0.6 * inch, 1.1 * inch, 0.9 * inch])
-    gt.setStyle(TableStyle([('BACKGROUND', (0,0), (-1,0), colors.HexColor('#D32F2F')), ('TEXTCOLOR', (0,0), (-1,0), colors.white), ('GRID', (0,0), (-1,-1), 0.5, colors.black)]))
-    story.append(gt)
+  <h3 id="statusMessage"></h3>
 
-    doc.build(story)
-    buffer.seek(0)
-    return buffer
+  <script>
+    function submitPaper() {
+      const form = document.getElementById('quizForm');
+      const formData = new FormData(form);
+      
+      document.getElementById("statusMessage").innerText = "پیپر جمع ہو رہا ہے، براہ کرم انتظار کریں...";
 
-# ویب بٹن
-if st.button("Generate Tag PDF"):
-    pdf_data = create_pdf_bytes(location, hotline)
-    
-    # پی ڈی ایف ڈاؤن لوڈ بٹن
-    st.download_button(
-        label="📥 Download Generated PDF Tag",
-        data=pdf_data,
-        file_name="Fire_Tag.pdf",
-        mime="application/pdf"
-    )
-    st.success("PDF کامیابی سے تیار ہو گئی ہے!")
-    
+      // AKfycbzUfPO4W3_IbFD192vc4K0kPUyCzUAH-zlGC9CvYe7KrdVZ6qTEErq-Opldyc0gjwAN
+      const scriptURL = 'https://script.google.com/macros/s/AKfycbzUfPO4W3_IbFD192vc4K0kPUyCzUAH-zlGC9CvYe7KrdVZ6qTEErq-Opldyc0gjwAN/exec';
+
+      fetch(scriptURL, { method: 'POST', body: formData})
+        .then(response => {
+          document.getElementById("statusMessage").innerText = "شکریہ! آپ کا امتحان جمع ہو چکا ہے۔ نتیجہ نوٹس بورڈ پر جاری کیا جائے گا۔";
+          form.reset();
+        })
+        .catch(error => console.error('Error!', error.message));
+    }
+  </script>
+</body>
+</html>
