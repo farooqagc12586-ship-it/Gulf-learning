@@ -1,61 +1,627 @@
 <!DOCTYPE html>
-<html lang="ur">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>10 Questions Online Exam</title>
-  <style>
-    body { font-family: Arial, sans-serif; padding: 20px; direction: rtl; }
-    fieldset { margin-bottom: 15px; border-radius: 8px; border: 1px solid #ccc; }
-    legend { font-weight: bold; padding: 0 10px; }
-    button { padding: 10px 20px; background: green; color: white; border: none; cursor: pointer; font-size: 16px; }
-  </style>
-</head>
-<body>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Web Development Course — Beginner to Builder</title>
 
-  <h2>آن لائن امتحان (10 سوالات)</h2>
-  
-  <form id="quizForm">
-    <input type="text" name="studentName" placeholder="آپ کا نام" required><br><br>
-    <input type="email" name="studentEmail" placeholder="آپ کا جیمیل (Gmail)" required><br><br>
+<style>
+  /* ============================================================
+     GENERAL RESET & PAGE STYLE
+     ============================================================ */
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
 
-    <!-- Q1 -->
-    <fieldset>
-      <legend>1. He ---- to school everyday.</legend>
-      <input type="radio" name="q1" value="a"> goes <br>
-      <input type="radio" name="q1" value="b"> go <br>
-    </fieldset>
+  html {
+    scroll-behavior: smooth;
+  }
 
-    <!-- Q2 -->
-    <fieldset>
-      <legend>2. They ---- playing football.</legend>
-      <input type="radio" name="q2" value="a"> is <br>
-      <input type="radio" name="q2" value="b"> are <br>
-    </fieldset>
+  body {
+    font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    font-size: 17px;
+    line-height: 1.7;
+    color: #1f2937;
+    background: #f3f4f6;
+    padding: 20px;
+  }
 
-    <!-- Q3 se Q10 tak isi tarah q3, q4... q10 banayein -->
+  /* The "paper" that holds the whole document */
+  .paper {
+    max-width: 900px;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 60px 70px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+  }
 
-    <button type="button" onclick="submitPaper()">امتحان جمع کروائیں</button>
-  </form>
+  /* ============================================================
+     TYPOGRAPHY
+     ============================================================ */
+  h1, h2, h3, h4 {
+    color: #111827;
+    line-height: 1.3;
+    margin-top: 1.4em;
+    margin-bottom: 0.6em;
+    font-weight: 700;
+  }
 
-  <h3 id="statusMessage"></h3>
+  h1 { font-size: 2.2rem; margin-top: 0; }
+  h2 { font-size: 1.7rem; border-bottom: 3px solid #2563eb; padding-bottom: 8px; }
+  h3 { font-size: 1.3rem; color: #1e40af; }
+  h4 { font-size: 1.1rem; color: #1e40af; }
 
-  <script>
-    function submitPaper() {
-      const form = document.getElementById('quizForm');
-      const formData = new FormData(form);
-      
-      document.getElementById("statusMessage").innerText = "پیپر جمع ہو رہا ہے، براہ کرم انتظار کریں...";
+  p { margin-bottom: 1em; }
 
-      // AKfycbzUfPO4W3_IbFD192vc4K0kPUyCzUAH-zlGC9CvYe7KrdVZ6qTEErq-Opldyc0gjwAN
-      const scriptURL = 'https://script.google.com/macros/s/AKfycbzUfPO4W3_IbFD192vc4K0kPUyCzUAH-zlGC9CvYe7KrdVZ6qTEErq-Opldyc0gjwAN/exec';
+  ul, ol {
+    margin: 0 0 1em 1.5em;
+  }
 
-      fetch(scriptURL, { method: 'POST', body: formData})
-        .then(response => {
-          document.getElementById("statusMessage").innerText = "شکریہ! آپ کا امتحان جمع ہو چکا ہے۔ نتیجہ نوٹس بورڈ پر جاری کیا جائے گا۔";
-          form.reset();
-        })
-        .catch(error => console.error('Error!', error.message));
+  li { margin-bottom: 0.4em; }
+
+  strong { color: #111827; }
+
+  /* ============================================================
+     COVER PAGE
+     ============================================================ */
+  .cover {
+    text-align: center;
+    padding: 100px 20px 80px;
+    border-bottom: 4px double #2563eb;
+    margin-bottom: 60px;
+  }
+
+  .cover .badge {
+    display: inline-block;
+    background: #dbeafe;
+    color: #1e40af;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    padding: 8px 18px;
+    border-radius: 999px;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+  }
+
+  .cover h1 {
+    font-size: 3rem;
+    color: #1e3a8a;
+    margin-bottom: 16px;
+  }
+
+  .cover .subtitle {
+    font-size: 1.25rem;
+    color: #4b5563;
+    margin-bottom: 40px;
+  }
+
+  .cover .meta {
+    font-size: 0.95rem;
+    color: #6b7280;
+    line-height: 1.9;
+  }
+
+  /* ============================================================
+     TABLE OF CONTENTS
+     ============================================================ */
+  .toc {
+    background: #f9fafb;
+    border-left: 5px solid #2563eb;
+    padding: 30px 35px;
+    border-radius: 6px;
+    margin-bottom: 60px;
+  }
+
+  .toc h2 {
+    border: none;
+    margin-top: 0;
+    font-size: 1.4rem;
+    color: #1e3a8a;
+  }
+
+  .toc ol {
+    list-style: none;
+    margin-left: 0;
+    counter-reset: section;
+  }
+
+  .toc ol li {
+    counter-increment: section;
+    padding: 6px 0;
+    border-bottom: 1px dotted #d1d5db;
+  }
+
+  .toc ol li::before {
+    content: counter(section) ". ";
+    color: #2563eb;
+    font-weight: 700;
+    margin-right: 6px;
+  }
+
+  .toc a {
+    color: #1f2937;
+    text-decoration: none;
+  }
+
+  .toc a:hover { color: #2563eb; text-decoration: underline; }
+
+  /* ============================================================
+     SECTION BLOCKS
+     ============================================================ */
+  section {
+    margin-bottom: 60px;
+    page-break-inside: avoid;
+  }
+
+  /* ============================================================
+     CALLOUT BOXES
+     ============================================================ */
+  .callout {
+    padding: 18px 22px;
+    border-radius: 6px;
+    margin: 22px 0;
+    border-left: 5px solid;
+    font-size: 0.98rem;
+  }
+
+  .callout .label {
+    display: block;
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .callout.trick {
+    background: #fef3c7;
+    border-color: #f59e0b;
+  }
+  .callout.trick .label { color: #92400e; }
+
+  .callout.tip {
+    background: #dbeafe;
+    border-color: #2563eb;
+  }
+  .callout.tip .label { color: #1e40af; }
+
+  .callout.warn {
+    background: #fee2e2;
+    border-color: #dc2626;
+  }
+  .callout.warn .label { color: #991b1b; }
+
+  .callout.note {
+    background: #ecfdf5;
+    border-color: #10b981;
+  }
+  .callout.note .label { color: #065f46; }
+
+  /* ============================================================
+     CODE BLOCKS
+     ============================================================ */
+  code {
+    background: #f1f5f9;
+    color: #b91c1c;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: "Consolas", "Menlo", monospace;
+    font-size: 0.92em;
+  }
+
+  pre {
+    background: #0f172a;
+    color: #e2e8f0;
+    padding: 18px 22px;
+    border-radius: 6px;
+    overflow-x: auto;
+    margin: 18px 0;
+    font-family: "Consolas", "Menlo", monospace;
+    font-size: 0.92rem;
+    line-height: 1.55;
+    page-break-inside: avoid;
+  }
+
+  pre code {
+    background: none;
+    color: inherit;
+    padding: 0;
+    font-size: 1em;
+  }
+
+  /* ============================================================
+     TABLES
+     ============================================================ */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 18px 0;
+    font-size: 0.95rem;
+    page-break-inside: avoid;
+  }
+
+  th, td {
+    border: 1px solid #d1d5db;
+    padding: 10px 14px;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  th {
+    background: #1e3a8a;
+    color: #ffffff;
+    font-weight: 600;
+  }
+
+  tr:nth-child(even) td { background: #f9fafb; }
+
+  /* ============================================================
+     QUICK TEST / PRACTICE / CHALLENGE BLOCKS
+     ============================================================ */
+  .exercise {
+    background: #f8fafc;
+    border: 2px dashed #94a3b8;
+    border-radius: 8px;
+    padding: 22px 26px;
+    margin: 22px 0;
+    page-break-inside: avoid;
+  }
+
+  .exercise h4 {
+    margin-top: 0;
+    color: #1e40af;
+    font-size: 1.05rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .exercise .type {
+    display: inline-block;
+    background: #1e40af;
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 3px 10px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+
+  /* ============================================================
+     PLACEHOLDER (for lessons to be written later)
+     ============================================================ */
+  .placeholder {
+    background: #fffbeb;
+    border: 2px dashed #f59e0b;
+    border-radius: 8px;
+    padding: 24px 28px;
+    color: #78350f;
+    font-style: italic;
+    margin: 20px 0;
+    text-align: center;
+  }
+
+  /* ============================================================
+     ROADMAP VISUAL
+     ============================================================ */
+  .roadmap {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+    margin: 24px 0;
+  }
+
+  .roadmap .step {
+    background: linear-gradient(135deg, #2563eb, #1e40af);
+    color: #ffffff;
+    padding: 18px;
+    border-radius: 8px;
+    text-align: center;
+  }
+
+  .roadmap .step .num {
+    font-size: 1.8rem;
+    font-weight: 800;
+    display: block;
+    margin-bottom: 6px;
+    opacity: 0.7;
+  }
+
+  .roadmap .step .title {
+    font-weight: 700;
+    font-size: 1rem;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .roadmap .step .desc {
+    font-size: 0.85rem;
+    opacity: 0.9;
+  }
+
+  /* ============================================================
+     PRINT STYLES
+     ============================================================ */
+  @media print {
+    body {
+      background: #ffffff;
+      padding: 0;
+      font-size: 11.5pt;
+      line-height: 1.6;
     }
-  </script>
-</body>
-</html>
+
+    .paper {
+      box-shadow: none;
+      border-radius: 0;
+      padding: 0;
+      max-width: 100%;
+    }
+
+    h1, h2, h3, h4 {
+      page-break-after: avoid;
+    }
+
+    pre, table, .callout, .exercise {
+      page-break-inside: avoid;
+    }
+
+    .cover {
+      page-break-after: always;
+      padding: 200px 40px;
+      border-bottom: none;
+    }
+
+    a {
+      color: #1f2937;
+      text-decoration: none;
+    }
+
+    .roadmap .step {
+      background: #e0e7ff !important;
+      color: #1e3a8a !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .toc { background: #ffffff; }
+  }
+
+  /* ============================================================
+     MOBILE
+     ============================================================ */
+  @media (max-width: 600px) {
+    .paper { padding: 30px 22px; }
+    .cover h1 { font-size: 2rem; }
+    .cover { padding: 60px 10px; }
+    body { font-size: 16px; padding: 8px; }
+  }
+</style>
+</head>
+
+<body>
+<div class="paper">
+
+  <!-- ============================================================
+       COVER PAGE
+       ============================================================ -->
+  <div class="cover">
+    <span class="badge">Beginner to Builder</span>
+    <h1>Web Development Course</h1>
+    <p class="subtitle">Learn to build real websites and web apps — step by step, from zero.</p>
+    <p class="meta">
+      <strong>Level:</strong> Absolute Beginner<br>
+      <strong>Format:</strong> Self-study • Printable • Practical<br>
+      <strong>Technologies:</strong> HTML • CSS • JavaScript • Python • Flask • SQLite • Git • GitHub
+    </p>
+  </div>
+
+  <!-- ============================================================
+       TABLE OF CONTENTS
+       ============================================================ -->
+  <nav class="toc">
+    <h2>Table of Contents</h2>
+    <ol>
+      <li><a href="#roadmap">Course Roadmap</a></li>
+      <li><a href="#tools">Required Tools</a></li>
+      <li><a href="#lesson1">Lesson 1 — Computer &amp; Programming Basics</a></li>
+      <li><a href="#lesson2">Lesson 2 — HTML</a></li>
+      <li><a href="#lesson3">Lesson 3 — CSS</a></li>
+      <li><a href="#lesson4">Lesson 4 — JavaScript</a></li>
+      <li><a href="#lesson5">Lesson 5 — JavaScript Projects</a></li>
+      <li><a href="#lesson6">Lesson 6 — Python</a></li>
+      <li><a href="#lesson7">Lesson 7 — Python Backend with Flask</a></li>
+      <li><a href="#lesson8">Lesson 8 — Databases &amp; SQLite</a></li>
+      <li><a href="#lesson9">Lesson 9 — Git &amp; GitHub</a></li>
+      <li><a href="#lesson10">Lesson 10 — Deployment</a></li>
+      <li><a href="#lesson11">Lesson 11 — Final Project</a></li>
+      <li><a href="#debugging">Debugging Guide</a></li>
+      <li><a href="#glossary">Glossary</a></li>
+    </ol>
+  </nav>
+
+  <!-- ============================================================
+       ROADMAP
+       ============================================================ -->
+  <section id="roadmap">
+    <h2>1. Course Roadmap</h2>
+    <p>Think of this course as a staircase. Each step prepares you for the next. Never skip a step.</p>
+
+    <div class="roadmap">
+      <div class="step"><span class="num">01</span><span class="title">Basics</span><span class="desc">How the web works</span></div>
+      <div class="step"><span class="num">02</span><span class="title">HTML</span><span class="desc">Page structure</span></div>
+      <div class="step"><span class="num">03</span><span class="title">CSS</span><span class="desc">Styling &amp; layout</span></div>
+      <div class="step"><span class="num">04</span><span class="title">JavaScript</span><span class="desc">Interactivity</span></div>
+      <div class="step"><span class="num">05</span><span class="title">JS Projects</span><span class="desc">Clock, calculator, exam</span></div>
+      <div class="step"><span class="num">06</span><span class="title">Python</span><span class="desc">Backend logic</span></div>
+      <div class="step"><span class="num">07</span><span class="title">Flask</span><span class="desc">Web server</span></div>
+      <div class="step"><span class="num">08</span><span class="title">Database</span><span class="desc">SQLite storage</span></div>
+      <div class="step"><span class="num">09</span><span class="title">Git &amp; GitHub</span><span class="desc">Version control</span></div>
+      <div class="step"><span class="num">10</span><span class="title">Deployment</span><span class="desc">Go live online</span></div>
+      <div class="step"><span class="num">11</span><span class="title">Final Project</span><span class="desc">Exam system</span></div>
+    </div>
+
+    <h3>Big-Picture Memory Trick</h3>
+    <table>
+      <tr><th>Technology</th><th>Real-life role</th></tr>
+      <tr><td>HTML</td><td>Skeleton (bones of a page)</td></tr>
+      <tr><td>CSS</td><td>Clothes &amp; paint (looks)</td></tr>
+      <tr><td>JavaScript</td><td>Brain &amp; muscles (actions in the browser)</td></tr>
+      <tr><td>Python + Flask</td><td>Kitchen staff (works behind the scenes)</td></tr>
+      <tr><td>Database</td><td>Store room (keeps everything safe)</td></tr>
+    </table>
+  </section>
+
+  <!-- ============================================================
+       TOOLS
+       ============================================================ -->
+  <section id="tools">
+    <h2>2. Required Tools</h2>
+    <p>Install these as you need them. Right now, you only need a browser.</p>
+
+    <table>
+      <tr><th>Tool</th><th>Why you need it</th><th>When</th></tr>
+      <tr><td>Browser (Chrome / Firefox / Edge)</td><td>To view your website</td><td>Now</td></tr>
+      <tr><td>VS Code</td><td>The editor where you type code</td><td>Lesson 2</td></tr>
+      <tr><td>Browser DevTools</td><td>Inspect and debug pages</td><td>Lesson 2</td></tr>
+      <tr><td>Python</td><td>Backend programming</td><td>Lesson 6</td></tr>
+      <tr><td>Git</td><td>Save versions of your code</td><td>Lesson 9</td></tr>
+      <tr><td>GitHub account</td><td>Store and share your code</td><td>Lesson 9</td></tr>
+    </table>
+  </section>
+
+  <!-- ============================================================
+       LESSON 1
+       ============================================================ -->
+  <section id="lesson1">
+    <h2>3. Lesson 1 — Computer &amp; Programming Basics</h2>
+
+    <h3>3.1 What is programming?</h3>
+    <p>Programming means giving a computer a list of instructions, in order, to do a job.</p>
+    <p>Real-life example — a recipe:</p>
+    <pre><code>1. Boil water
+2. Add pasta
+3. Wait 10 minutes
+4. Drain water</code></pre>
+    <p>That is a program. The cook is the computer. If step 2 comes before step 1, the result is wrong. Computers are the same — <strong>order matters</strong>.</p>
+
+    <div class="callout trick">
+      <span class="label">Memory Trick</span>
+      Programming = writing a recipe for a very obedient but very literal assistant.
+    </div>
+
+    <h3>3.2 What is code?</h3>
+    <p><strong>Code</strong> is the written form of those instructions. It is text, saved in a file, that a computer can read and follow.</p>
+    <p>Code is not magic. It is just instructions written in a language the computer understands.</p>
+
+    <h3>3.3 What is a programming language?</h3>
+    <p>Computers only understand <code>0</code> and <code>1</code>. Writing in binary is painful for humans. So we invented <strong>programming languages</strong> — halfway between human language and machine language.</p>
+    <p>Examples: HTML, CSS, JavaScript, Python. Each has its own <strong>syntax</strong> (rules of grammar).</p>
+
+    <div class="callout trick">
+      <span class="label">Memory Trick</span>
+      Syntax = grammar. <code>let x = 5;</code> is correct grammar in JavaScript. <code>let 5 x =;</code> is not.
+    </div>
+
+    <h3>3.4 What is a website?</h3>
+    <p>A <strong>website</strong> is a set of files stored somewhere that a browser can download and display.</p>
+    <ul>
+      <li><strong>Static</strong> — the same for everyone (a business card page).</li>
+      <li><strong>Dynamic</strong> — changes based on who you are or what you do (your email inbox).</li>
+    </ul>
+
+    <h3>3.5 What is a web application?</h3>
+    <p>A <strong>web application</strong> is a website you can <em>interact</em> with — type into, click, submit, get results.</p>
+    <ul>
+      <li>A page showing your school's address → <strong>website</strong>.</li>
+      <li>A page where you log in and take an exam → <strong>web application</strong>.</li>
+    </ul>
+    <p>Our final project is a web application.</p>
+
+    <h3>3.6 What is a browser?</h3>
+    <p>A <strong>browser</strong> (Chrome, Firefox) is the program that:</p>
+    <ol>
+      <li>Asks a server for files.</li>
+      <li>Reads HTML, CSS, JavaScript.</li>
+      <li>Draws the result on your screen.</li>
+    </ol>
+    <p>The browser is the <strong>customer</strong> in a restaurant — it asks, receives, and enjoys the meal.</p>
+
+    <h3>3.7 What is a server?</h3>
+    <p>A <strong>server</strong> is a computer that is always on and always waiting to send files or data when asked.</p>
+    <p>Your laptop <em>can</em> be a server. Real servers live in data centres and run 24/7.</p>
+
+    <div class="callout trick">
+      <span class="label">Memory Trick</span>
+      Browser = customer. Server = waiter + kitchen.
+    </div>
+
+    <h3>3.8 What is frontend?</h3>
+    <p><strong>Frontend</strong> = everything the user sees and touches in the browser. Built with HTML, CSS, and JavaScript.</p>
+
+    <div class="callout trick">
+      <span class="label">Memory Trick</span>
+      Frontend = the shop window and the counter.
+    </div>
+
+    <h3>3.9 What is backend?</h3>
+    <p><strong>Backend</strong> = the code running on the server. The user never sees it. It handles logging in, checking passwords, saving scores, sending emails. Built with Python, Flask, and similar tools.</p>
+
+    <div class="callout trick">
+      <span class="label">Memory Trick</span>
+      Backend = the worker behind the counter.
+    </div>
+
+    <h3>3.10 What is a database?</h3>
+    <p>A <strong>database</strong> is an organised place to store information permanently, so it survives even after the computer restarts.</p>
+
+    <table>
+      <tr><th>Filing cabinet</th><th>Database</th></tr>
+      <tr><td>Cabinet</td><td>Database</td></tr>
+      <tr><td>Drawer</td><td>Table</td></tr>
+      <tr><td>One folder</td><td>Row (one record)</td></tr>
+      <tr><td>"Name" field on a form</td><td>Column</td></tr>
+    </table>
+
+    <h3>3.11 What is a URL?</h3>
+    <p><strong>URL</strong> = Uniform Resource Locator = the address of a page.</p>
+    <pre><code>https://www.school.com/exam/result
+│      │              │
+│      │              └── path (which page)
+│      └── domain name (which website)
+└── protocol (how to talk)</code></pre>
+
+    <div class="callout trick">
+      <span class="label">Memory Trick</span>
+      URL = the house address of a webpage.
+    </div>
+
+    <h3>3.12 What is hosting?</h3>
+    <p><strong>Hosting</strong> means renting space on an always-on server so other people can visit your website.</p>
+    <ul>
+      <li>Your website lives on your computer → only you can see it.</li>
+      <li>Your website lives on a hosting server → the whole world can see it.</li>
+    </ul>
+
+    <h3>3.13 How it all fits together</h3>
+    <p>When you type <code>www.school.com</code> and press Enter:</p>
+    <pre><code>1. Browser asks DNS: "Where is school.com?" → gets an IP address
+2. Browser asks that server: "Please give me the page"
+3. Server (backend) may ask the database for data
+4. Server sends back HTML + CSS + JS
+5. Browser draws the page (frontend)
+6. You click, type, submit → repeat</code></pre>
+    <p>That loop is the whole web. Everything we learn is a piece of it.</p>
+
+    <div class="exercise">
+      <span class="type">Quick Test</span>
+      <h4>Answer these 5 questions</h4>
+      <ol>
+        <li>What is the difference between a website and a web application?</li>
+        <li>Which one does the user see: frontend or backend?</li>
+        <li>What does a browser actually do with HTML?</li>
+        <li>Is a database the same as a s
