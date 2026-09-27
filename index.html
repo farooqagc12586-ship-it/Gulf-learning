@@ -71,7 +71,7 @@
             <i class="fa-solid fa-bullhorn mr-1.5"></i> <span id="announcement-text">Welcome to FACE/SAFE Examination Portal.</span>
         </div>
 
-            <!-- VIEW 1: AUTHENTICATION / PROFILE -->
+        <!-- VIEW 1: AUTHENTICATION / PROFILE -->
         <section id="auth-view" class="bg-white rounded-xl shadow-lg border border-slate-100 p-6 sm:p-8">
             <div class="text-center mb-6">
                 <h2 class="text-2xl font-bold text-slate-800" id="auth-heading">Student Registration & Login</h2>
@@ -118,11 +118,9 @@
                 </button>
             </form>
         </section>
-        
 
         <!-- VIEW 2: STUDENT DASHBOARD & EXAM CONFIGURATION -->
         <section id="dashboard-view" class="hidden space-y-6">
-            <!-- Welcome Header -->
             <div class="bg-gradient-to-r from-indigo-900 to-slate-800 rounded-xl p-6 text-white shadow-md flex justify-between items-center">
                 <div>
                     <h2 class="text-xl font-bold" id="dash-welcome">Welcome, Student</h2>
@@ -151,7 +149,6 @@
                     <span class="text-xs font-normal text-slate-500">Step 1 of 2</span>
                 </h3>
 
-                <!-- Category Selection -->
                 <div class="grid grid-cols-2 gap-4">
                     <button id="cat-school-btn" type="button" onclick="selectExamCategory('SCHOOL')" class="p-4 rounded-xl border-2 border-indigo-600 bg-indigo-50 text-indigo-950 font-bold text-center text-sm transition">
                         <i class="fa-solid fa-graduation-cap text-2xl block mb-2 text-indigo-600"></i>
@@ -163,7 +160,6 @@
                     </button>
                 </div>
 
-                <!-- School Options Container -->
                 <div id="school-options" class="space-y-4">
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">Select Grade Level</label>
@@ -204,7 +200,6 @@
                     </div>
                 </div>
 
-                <!-- Dynamic Exam Sizing Indicator -->
                 <div class="bg-slate-100 rounded-lg p-3.5 flex justify-between items-center text-xs sm:text-sm font-medium text-slate-700">
                     <div><i class="fa-solid fa-list-check text-indigo-600 mr-1"></i> Questions: <span id="spec-questions" class="font-bold text-indigo-900">20 Qs</span></div>
                     <div><i class="fa-solid fa-clock text-indigo-600 mr-1"></i> Time Limit: <span id="spec-time" class="font-bold text-indigo-900">20 Mins</span></div>
@@ -219,7 +214,6 @@
 
         <!-- VIEW 3: LIVE EXAM INTERFACE -->
         <section id="exam-view" class="hidden space-y-4">
-            <!-- Header Bar with Timer & Progress -->
             <div class="bg-slate-900 text-white rounded-xl p-4 shadow-lg sticky top-16 z-40 space-y-3">
                 <div class="flex justify-between items-center">
                     <div>
@@ -232,7 +226,6 @@
                     </div>
                 </div>
 
-                <!-- Progress Bar -->
                 <div>
                     <div class="flex justify-between text-xs text-slate-400 mb-1">
                         <span>Progress: Question <span id="current-q-index">1</span> of <span id="total-q-count">20</span></span>
@@ -244,19 +237,14 @@
                 </div>
             </div>
 
-            <!-- Active Question Card -->
             <div class="bg-white rounded-xl shadow-md border border-slate-100 p-6 space-y-6">
                 <div class="flex items-start space-x-3 rtl:space-x-reverse">
                     <span id="q-number-badge" class="bg-indigo-100 text-indigo-900 font-bold px-3 py-1 rounded-lg text-sm shrink-0">Q1</span>
                     <h4 id="q-text-display" class="text-base sm:text-lg font-semibold text-slate-800 leading-relaxed">Loading question...</h4>
                 </div>
 
-                <!-- 4 Options -->
-                <div id="options-container" class="space-y-3">
-                    <!-- Dynamic rendering of Options A, B, C, D -->
-                </div>
+                <div id="options-container" class="space-y-3"></div>
 
-                <!-- Navigation Controls -->
                 <div class="flex justify-between items-center pt-4 border-t">
                     <button id="prev-q-btn" onclick="navigateQuestion(-1)" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium px-4 py-2 rounded-lg text-sm transition">
                         <i class="fa-solid fa-arrow-left mr-1 rtl:hidden"></i> Previous
@@ -273,7 +261,6 @@
 
         <!-- VIEW 4: RESULTS & DIAGNOSTIC ANALYTICS -->
         <section id="result-view" class="hidden space-y-6">
-            <!-- Score Overview Banner -->
             <div id="result-banner" class="bg-white rounded-xl shadow-md border p-6 text-center space-y-3">
                 <div id="result-status-icon" class="text-5xl text-emerald-500"><i class="fa-solid fa-circle-check"></i></div>
                 <h2 id="result-status-title" class="text-2xl font-bold text-slate-800">Examination Completed</h2>
@@ -298,6 +285,14 @@
                     </div>
                 </div>
 
-                <!-- Certificate Action CTA -->
                 <div id="cert-action-box" class="pt-2 hidden">
-                    <button onclick="generateCertificateView()" class="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold px-6 py-2.5 rounded-lg 
+                    <button onclick="generateCertificateView()" class="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold px-6 py-2.5 rounded-lg shadow-md transition text-sm">
+                        <i class="fa-solid fa-certificate mr-2"></i> View & Download Official Certificate
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-md border border-slate-100 p-6 space-y-4">
+                <h3 class="font-bold text-slate-800 text-base border-b pb-2"><i class="fa-solid fa-chart-pie text-indigo-600 mr-2"></i> Performance Analysis</h3>
+                
+                <div class="gr
