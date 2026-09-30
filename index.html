@@ -1,275 +1,113 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#0b1220">
-<title>FACE/SAFE — Free Education System Exam</title>
-<style>
-:root{
-  --bg:#f4f7fb;--card:#fff;--text:#101828;--muted:#667085;--primary:#175cd3;
-  --primary2:#0b4abf;--border:#d0d5dd;--good:#087443;--bad:#b42318;
-  --shadow:0 8px 28px rgba(16,24,40,.08);--radius:18px;
-}
-body.dark{
-  --bg:#0b1220;--card:#121a2a;--text:#fff;--muted:#b5bfd1;--primary:#84adff;
-  --primary2:#a8c4ff;--border:#344054;--good:#75e0aa;--bad:#ff8d86;
-}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif;line-height:1.45}
-button,input,select{font:inherit}
-button{cursor:pointer}
-button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--primary);outline-offset:2px}
-.app{max-width:980px;margin:auto;padding:14px}
-header{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);margin-bottom:14px}
-.brand{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.brand h1{font-size:22px;margin:0}.brand p{margin:3px 0 0;color:var(--muted);font-size:13px}
-.top-actions{display:flex;gap:7px}
-.icon-btn{border:1px solid var(--border);background:transparent;color:var(--text);border-radius:12px;padding:9px 11px}
-.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);margin-bottom:14px}
-h2,h3{margin-top:0}.muted{color:var(--muted)}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-.field{display:flex;flex-direction:column;gap:6px}.field label{font-weight:700;font-size:14px}
-input,select{width:100%;padding:12px;border:1px solid var(--border);border-radius:12px;background:var(--card);color:var(--text);outline:none}
-input:focus,select:focus{border-color:var(--primary)}
-.subjects{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
-.subject{border:1px solid var(--border);padding:12px;border-radius:13px;background:var(--card);display:flex;gap:9px;align-items:center;cursor:pointer}
-.subject input{width:auto;accent-color:var(--primary)}
-.btn{border:0;border-radius:12px;padding:12px 17px;background:var(--primary);color:#fff;font-weight:700}
-.btn:hover{background:var(--primary2)}.btn.secondary{background:transparent;color:var(--text);border:1px solid var(--border)}
-.btn.danger{background:#b42318}.btn:disabled{opacity:.55;cursor:not-allowed}
-body.dark .btn{color:#0b1220}
-body.dark .btn.secondary{color:var(--text)}
-body.dark .btn.danger{color:#fff}
-.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}
-.hidden{display:none!important}
-.notice{padding:12px;border-radius:12px;background:rgba(23,92,211,.09);border:1px solid rgba(23,92,211,.2);margin:12px 0}
-.error{color:var(--bad);font-weight:700}.success{color:var(--good);font-weight:700}
-.exam-head{position:sticky;top:8px;z-index:5;background:var(--card);border:1px solid var(--border);border-radius:15px;padding:12px;margin-bottom:12px;box-shadow:var(--shadow)}
-.exam-info{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
-.timer{font-size:21px;font-weight:800}.progress{height:9px;background:var(--border);border-radius:99px;overflow:hidden;margin-top:9px}.progress>div{height:100%;background:var(--primary);width:0}
-.q-card{padding:20px}.q-number{font-size:13px;color:var(--muted);font-weight:700}.question{font-size:20px;font-weight:700;margin:8px 0 18px}
-.options{display:grid;gap:10px}.option{border:1px solid var(--border);background:var(--card);color:var(--text);border-radius:13px;padding:14px;text-align:left}
-.option:hover{border-color:var(--primary)}
-.option.selected{border-color:var(--primary);background:rgba(23,92,211,.08);box-shadow:0 0 0 2px rgba(23,92,211,.25)}
-.nav-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(40px,1fr));gap:6px;margin-top:14px}
-.q-dot{border:1px solid var(--border);background:var(--card);color:var(--text);border-radius:8px;padding:7px}.q-dot.done{background:rgba(23,92,211,.14);border-color:var(--primary)}
-.score{font-size:42px;font-weight:900;text-align:center;margin:10px 0}
-.result-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.stat{border:1px solid var(--border);padding:12px;border-radius:12px;text-align:center}.stat b{display:block;font-size:22px}
-.review{border:1px solid var(--border);border-radius:13px;padding:14px;margin:10px 0}
-.review.correct{border-left:5px solid var(--good)}
-.review.wrong{border-left:5px solid var(--bad)}
-.review.unanswered{border-left:5px solid var(--muted)}
-.badge{display:inline-block;padding:5px 9px;border-radius:99px;font-size:12px;font-weight:800;background:rgba(23,92,211,.12);color:var(--primary)}
-.certificate{background:#fff;color:#111;border:12px double #1d4ed8;padding:38px;text-align:center;max-width:760px;margin:20px auto}
-.certificate h1{font-size:34px}.certificate .name{font-size:30px;font-weight:900;border-bottom:2px solid #111;display:inline-block;padding:4px 30px}
-.certificate .cert-id{font-size:12px;color:#555}
-footer{text-align:center;color:var(--muted);font-size:12px;padding:15px}
-@media(max-width:650px){
- .grid,.subjects{grid-template-columns:1fr}.result-grid{grid-template-columns:repeat(2,1fr)}
- .question{font-size:18px}.brand{align-items:flex-start}.card{padding:15px}
-}
-@media print{
- body{background:#fff}.no-print{display:none!important}.certificate{box-shadow:none;margin:0;max-width:none}
- .card{box-shadow:none;border:0;padding:0}
-}
-</style>
-</head>
-<body>
-<div class="app">
-<header>
-  <div class="brand">
-    <div>
-      <h1>FACE/SAFE</h1>
-      <p>Farooq Ahmed Chitrali Education System and Free Exam</p>
-    </div>
-    <div class="top-actions">
-      <button class="icon-btn" id="themeBtn" type="button" onclick="toggleTheme()" aria-label="Toggle theme">🌙</button>
-      <button class="icon-btn" type="button" onclick="resetDemo()">Reset</button>
-    </div>
-  </div>
-</header>
-
-<main id="setup">
-<section class="card">
-<h2>Student Login &amp; Profile</h2>
-<p class="muted">Prototype mode: data is stored only in this browser.</p>
-<div class="grid">
-  <div class="field"><label for="email">Email / Gmail *</label><input id="email" type="email" placeholder="student@gmail.com" autocomplete="email"></div>
-  <div class="field"><label for="studentName">Student Name *</label><input id="studentName" placeholder="Student name" autocomplete="name"></div>
-  <div class="field"><label for="password">Password *</label><input id="password" type="password" placeholder="Password" autocomplete="current-password"></div>
-  <div class="field"><label for="age">Age</label><input id="age" type="number" min="5" max="100" placeholder="Age"></div>
-  <div class="field"><label for="gender">Gender</label><select id="gender"><option value="">Select</option><option>Male</option><option>Female</option><option>Other</option></select></div>
-  <div class="field"><label for="region">Region / Country</label><input id="region" placeholder="Country or region" autocomplete="country-name"></div>
-</div>
-</section>
-
-<section class="card">
-<h2>Exam Setup</h2>
-<div class="grid">
-  <div class="field"><label for="language">Language</label>
-    <select id="language"><option>English</option><option>Urdu</option><option>Arabic</option><option>Hindi</option><option>Roman Urdu</option></select>
-  </div>
-  <div class="field"><label for="grade">Grade</label>
-    <select id="grade"><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select>
-  </div>
-  <div class="field"><label for="examType">Exam Type</label>
-    <select id="examType" onchange="updateExamType()"><option value="school">School Exam</option><option value="safety">Safety / HSE Exam</option></select>
-  </div>
-  <div class="field"><label for="examRegion">Preferred Region</label><select id="examRegion"><option>General</option><option>Saudi Arabia</option><option>Pakistan</option><option>International</option></select></div>
-</div>
-
-<div id="schoolSubjects" style="margin-top:15px">
-<label><b>Select 1–5 subjects</b></label>
-<div class="subjects" id="subjectList"></div>
-</div>
-
-<div id="safetyInfo" class="notice hidden">
-<b>Safety Exam:</b> 50 questions, 50 minutes. Certificate eligibility requires 60%.
-</div>
-
-<div id="retakeNotice"></div>
-<div class="actions">
-<button class="btn" id="startBtn" type="button" onclick="startExam()">Start Exam</button>
-</div>
-<div id="setupMsg"></div>
-</section>
-</main>
-
-<main id="exam" class="hidden">
-<div class="exam-head">
-  <div class="exam-info">
-    <div><b id="examTitle"></b><div class="muted" id="examMeta"></div></div>
-    <div class="timer" id="timer" aria-live="polite">00:00</div>
-  </div>
-  <div class="progress"><div id="progressBar"></div></div>
-</div>
-<section class="card q-card">
-  <div class="q-number" id="qNumber"></div>
-  <div class="question" id="questionText"></div>
-  <div class="options" id="options"></div>
-  <div class="actions">
-    <button class="btn secondary" type="button" onclick="previousQuestion()">Previous</button>
-    <button class="btn" id="nextBtn" type="button" onclick="nextQuestion()">Next</button>
-    <button class="btn danger hidden" id="submitBtn" type="button" onclick="submitExam(false)">Submit Exam</button>
-  </div>
-  <div class="nav-grid" id="navGrid"></div>
-</section>
-</main>
-
-<main id="result" class="hidden">
-<section class="card">
-<h2>Exam Result</h2>
-<div class="score" id="score"></div>
-<div id="statusText" style="text-align:center"></div>
-<div class="result-grid" id="stats" style="margin-top:14px"></div>
-<div class="notice" id="certificateNotice"></div>
-</section>
-<section class="card">
-<h3>Performance</h3>
-<div id="performance"></div>
-</section>
-<section class="card">
-<h3>All Questions &amp; Answers</h3>
-<div id="review"></div>
-</section>
-<div class="actions no-print">
-<button class="btn" id="certificateBtn" type="button" onclick="showCertificate()">View Certificate</button>
-<button class="btn secondary" type="button" onclick="location.reload()">Back to Home</button>
-</div>
-</main>
-
-<main id="certificatePage" class="hidden">
-<section class="card no-print">
-<div class="actions">
-<button class="btn" type="button" onclick="window.print()">Print / Save PDF</button>
-<button class="btn secondary" type="button" onclick="backToResult()">Back</button>
-</div>
-</section>
-<div id="certificate"></div>
-</main>
-
-<footer>FACE/SAFE Prototype • GitHub Pages • Free Education System Exam</footer>
-</div>
-
-<script>
-/* ============================================================
-   SUBJECTS
-   ============================================================ */
-const SUBJECTS = {
-  "Quran": "Quran",
-  "English": "English",
-  "Mathematics": "Mathematics",
-  "Science": "Basic Science",
-  "Computer": "Computer Studies"
-};
-
-/* ============================================================
-   QUESTION BANK
-   English 10 | Mathematics 10 | Science 10 | Computer 10 | Quran 10 | Safety 50
-   ============================================================ */
-const BANK = [
-/* ---------------- ENGLISH (10) ---------------- */
-{subject:"English",q:"Which word is a synonym of “happy”?",o:["Joyful","Angry","Tired","Empty"],a:0,e:"Joyful means happy."},
-{subject:"English",q:"What is the plural of “child”?",o:["Childs","Children","Childes","Childrens"],a:1,e:"Children is the correct plural of child."},
-{subject:"English",q:"Choose the correct sentence.",o:["She go to school.","She goes to school.","She going school.","She gone school."],a:1,e:"With “she” in the simple present, the verb takes -s."},
-{subject:"English",q:"What is the opposite of “early”?",o:["Soon","Quick","Late","Fast"],a:2,e:"Late is the opposite of early."},
-{subject:"English",q:"Which word is a noun?",o:["Beautiful","Run","Teacher","Quickly"],a:2,e:"A noun names a person, place, thing, or idea; “teacher” is a person."},
-{subject:"English",q:"Which word is an antonym of “ancient”?",o:["Old","Modern","Historic","Aged"],a:1,e:"Modern means new or current, the opposite of ancient."},
-{subject:"English",q:"Find the verb: “The boy runs quickly.”",o:["boy","runs","quickly","the"],a:1,e:"“Runs” is the action word, so it is the verb."},
-{subject:"English",q:"Which word is spelled correctly?",o:["Beutiful","Beautifull","Beautiful","Beautifil"],a:2,e:"The correct spelling is “beautiful”."},
-{subject:"English",q:"Which word is a preposition?",o:["Under","Jump","Happy","Slowly"],a:0,e:"“Under” shows position or relationship, so it is a preposition."},
-{subject:"English",q:"Complete the sentence: “They ___ playing football now.”",o:["is","am","are","be"],a:2,e:"With the plural subject “they”, we use “are”."},
-
-/* ---------------- MATHEMATICS (10) ---------------- */
-{subject:"Mathematics",q:"What is 12 × 5?",o:["50","55","60","65"],a:2,e:"12 multiplied by 5 equals 60."},
-{subject:"Mathematics",q:"How many metres are in 1 kilometre?",o:["10","100","1,000","10,000"],a:2,e:"1 kilometre equals 1,000 metres."},
-{subject:"Mathematics",q:"What is 3/4 as a decimal?",o:["0.25","0.50","0.75","1.25"],a:2,e:"3 divided by 4 equals 0.75."},
-{subject:"Mathematics",q:"Which unit is commonly used for mass?",o:["Kilogram","Kilometre","Litre","Metre"],a:0,e:"Kilogram is a unit of mass."},
-{subject:"Mathematics",q:"What is 100 ÷ 4?",o:["20","25","30","40"],a:1,e:"100 divided by 4 equals 25."},
-{subject:"Mathematics",q:"What is 7 × 8?",o:["48","54","56","64"],a:2,e:"7 multiplied by 8 equals 56."},
-{subject:"Mathematics",q:"What is the perimeter of a square with side 6 cm?",o:["12 cm","18 cm","24 cm","36 cm"],a:2,e:"Perimeter = 4 × side = 4 × 6 = 24 cm."},
-{subject:"Mathematics",q:"What is 25% of 200?",o:["25","40","50","75"],a:2,e:"25% of 200 = 200 × 0.25 = 50."},
-{subject:"Mathematics",q:"Which of these is a prime number?",o:["4","9","7","15"],a:2,e:"7 has only two factors, 1 and 7, so it is prime."},
-{subject:"Mathematics",q:"Solve for x: 2x = 18",o:["6","8","9","16"],a:2,e:"Divide both sides by 2, so x = 9."},
-
-/* ---------------- SCIENCE (10) ---------------- */
-{subject:"Science",q:"Which organ pumps blood around the human body?",o:["Lung","Heart","Stomach","Kidney"],a:1,e:"The heart pumps blood through the body."},
-{subject:"Science",q:"Water normally freezes at what temperature?",o:["0°C","10°C","50°C","100°C"],a:0,e:"Pure water freezes at 0°C under standard atmospheric pressure."},
-{subject:"Science",q:"Which gas do humans need for respiration?",o:["Oxygen","Helium","Neon","Hydrogen"],a:0,e:"Humans use oxygen during respiration."},
-{subject:"Science",q:"Which is a source of energy from the Sun?",o:["Solar energy","Sound energy","Nuclear waste","Soil"],a:0,e:"Solar energy comes from sunlight."},
-{subject:"Science",q:"Plants mainly make food through which process?",o:["Digestion","Photosynthesis","Evaporation","Filtration"],a:1,e:"Plants make food through photosynthesis."},
-{subject:"Science",q:"Which planet is closest to the Sun?",o:["Venus","Earth","Mercury","Mars"],a:2,e:"Mercury is the closest planet to the Sun."},
-{subject:"Science",q:"Which force pulls objects toward the Earth?",o:["Magnetism","Gravity","Friction","Tension"],a:1,e:"Gravity pulls objects toward the centre of the Earth."},
-{subject:"Science",q:"Which part of a plant absorbs water from the soil?",o:["Leaf","Stem","Root","Flower"],a:2,e:"Roots absorb water and minerals from the soil."},
-{subject:"Science",q:"What is the chemical formula for water?",o:["CO2","H2O","O2","NaCl"],a:1,e:"Water is H2O — two hydrogen atoms and one oxygen atom."},
-{subject:"Science",q:"Which sense organ detects smell?",o:["Ear","Tongue","Nose","Skin"],a:2,e:"The nose contains receptors that detect smell."},
-
-/* ---------------- COMPUTER (10) ---------------- */
-{subject:"Computer",q:"What does CPU commonly stand for?",o:["Central Processing Unit","Computer Power Utility","Central Program User","Control Print Unit"],a:0,e:"CPU stands for Central Processing Unit."},
-{subject:"Computer",q:"Which is used to enter text into a computer?",o:["Monitor","Keyboard","Speaker","Projector"],a:1,e:"A keyboard is an input device used to enter text."},
-{subject:"Computer",q:"Which is a spreadsheet application?",o:["Excel","Paint","Calculator","Notepad only"],a:0,e:"Microsoft Excel is a spreadsheet application."},
-{subject:"Computer",q:"What should you do with a suspicious password request?",o:["Share it","Ignore security warnings","Do not share the password","Post it online"],a:2,e:"Passwords should never be shared with suspicious people or services."},
-{subject:"Computer",q:"What is a web browser used for?",o:["Accessing websites","Washing data","Charging a battery","Printing electricity"],a:0,e:"A browser is software used to access websites and web content."},
-{subject:"Computer",q:"What does RAM stand for?",o:["Read Access Memory","Random Access Memory","Rapid Access Module","Run All Memory"],a:1,e:"RAM means Random Access Memory."},
-{subject:"Computer",q:"Which device stores data permanently?",o:["RAM","Hard disk","CPU","Monitor"],a:1,e:"A hard disk keeps data even when the power is off."},
-{subject:"Computer",q:"Which is the strongest password?",o:["123456","password","Ahmed2010","T7#kL9@qZ2"],a:3,e:"A long mix of letters, numbers, and symbols is the strongest."},
-{subject:"Computer",q:"Which key deletes the character to the left of the cursor?",o:["Backspace","Enter","Shift","Caps Lock"],a:0,e:"Backspace deletes the character before the cursor."},
-{subject:"Computer",q:"What does “www” stand for?",o:["World Wide Web","Web Wide World","Wide World Web","World Web Wide"],a:0,e:"www stands for World Wide Web."},
-
-/* ---------------- QURAN (10) ---------------- */
-{subject:"Quran",q:"What is the first month of the Islamic calendar?",o:["Ramadan","Muharram","Shawwal","Rajab"],a:1,e:"Muharram is the first month of the Islamic calendar."},
-{subject:"Quran",q:"How many daily obligatory prayers are there?",o:["2","3","5","7"],a:2,e:"There are five obligatory daily prayers."},
-{subject:"Quran",q:"Which is one of the five pillars of Islam?",o:["Zakat","Chess","Travel","Trade"],a:0,e:"Zakat is one of the five pillars of Islam."},
-{subject:"Quran",q:"What is Ramadan?",o:["An Islamic month of fasting","A weekday","A language","A city"],a:0,e:"Ramadan is the ninth month of the Islamic calendar and the month of obligatory fasting."},
-{subject:"Quran",q:"What does honesty generally mean?",o:["Telling the truth","Hiding facts","Breaking promises","Cheating"],a:0,e:"Honesty includes truthfulness and avoiding deception."},
-{subject:"Quran",q:"How many surahs are in the Quran?",o:["100","110","114","120"],a:2,e:"The Quran contains 114 surahs."},
-{subject:"Quran",q:"Which is the first surah of the Quran?",o:["Al-Fatihah","Al-Baqarah","An-Nas","Yasin"],a:0,e:"Al-Fatihah is the first surah of the Quran."},
-{subject:"Quran",q:"In which month do Muslims perform Hajj?",o:["Ramadan","Dhul-Hijjah","Muharram","Shawwal"],a:1,e:"Hajj is performed in the month of Dhul-Hijjah."},
-{subject:"Quran",q:"How many rak'ah are in the obligatory Fajr prayer?",o:["2","3","4","5"],a:0,e:"The obligatory Fajr prayer has two rak'ah."},
-{subject:"Quran",q:"Which book was revealed to Prophet Muhammad (PBUH)?",o:["The Quran","The Bible","The Torah","The Psalms"],a:0,e:"The Quran was revealed to Prophet Muhammad (PBUH)."},
-
-/* ---------------- SAFETY / HSE (50) ---------------- */
-{subject:"Safety",q:"What is the primary purpose of a Job Safety Analysis (JSA)?",o:["Identify hazards and controls","Increase paperwork only","Replace all training","Calculate salary"],a:0,e:"A JSA identifies job steps, hazards, and suitable controls."},
-{subject:"Safety",q:"What does PPE stand for?",o:["Personal Protective Equipment","Public Protection Entry","Process Planning Equipment","Personal Project Evaluation"],a:0,e:"PPE means Personal Protective Equipment."},
-{subject:"Safety",q:"Which control is generally preferred over relying only on PPE?",o:["Elim
+"SESSION 2026","","OVERSEAS CHITRALI'S COMMUNITY","__1","__2","__3","__4","__5","__6","YEARLY PAYMENT 2026","__7","__8","__9","__10","__11","__12","__13","EMERGENCY PAYMENT 2025","__14","__15","__16","__17","__18","__19","__20","__21","__22","__23","__24","__25","__26","__27"
+"PERSONAL INFORMATION","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""
+"Reg No","NAME","FATHER NAME","DESIGNATION","CITY","CONTACT","CNIC NUMBER","IQAMA","MEMBERSHIP DATE","REG FEE","PAY 1","Date ","PAY 2","Date ","TOTAL AMOUNT","PAID","DUES","Final Exit 24 mem Bonus 2000","INJUERY/ Operation SR: 10x6","DEPORT  SR: ","DEATH FUND","SOCIAL FUND","TOTAL AMOUNT","PAID ","DUES","","Advance","","","","",""
+"A01","Haider Nawaz","Gull nawaz","Chairman","Riyadh",595356572,"15201-0476049-1",2396423796,"12.05.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","",0,""
+"A02","Muhamad Aziz","Zanoyar khan","President","Abha",593142988,"17301-6730724-9",2320823129,"08.06.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","",0,""
+"A04","Mukhtar Ur Rahman","Fzlu Rahman","Development SEC","",583945966,"15202-5695331-3",2464326830,"31.05.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","",0,""
+"A05","Misabah Uddin","Pahlawan khan","Chief finnance","JEDDAH",539396103,"15201-3587779-5",2238007351,"12.05.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","",0,""
+"A06","Ali Murad Lal","Musharaf ","Jerga Sectory","Khamees",599140704,"15202-08117047",2322843059,"08.05.2023",0,100,"25-Jan-2026",100,"1/25/2026",200,200,0,0,0,0,0,0,0,35,-35,"","","","","",70,""
+"A08","Mumtaz Ahmad","Abdul Aziz khan","Cabinet member","Riyadh",580059816,"15202-3742379-9",2341490080,"12.05.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","",0,""
+"A09","Abdul Khaliq","Abdul karim","Emergency Donation SEC","Khamees",595701276,"17301-8646944-1",240582156,"12.05.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","",0,""
+"A10","Mujeeb Ur Rehman","Fazlurahman","All Group Admiins","JEDDA",564287376,"15201-3641407-1",2523933774,"04.06.2023",0,100,"15-Jan-2026","","",200,100,100,0,0,0,0,0,0,"",0,"","","","","",0,""
+"A11","Siyana Khan","Anwar khan","Shura member","Riyadh",598200547,"15201-0917819-7",2384736506,"12.05.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","",0,""
+"A12","Jalil Ur Rehman ","Khawaja muhammad","Labour ","Jeddah",539396103,"15201.8349598.3",2526775164,"12.05.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","",0,""
+"A14","Nasir Zaman","Qamar zaman","Driver ","Riyadh",503913713,"15201.1235560.1",2450612771,"08.06.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","",0,""
+"A15","Hassan Sayeed","Haroon syed","Social media SEC","Abha",563717046,"",2486977834,"28.05.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","",0,""
+"A16","Fida Ur Rehman","Sher Nayab","Worker","Damamm",592092793,"15202-444-6946-5",2430125654,"28.05.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","",0,""
+"A17","Syed Ahmed","M Ghafar khan","Worker","Khamees",592345270,"15202-0832444-9",2193521107,"03.06.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","",0,""
+"A18","Azhar Ali Shah","Amir hasan shah","Worker","Al Hasa",549539976,"15201-2558549-7",2427138017,"03.06.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","",0,""
+"A19","Saif Ur Rehman","Saeed ur Rehman","Worker","Al qasim ",506672896,"15202-6197503-1",2397330362,"03.06.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","",0,""
+"A20","Ali Jafar khan","Siadat khan","Worker","JEDDA",542706958,"15202-0814663-9",2534298548,"03.06.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","Final 2000",3000,"19.05.2025","",0,""
+"A21","Gull Nawaz","Mirza Nadir","Worker","Jeddah","","15201-10585065-1",2535221457,"03.06.2023",0,100,"15-Jan-2026","","",200,100,100,0,0,0,0,0,0,"",0,"","","","","",0,""
+"A22","Fareed Ahmed","Qadeem khan","Worker","Muhail  ",572762029,"15201-10998115-3",2442346892,"03.06.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","final exit ",3000,"27.10.2025","","",""
+"A23","Sher Ghazi Khan","Hakeem ","Worker","Jubail",552797671,"15202-4368899-7",2522944376,"03.06.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A24","Muhammad Shuja Uddin","Ghulam Mahaiyuddin ","Worker","Jubail",572345912,"15201-6629069-5",2527522383,"03.06.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A25","Jamil Ur Rehman","Abdur rahman","Worker","Muhail  ",556351527,"17301-8093378-7"," ","06.06.2023",0,100,"",40,"",200,140,60,0,0,0,0,0,0,"",0,"",140,"","","","",""
+"A27","Azeem Uddin","Umir u din","Worker","Jeddah",578812375,"15201-15336853-9",2532321912,"08.06.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","Final 2000","","29.05.2025","","",""
+"A28","Nazir Hussain","Syed bahader","Worker","Jeddah",593540489,"15201-5531037-3",2485960526,"08.06.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A29","Afzal Nadir","Siya khan jan","Labour ","Khamis",537975751,"17301-1528935-5",2546667599,"08.06.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A30","Nawrooz Baig ","Zar aman big","Labour ","Abha",598795980,"",229326998,"08.06.2023",0,100,"25-Jan-2026","","",200,100,100,0,0,0,0,0,0,"",0,"","","","","","",""
+"A31","Islam Uddin ","Nasab wali Shah ","Company ","Tabouk",530956910,"15202-7419955-7",2510219583,"08.06.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A32","Asif khan","Afsar","Company ","Tabouk",583084605,"15202-3684304-7",2465166532,"08.06.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A33","Atta Ullah","Sher hakeem khan","Driver ","Tabouk",530718370,"15201-7278424-7",2481020192,"08.06.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A34","Saif Ullah ","Juma gull","Hotel Worker","Jeddah",566148708,"15201-6230344-1",2361106186,"11.06.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A36","Aziz  khan","Rihmat ullah khan","Company ","Abha",555081047,"15201-8039458-5",2419490962,"11.06.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A37","Sahib nawaz","Yor mas khan","Labour ","Dammam",596726922,"15202-0987770-3",2504674488,"13.06.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","Final Exit",2000,"02.07.2025","","",""
+"A39","Shujaat Ahmed ","Nasir Muhammad ","Super Store Manager ","Riyadh",568954728,"15201-38833755-1",2488147865,"08.06.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A40","Aziz Ur Rehman ","Suwerum Kan ","Worker ","Riyadh",572511775,"15202-0584548-5",2259370647,"08.06.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A42","Mumtaz Uddin ","Muh. Siraj ud Din ","Co Ordinator","Riyadh",539004329,"15201-8343013-1",2526774951,"08.06.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A43","Ihsan Ul Haq ","Sher Ghazi ","Worker ","Taif ",3450270639,"15201-4671958-9","","08.06.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A44","Noor Shahi Din","Muhammad Salah uddin ","Worker ","Taif ",3470735930,"15201-0348116-1",2550114447,"08.06.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A46","Islam Uddin ","Jamal Uddin ","Worker ","Riyadh ",599071840,"15201-1589301-9",220337805,"08.06.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A47","Saif Ur Rehman ","Sher Balang ","Lab Assistant ","Taif ",546146878,"15201-5572053-3",2401771783,"08.06.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A48","Didar Ishaq","Faramoz Khan ","Co Ordinator","Riyadh ",596638313,"15202-8381829-1",2402971549,"06.06.2023",0,30,"","","",200,30,170,0,0,0,0,0,0,"",0,"",30,"","","","",""
+"A49","Abdul Majeed","Durani Khan ","General Sectory","Riyadh",506579100,"15201-088360-7",2465099261,"06.06.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A50","Sher Ahmed ","Ahmad Khan ","Driver ","Riyadh ",581064859,"15201-7230529-3",2372124251,"06.06.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A52","Muhammad Ijaz ","Muhammad Riaz ","Company ","Damaam",551235921,"15202-6900727-5",2411519460,"06.06.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A54","Muhammad Idress Nabi ","Muhammad Saif alnabi ","Worker ","Riyadh ",582232661,"15201-5484443-9",2518968751,"14.06.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A56","Asif Ahmed ","Abdul Wakeel ","Company ","Riyadh",571959779,"15202-5820190-5",2417821317,"16.06.2023",0,100,"25-Jan-2026","","",200,100,100,0,0,0,0,0,0,"",0,"","","","","","",""
+"A57","Nazim Wali Khan","Zar Nigah Khan ","Company ","Jeddah",556319895,"15202-7968451-9",2335995292,"16.06.2023",0,100,"15-Jan-2026","","",200,100,100,0,0,0,0,0,0,"",0,"","","","","","",""
+"A58","Sayed Ali Shah","Sultan Murad Shahq","Worker","AlMinas",532793823,"15202-0809372-7",2238072488,"16.06.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A59","Muhammad Razzaq ","Shah Bool ","Saftery","Riyadh",593665300,"15201-2656985-5",2531159693,"17.06.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A60","Shehzada Raheem ","Muhammad Raheem ","Labour ","Makkah ",592820038,"",2425629082,"17.06.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A61","Muhammad Moin Uddin ","Muhammad Khan ","Shura member","Khubar",560082825,"",2140118528,"17.06.2023",0,100,"30-Dec-2025","","",200,100,100,0,0,0,0,0,0,"",0,"",100,"","30-12-2025","","",""
+"A63","Muhammad Faizul Islam","Muhammad Sahib Khan","Worker","Riyadh ",571054056,"15202-2711425-7",2533786386,"19.06.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A64","Shafi Ullah ","Mutawar Shah","Worker ","",582341725,"15202-0808179-3",2473395636,"23.06.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A65","Kashif Ahmed","Abdullah Jan","Worker","Hail",570144695,"15201-0567095.3",2529462307,"23.06.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A66","Mir Ahmed","Sher Qarab","Driver ","Riyadh",508854875,"15202-0816710-5",2512886439,"23.06.2023",0,100,"25-Jan-2026","","",200,100,100,0,0,0,0,0,0,"",0,"","","","","","",""
+"A68","Fazal Haq","Mir Aziz Khan","Imam Masjid ","Baljarshe",551533265,"15202-1368651-3",2438558534,"23.06.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A70","Muhammad Zakariya ","Nawaz Khan","Driver ","",594860656,"15201-4632425-7",2321662682,"24.06.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A71","Shafiq Ahmad","Mir Ahmad ","Worker","Damamm",546497067,"15201-7387277-3",2516603806,"24.06.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","Final exit ",2000,"20.07.2025","","",""
+"A72","Mehmood Sher Wali ","Zar Wali Khan","Worker","Riyadh","","15201-0562304-5",2369867161,"25.06.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A73","Imran Ali Khan","Ali Dost","Technician","Damamm",595308371,"15202-7743556-7",2420216422,"25.06.2023",0,100,"17-Jan-2026","","",200,100,100,0,0,0,0,0,0,"",0,"","","","","","",""
+"A74","Amir Ishaq","Faramoz Khan ","Driver ","Riyadh",530461650,"15202-8413928-3",2342373418,"25/6/2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A75","Shehbaz Khan","Barabar Khan","Busniss ","Riyadh ","","15202-0921808-3",2224568903,"25.06.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A78","Muhammad Azam Khan","Mir Azam Khan","Busniss ","Khamis",594395111,"15201-2588786-1",2167783642,"11.09.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A79","Saeed Ullah Khan","Zia Allah Khan","Worker","Riyadh ",508205123,"15201-5000241-5",2370909778,"29.06.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A81","Abdul Wajid","Noor Muhammad Khan","Talecom ","Khamees","","","","30.06.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A82","Wali Hassan","Jan Gull","Worker","Riyadh ",839553859,"15201-9661128-3",2521717062,"30.06.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A84","Fazali Razaq ","Abdul Murad ","Masen","Dammam ",572306348,"15202-8564713-3",2536896422,"01.07.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A85","Nasir Ahmad ","Noor Muhammad Khan","Warehouse","Riyadh",562152720,"15202-1535137-9",2472248299,"02.07.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A86","Showkat Nihaal","Ulfat Nihaal","Paling Helper ","Jezan",597169646,"15202-7106350-1",2543786178,"02.07.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","Final Exit",2000,"7.5.2025","","",""
+"A87","Sharif Ullah","Sharif Zada ","Packing ","Jezan",597741585,"15202-0789271-9",2543785634,"02.07.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A88","Rustam Shah","Narsruk","Vice President","Dammam ",551475810,"15201-2160327-5",2459079485,"02.07.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A90","Muhammad Sadiq ","Ghulam Ishaq ","Work Perment ","Safaniya ",595832358,"15202-9518681-9",2399274345,"03.07.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A91","Sher Wazir ","Md Ghazan","Co Ordinator","Dammam ",595008772,"15201-0563665-3",2401415563,"03.07.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A93","Ikhlaq Ahmad ","Wazir Ahmad ","Worker","Dammam",596980512,"15201-5751753-1",2382815849,"04.07.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A94","Sabir Khan","Soroom Khan","Worker","Al Khubar ",540541752,"15202-6290757-7",2249295003,"04.07.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","Final Exit",3000,"7.10.2025","","",""
+"A95","Waseem Akram","Maraj uddin","Worker","Al Khbar",581717857,"15202-2412649-3",2404640423,"04.07.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A96","Siraj Uddin","Syed Safi Uddin","Worker","Riyadh ",581542259,"15202-0795838-9",2265030599,"04.07.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A97","Nasir ullah","Aman Ullah","Worker ","Riyadh ",596673707,"15202-3639331-9",2434296659,"04.07.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A98","Noor Arab Khan","Sher Arab Khan","Shura member","Riyadh",559128693,"15202-0827838-1",2333473573,"05.01.2024",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A99","Shuja Uddin","Pahlawan ","Worker","Dammam",546716134,"15201-0595096-9",2271407179,"05.07.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A102","Muhammad Wali Khan","Dolat Khan ","Hotel Worker","Tabouk",3495111506,"15201-6715683-1",2527387530,"06.07.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A103","Zahid Nawaz ","Muhammad Nawaz Khan ","Driver ","Jeddah ",548719286,"15201-2617341-5",2538116639,"06.07.2023",0,100,"15-Jan-2026","","",200,100,100,0,0,0,0,0,0,"",0,"","","","","","",""
+"A104","Amir Azam ","Muhammad Azam","Machanic ","Jabal ",500781646,"",2319909947,"06.07.2023",0,100,"22-Jan-2026",70,"22-Jan-26",200,170,30,0,0,0,0,0,0,"",0,"","","","","","",""
+"A105","Abdul Arif Jan","Abdul Wakeel Khan","Gealogist ","Jabel ",592348825,"15201-1789556-9",2386917880,"06.07.2023",0,100,"22-Jan-2026","","",200,100,100,0,0,0,0,0,0,"",0,"","","","","","",""
+"A108","Zar  DUllah Khan","Mirad Ullah Khan ","Hotel Worker","Drap",538670651,"",2289178572,"07.07.2023",0,100,"6-Jan-2026","","",200,100,100,0,0,0,0,0,0,"",0,"","","","","","",""
+"A109","Muhammad Jahangir ","Mayoon ","Co Ordinator","Khamees",593923704,"15202.4704958.5",2272328887,"07.07.2023",0,100,"25-Jan-2026",100,"1/25/2026",200,200,0,0,0,0,0,0,0,"",0,"","","","","","",""
+"A111","Riaz Uddin","Akram Uddin","Sefty Officer ","Makkah ",547129250,"15202-6735329-5",2475186926,"07.07.2023",0,100,"4-Jan-2026","","",200,100,100,0,0,0,0,0,0,"",0,"","","","","","",""
+"A112","Abdul Murad ","Abdul Aziz ","Driver ","Jubail '",570035730,"15201-6776930-5",2392793085,"08.07.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A113","Muhammad Hafiz Ullah ","Mir Aziz Khan","Co Ordinator","",551692631,"15202-5993456-3",2534526559,"08.07.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A114","Syed Mirza Wali Shah","Niyat Wali ","HVAC Technician","Damamm",501368531,"42201-4200294-7",2273418448,"08.07.2023",0,100,"1-Jan-2026","","",200,100,100,0,0,0,0,0,0,"",0,"",100,"","1/1/2026","","",""
+"A115","Saif Ur Rehman ","Adina Khan","Worker","Dammam",597639432,"15202-7118583-9",2442234890,"08.07.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","Final Exit","","16.7.2025","","",""
+"A116","Mumtaz Ahmad ","Abdul Muzafar Khan","Worker","Damamm","","15201-0575440-1",2504041803,"08.07.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A117","Noor Ajab ","Momin ","Worker","Dammam",580108374,"15201-3264807-9",2403564921,"08.07.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","Final Exit ",3000,"10.11.2025","","",""
+"A118","Abdus Sattar ","Abdul Qadir ","Worker","Jubail '",593543649,"15202-7237702-5",2377265018,"08.07.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A119","Atta Ur Rehman ","Ramzan Khan","Worker","Damamm",542736430,"15202-7496635-1",2380451910,"08.07.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A120","Masood ","Mosa Khan","Worker","Jabail ",556936021,"15202-9354301-3",2449413448,"08.07.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A121","Ahmad Qadir ","Rehmat Panah ","Shawel Opretor ","Neom Duba ",592053036,"15201-059538-9",2475179541,"09.07.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A123","Mirza Muhammad ","Gul Muhammad ","Worker","",59854782,"15202-2871485-9",2420216430,"09.07.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A124","Hazrat Uddin","Pehlawan Khan","Worker","Dammam",550450164,"",21366739373,"10.07.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A125","Afzal Ali ","Gul Sambar Khan","Workr","Riyadh ",595571503,"15202-7074245-5",2369730342,"10.07.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A126","Aziz Ul Hassan","Afzal Khan","Worker","Makkah ",596710495,"15202-6620478-7",2348096104,"10.07.2023",0,100,"1-Jan-2026",5,"1/1/2026",200,105,95,0,0,0,0,0,0,"",0,"",105,"","1/1/2026","","",""
+"A127","Abdul Manan ","Nawaz Khan","Assistant hotel","Makkah ",590237165,"15202-3450878-7",2448735478,"10.07.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A128","Sher Alam Khan","Sher Swat Khan ","Worker","Riyadh",50681040,"15201-4424486-5",2525141566,"10.07.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A129","Hussain Ali Jan","Mehmood Jan","Worker","Jeddah ",510602692,"15202-0841950-1",251515856,"11.07.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A130","Ahsan ul Haq ","Sadbar Khan","Worker","Jezan ",578279857,"15201-8129141-7",2513160743,"11.07.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A131","Zafar Ullah ","Rehmat Aziz ","Worker","Riyadh",531157763,"15202-3782921-1",2533782005,"13.07.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A132","Hayat Ullah","Ghazyana Shah ","Worker","Riyadh ",591634480,"15202-9476757-9",2302771585,"13.07.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A133","Naveed Ur Rehman","Abdul Rahman ","Worker","Riyadh ",594096114,"15201-3770416-3",2516344781,"14.07.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A135","ilyas Ahmad Kaleem","Abdul Ghaffar ","Security","Jeddah ",576752867,"15202-2396469-3",2519272633,"15.07.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A136","Shah Feroz Khan","Khosh Bali Khan","Worker ","Riyadh ",543799461,"42101-3876629-5",2195622009,"17.07.2023",0,"","","","",200,0,200,0,0,0,0,0,0,"",0,"","","","","","",""
+"A137","Zafar Hayat","Muhammad Sahrif ","Worker","Dammam","","15202-7967271-3",2537766731,"19.07.2023",0,"","","","",200,0,200,0,0,
