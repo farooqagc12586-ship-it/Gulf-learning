@@ -1,343 +1,352 @@
+```html
 <!DOCTYPE html>
-<html lang="ur" dir="rtl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>فاروق چترالی آسان مارکیٹنگ</title>
-    <!-- Tailwind CSS for styling -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Flip Cricket 3D - Mobile Championship</title>
+    
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome for icons -->
+    
+    <!-- Three.js 3D Library CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <!-- FontAwesome & Google Fonts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Alpine.js for lightweight state management -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&family=Inter:wght@400;600;700&display=swap');
-        body { font-family: 'Inter', 'Noto Nastaliq Urdu', sans-serif; }
-        .pb-safe { padding-bottom: calc(4rem + env(safe-area-inset-bottom)); }
+        * {
+            font-family: 'Inter', sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+        }
+
+        body {
+            background-color: #090d16;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism styling */
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .glass-card {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* Glowing accents */
+        .glow-gold {
+            box-shadow: 0 0 25px rgba(245, 158, 11, 0.35);
+        }
+
+        .glow-emerald {
+            box-shadow: 0 0 25px rgba(16, 185, 129, 0.35);
+        }
+
+        /* Pulse Animations */
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7); }
+            70% { transform: scale(1.03); box-shadow: 0 0 0 15px rgba(245, 158, 11, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+        }
+
+        .pulse-btn {
+            animation: pulse-ring 2s infinite;
+        }
+
+        /* Custom scrollbar for commentary */
+        .custom-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.5);
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: rgba(245, 158, 11, 0.4);
+            border-radius: 4px;
+        }
+
+        /* Confetti overlay canvas */
+        #confettiCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        /* Wicket Flash Effect */
+        .wicket-flash {
+            animation: redFlash 0.6s ease-out;
+        }
+        @keyframes redFlash {
+            0% { background-color: rgba(239, 68, 68, 0.5); }
+            100% { background-color: transparent; }
+        }
     </style>
 </head>
-<body class="bg-slate-100 text-slate-800 antialiased selection:bg-emerald-500 selection:text-white pb-20"
-      x-data="appData()" 
-      :dir="currentLang === 'en' ? 'ltr' : 'rtl'">
+<body class="min-h-screen flex flex-col items-center justify-start pb-6">
 
-    <!-- TOP HEADER -->
-    <header class="bg-emerald-800 text-white p-4 sticky top-0 z-30 shadow-md">
-        <div class="flex justify-between items-center max-w-md mx-auto">
-            <div>
-                <h1 class="font-bold text-lg leading-tight" x-text="labels[currentLang].appName"></h1>
-                <p class="text-xs text-emerald-200" x-text="labels[currentLang].tagline"></p>
-            </div>
-            <!-- Language Selector -->
-            <select x-model="currentLang" class="bg-emerald-900 text-white text-xs px-2 py-1 rounded border border-emerald-700 outline-none">
-                <option value="ur">اردو</option>
-                <option value="en">English</option>
-                <option value="ru">Roman Urdu</option>
-                <option value="ar">العربية</option>
-            </select>
+    <canvas id="confettiCanvas"></canvas>
+
+    <!-- Toast / Event Announcement Banner -->
+    <div id="eventToast" class="fixed top-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 opacity-0 pointer-events-none transform -translate-y-4">
+        <div id="eventToastContent" class="px-6 py-3 rounded-full text-lg font-black tracking-wider shadow-2xl flex items-center space-x-2 border">
+            <span id="eventToastIcon">🔥</span>
+            <span id="eventToastText">FOUR RUNS!</span>
         </div>
-    </header>
+    </div>
 
-    <!-- MAIN VIEWPORT -->
-    <main class="max-w-md mx-auto p-4 space-y-4">
+    <div class="w-full max-w-md min-h-screen flex flex-col justify-between p-3 relative z-10">
 
-        <!-- 1. DASHBOARD VIEW -->
-        <template x-if="currentTab === 'dashboard'">
-            <div class="space-y-4">
-                <!-- Welcome Banner -->
-                <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-center justify-between">
-                    <div>
-                        <span class="text-xs font-semibold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full" x-text="labels[currentLang].today"></span>
-                        <h2 class="text-xl font-bold text-slate-800 mt-1" x-text="formatCurrency(calculateTodaySales())"></h2>
-                        <p class="text-xs text-slate-500" x-text="labels[currentLang].todaySales"></p>
-                    </div>
-                    <div class="text-3xl text-emerald-600"><i class="fa-solid fa-chart-line"></i></div>
+        <!-- HEADER / NAVIGATION -->
+        <header class="flex items-center justify-between py-2 px-1">
+            <div class="flex items-center space-x-2">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 to-emerald-400 flex items-center justify-center font-black text-slate-900 shadow-md">
+                    <i class="fa-solid fa-bowling-ball text-lg"></i>
                 </div>
-
-                <!-- KPI Grid -->
-                <div class="grid grid-cols-2 gap-3">
-                    <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200">
-                        <p class="text-xs text-slate-500" x-text="labels[currentLang].todayProfit"></p>
-                        <p class="text-lg font-bold text-emerald-600" x-text="formatCurrency(calculateTodayProfit())"></p>
-                    </div>
-                    <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200">
-                        <p class="text-xs text-slate-500" x-text="labels[currentLang].todayExpenses"></p>
-                        <p class="text-lg font-bold text-rose-600" x-text="formatCurrency(calculateTodayExpenses())"></p>
-                    </div>
-                    <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200">
-                        <p class="text-xs text-slate-500" x-text="labels[currentLang].receivables"></p>
-                        <p class="text-lg font-bold text-amber-600" x-text="formatCurrency(totalReceivables())"></p>
-                    </div>
-                    <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200">
-                        <p class="text-xs text-slate-500" x-text="labels[currentLang].stockValue"></p>
-                        <p class="text-lg font-bold text-blue-600" x-text="formatCurrency(totalStockValue())"></p>
-                    </div>
-                </div>
-
-                <!-- Low Stock Alert -->
-                <div x-show="lowStockProducts().length > 0" class="bg-amber-50 border-l-4 border-amber-500 p-3 rounded-r-xl">
-                    <div class="flex items-center space-x-2 space-x-reverse">
-                        <i class="fa-solid fa-triangle-exclamation text-amber-600"></i>
-                        <span class="text-xs font-bold text-amber-800" x-text="labels[currentLang].lowStockAlert"></span>
-                    </div>
-                    <div class="mt-2 text-xs text-amber-900 space-y-1">
-                        <template x-for="item in lowStockProducts()" :key="item.id">
-                            <div class="flex justify-between">
-                                <span x-text="item.name"></span>
-                                <span class="font-bold" x-text="item.stock + ' left'"></span>
-                            </div>
-                        </template>
-                    </div>
-                </div>
-
-                <!-- Recent Transactions List -->
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200">
-                    <h3 class="font-bold text-sm text-slate-700 mb-3" x-text="labels[currentLang].recentSales"></h3>
-                    <div class="space-y-3">
-                        <template x-for="sale in sales.slice(-3).reverse()" :key="sale.id">
-                            <div class="flex justify-between items-center text-xs pb-2 border-b border-slate-100 last:border-none">
-                                <div>
-                                    <p class="font-bold text-slate-800" x-text="sale.customerName"></p>
-                                    <p class="text-slate-400" x-text="sale.date"></p>
-                                </div>
-                                <div class="text-left">
-                                    <p class="font-bold text-emerald-600" x-text="formatCurrency(sale.total)"></p>
-                                    <span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-100" x-text="sale.paymentType"></span>
-                                </div>
-                            </div>
-                        </template>
-                    </div>
+                <div>
+                    <h1 class="text-lg font-black tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-amber-400 via-amber-200 to-emerald-400">
+                        FLIP CRICKET
+                    </h1>
+                    <p class="text-[10px] text-slate-400 font-semibold uppercase tracking-widest -mt-1" id="subHeaderMode">3D Championship</p>
                 </div>
             </div>
-        </template>
+            <div class="flex items-center space-x-2">
+                <button id="btnSoundToggle" onclick="toggleAudio()" class="w-8 h-8 rounded-lg glass-card flex items-center justify-center text-slate-300 hover:text-amber-400 transition">
+                    <i id="soundIcon" class="fa-solid fa-volume-high text-xs"></i>
+                </button>
+                <button onclick="showScorecard()" class="w-8 h-8 rounded-lg glass-card flex items-center justify-center text-slate-300 hover:text-amber-400 transition">
+                    <i class="fa-solid fa-clipboard-list text-xs"></i>
+                </button>
+                <button onclick="openMenuConfirm()" class="w-8 h-8 rounded-lg glass-card flex items-center justify-center text-slate-300 hover:text-rose-400 transition">
+                    <i class="fa-solid fa-house text-xs"></i>
+                </button>
+            </div>
+        </header>
 
-        <!-- 2. SALES VIEW -->
-        <template x-if="currentTab === 'sales'">
-            <div class="space-y-4">
-                <div class="flex justify-between items-center">
-                    <h2 class="font-bold text-lg" x-text="labels[currentLang].salesHistory"></h2>
-                    <button @click="openModal('sale')" class="bg-emerald-600 text-white text-xs px-3 py-2 rounded-lg font-bold flex items-center gap-1">
-                        <i class="fa-solid fa-plus"></i> <span x-text="labels[currentLang].newSale"></span>
-                    </button>
+        <main class="flex-1 flex flex-col justify-center my-1 relative">
+
+            <!-- VIEW 1: HOME & MODE SELECTION -->
+            <section id="viewHome" class="space-y-4 my-auto py-2">
+                <div class="text-center space-y-2">
+                    <div class="inline-block px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-semibold uppercase tracking-widest mb-1">
+                        Mobile Cricket Championship
+                    </div>
+                    <h2 class="text-3xl font-extrabold text-white">Select Game Mode</h2>
+                    <p class="text-xs text-slate-400 max-w-xs mx-auto">Tap the 3D outcomes ball to deliver shots, score boundaries, and conquer tournaments!</p>
                 </div>
 
-                <div class="space-y-2">
-                    <template x-for="sale in sales" :key="sale.id">
-                        <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex justify-between items-center">
-                            <div>
-                                <p class="font-bold text-sm text-slate-800" x-text="sale.customerName"></p>
-                                <p class="text-xs text-slate-400" x-text="sale.items.length + ' items • ' + sale.date"></p>
+                <!-- Game Mode Cards -->
+                <div class="grid grid-cols-1 gap-3 pt-2">
+                    <button onclick="selectGameMode('QUICK')" class="glass-panel p-4 rounded-2xl flex items-center justify-between border-l-4 border-amber-500 hover:bg-slate-800/80 transition text-left group">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-12 h-12 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl group-hover:scale-110 transition">
+                                <i class="fa-solid fa-bolt"></i>
                             </div>
-                            <div class="text-left">
-                                <p class="font-bold text-emerald-600" x-text="formatCurrency(sale.total)"></p>
-                                <button @click="shareWhatsAppInvoice(sale)" class="text-xs text-emerald-700 bg-emerald-50 px-2 py-1 rounded mt-1 border border-emerald-200">
-                                    <i class="fa-brands fa-whatsapp"></i> Invoice
-                                </button>
+                            <div>
+                                <h3 class="font-bold text-white text-base">Quick Match</h3>
+                                <p class="text-xs text-slate-400">1 Match against CPU with custom overs</p>
                             </div>
                         </div>
-                    </template>
-                </div>
-            </div>
-        </template>
-
-        <!-- 3. PRODUCTS / INVENTORY VIEW -->
-        <template x-if="currentTab === 'products'">
-            <div class="space-y-4">
-                <div class="flex justify-between items-center">
-                    <h2 class="font-bold text-lg" x-text="labels[currentLang].inventory"></h2>
-                    <button @click="openModal('product')" class="bg-emerald-600 text-white text-xs px-3 py-2 rounded-lg font-bold flex items-center gap-1">
-                        <i class="fa-solid fa-plus"></i> <span x-text="labels[currentLang].addProduct"></span>
+                        <i class="fa-solid fa-chevron-right text-slate-500 text-sm"></i>
                     </button>
-                </div>
 
-                <div class="space-y-2">
-                    <template x-for="item in products" :key="item.id">
-                        <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex justify-between items-center">
-                            <div>
-                                <p class="font-bold text-sm text-slate-800" x-text="item.name"></p>
-                                <p class="text-xs text-slate-500" x-text="'Cost: ' + formatCurrency(item.cost) + ' | Sale: ' + formatCurrency(item.price)"></p>
+                    <button onclick="selectGameMode('SERIES')" class="glass-panel p-4 rounded-2xl flex items-center justify-between border-l-4 border-emerald-500 hover:bg-slate-800/80 transition text-left group">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl group-hover:scale-110 transition">
+                                <i class="fa-solid fa-trophy"></i>
                             </div>
-                            <div class="text-left">
-                                <span class="text-xs font-bold px-2 py-1 rounded-full" 
-                                      :class="item.stock <= item.minStock ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'"
-                                      x-text="'Stock: ' + item.stock"></span>
+                            <div>
+                                <h3 class="font-bold text-white text-base">3-Match Series</h3>
+                                <p class="text-xs text-slate-400">Best of 3 series trophy challenge</p>
                             </div>
                         </div>
-                    </template>
-                </div>
-            </div>
-        </template>
-
-        <!-- 4. LEDGER VIEW -->
-        <template x-if="currentTab === 'ledger'">
-            <div class="space-y-4">
-                <div class="flex justify-between items-center">
-                    <h2 class="font-bold text-lg" x-text="labels[currentLang].customerLedger"></h2>
-                    <button @click="openModal('customer')" class="bg-emerald-600 text-white text-xs px-3 py-2 rounded-lg font-bold flex items-center gap-1">
-                        <i class="fa-solid fa-plus"></i> <span x-text="labels[currentLang].addCustomer"></span>
+                        <i class="fa-solid fa-chevron-right text-slate-500 text-sm"></i>
                     </button>
-                </div>
 
-                <div class="space-y-2">
-                    <template x-for="cust in customers" :key="cust.id">
-                        <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex justify-between items-center">
-                            <div>
-                                <p class="font-bold text-sm text-slate-800" x-text="cust.name"></p>
-                                <p class="text-xs text-slate-400" x-text="cust.phone"></p>
+                    <button onclick="selectGameMode('TOURNAMENT')" class="glass-panel p-4 rounded-2xl flex items-center justify-between border-l-4 border-purple-500 hover:bg-slate-800/80 transition text-left group">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-12 h-12 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center text-xl group-hover:scale-110 transition">
+                                <i class="fa-solid fa-sitemap"></i>
                             </div>
-                            <div class="text-left">
-                                <p class="text-xs text-slate-500" x-text="labels[currentLang].balance"></p>
-                                <p class="font-bold text-amber-600" x-text="formatCurrency(cust.balance)"></p>
+                            <div>
+                                <h3 class="font-bold text-white text-base">Knockout Cup</h3>
+                                <p class="text-xs text-slate-400">8 Teams Quarterfinal to Final Bracket</p>
                             </div>
                         </div>
-                    </template>
+                        <i class="fa-solid fa-chevron-right text-slate-500 text-sm"></i>
+                    </button>
                 </div>
-            </div>
-        </template>
+            </section>
 
-        <!-- 5. REPORTS VIEW -->
-        <template x-if="currentTab === 'reports'">
-            <div class="space-y-4">
-                <h2 class="font-bold text-lg" x-text="labels[currentLang].reports"></h2>
+            <!-- VIEW 2: TEAM & OVER CONFIGURATION -->
+            <section id="viewTeamSelect" class="hidden space-y-4 my-auto">
+                <div class="flex items-center justify-between">
+                    <button onclick="showView('viewHome')" class="text-xs text-slate-400 hover:text-white flex items-center space-x-1">
+                        <i class="fa-solid fa-arrow-left"></i> <span>Back</span>
+                    </button>
+                    <span class="text-xs font-bold text-amber-400 uppercase tracking-widest">Match Setup</span>
+                </div>
+
+                <!-- Overs Selector -->
+                <div class="glass-card p-3 rounded-xl space-y-2">
+                    <label class="text-xs font-semibold text-slate-300 block">Select Match Length:</label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button id="btnOver5" onclick="setOvers(5)" class="py-2.5 rounded-lg border font-bold text-xs bg-amber-500 text-slate-950 border-amber-400 transition">
+                            5 Overs
+                        </button>
+                        <button id="btnOver10" onclick="setOvers(10)" class="py-2.5 rounded-lg border font-bold text-xs bg-slate-800 text-slate-300 border-slate-700 transition">
+                            10 Overs
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Team Selection Grid -->
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center">
+                        <label class="text-xs font-semibold text-slate-300" id="lblTeamSelectTitle">Select Your Team:</label>
+                        <span class="text-[10px] text-amber-400 font-bold" id="lblTeamSelectCount">10 Nations Available</span>
+                    </div>
+
+                    <div id="teamGrid" class="grid grid-cols-2 gap-2 max-h-[300px] overflow-y-auto custom-scroll pr-1">
+                        <!-- Dynamic Team Cards generated via JS -->
+                    </div>
+                </div>
+
+                <button id="btnStartMatch" onclick="confirmTeamsAndStart()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black text-sm tracking-wider uppercase shadow-lg hover:brightness-110 transition">
+                    Proceed to Toss <i class="fa-solid fa-arrow-right ml-1"></i>
+                </button>
+            </section>
+
+            <!-- VIEW 3: TOSS SCREEN -->
+            <section id="viewToss" class="hidden space-y-6 text-center my-auto py-6">
+                <div class="space-y-1">
+                    <span class="text-xs font-bold text-amber-400 uppercase tracking-widest">Pre-Match Ceremonies</span>
+                    <h2 class="text-2xl font-black text-white">The Coin Toss</h2>
+                </div>
+
+                <div class="flex justify-center items-center space-x-6 py-2">
+                    <div class="text-center space-y-1">
+                        <div id="tossUserFlag" class="w-16 h-16 rounded-full glass-panel mx-auto flex items-center justify-center text-3xl border-2 border-amber-400">🇦🇺</div>
+                        <p id="tossUserName" class="text-xs font-bold text-slate-200">Australia</p>
+                    </div>
+                    <span class="text-sm font-black text-slate-500 italic">VS</span>
+                    <div class="text-center space-y-1">
+                        <div id="tossOppFlag" class="w-16 h-16 rounded-full glass-panel mx-auto flex items-center justify-center text-3xl border-2 border-slate-700">🏴󠁧󠁢󠁥󠁮󠁧󠁿</div>
+                        <p id="tossOppName" class="text-xs font-bold text-slate-200">England</p>
+                    </div>
+                </div>
+
+                <div id="tossChoiceArea" class="glass-panel p-4 rounded-2xl space-y-3">
+                    <p class="text-xs text-slate-300 font-medium">Choose your call for the coin spin:</p>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button onclick="performToss('HEADS')" class="py-3 rounded-xl bg-slate-800 border border-slate-700 font-bold text-xs text-white hover:border-amber-400 transition flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-coins text-amber-400"></i>
+                            <span>HEADS</span>
+                        </button>
+                        <button onclick="performToss('TAILS')" class="py-3 rounded-xl bg-slate-800 border border-slate-700 font-bold text-xs text-white hover:border-amber-400 transition flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-circle-notch text-amber-400"></i>
+                            <span>TAILS</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="tossResultArea" class="hidden glass-panel p-5 rounded-2xl space-y-4">
+                    <p id="tossResultMessage" class="text-sm font-bold text-amber-400">Australia won the toss!</p>
+                    <div id="tossDecisionButtons" class="grid grid-cols-2 gap-3">
+                        <button onclick="setTossDecision('BAT')" class="py-3 rounded-xl bg-amber-500 text-slate-950 font-black text-xs uppercase tracking-wider hover:bg-amber-400 transition">
+                            <i class="fa-solid fa-cricket-bat-ball mr-1"></i> Bat First
+                        </button>
+                        <button onclick="setTossDecision('BOWL')" class="py-3 rounded-xl bg-emerald-500 text-slate-950 font-black text-xs uppercase tracking-wider hover:bg-emerald-400 transition">
+                            <i class="fa-solid fa-baseball mr-1"></i> Bowl First
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="viewMatch" class="hidden space-y-2">
                 
-                <div class="bg-white p-4 rounded-xl border border-slate-200 space-y-3">
-                    <h3 class="font-bold text-sm text-slate-700 border-b pb-2" x-text="labels[currentLang].pnlSummary"></h3>
-                    <div class="flex justify-between text-xs">
-                        <span class="text-slate-500" x-text="labels[currentLang].totalRevenue"></span>
-                        <span class="font-bold" x-text="formatCurrency(calculateTotalRevenue())"></span>
-                    </div>
-                    <div class="flex justify-between text-xs">
-                        <span class="text-slate-500" x-text="labels[currentLang].cogs"></span>
-                        <span class="font-bold text-slate-700" x-text="formatCurrency(calculateTotalCOGS())"></span>
-                    </div>
-                    <div class="flex justify-between text-xs">
-                        <span class="text-slate-500" x-text="labels[currentLang].todayExpenses"></span>
-                        <span class="font-bold text-rose-600" x-text="formatCurrency(calculateTodayExpenses())"></span>
-                    </div>
-                    <div class="flex justify-between text-sm font-bold border-t pt-2">
-                        <span x-text="labels[currentLang].netProfit"></span>
-                        <span class="text-emerald-600" x-text="formatCurrency(calculateTotalRevenue() - calculateTotalCOGS() - calculateTodayExpenses())"></span>
-                    </div>
-                </div>
-            </div>
-        </template>
-    </main>
-
-    <!-- FLOATING QUICK ADD BUTTON (+) -->
-    <div class="fixed bottom-20 left-1/2 -translate-x-1/2 z-40">
-        <button @click="openModal('sale')" class="bg-emerald-600 text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center text-2xl hover:bg-emerald-700 transition active:scale-95 border-4 border-slate-100">
-            <i class="fa-solid fa-plus"></i>
-        </button>
-    </div>
-
-    <!-- BOTTOM NAVIGATION -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 z-30">
-        <div class="max-w-md mx-auto flex justify-around py-2 text-slate-500 text-xs">
-            <button @click="currentTab = 'dashboard'" :class="currentTab === 'dashboard' ? 'text-emerald-700 font-bold' : ''" class="flex flex-col items-center">
-                <i class="fa-solid fa-house text-lg mb-0.5"></i>
-                <span x-text="labels[currentLang].navHome"></span>
-            </button>
-            <button @click="currentTab = 'sales'" :class="currentTab === 'sales' ? 'text-emerald-700 font-bold' : ''" class="flex flex-col items-center">
-                <i class="fa-solid fa-cart-shopping text-lg mb-0.5"></i>
-                <span x-text="labels[currentLang].navSales"></span>
-            </button>
-            <div class="w-8"></div> <!-- Spacer for Quick Action Button -->
-            <button @click="currentTab = 'products'" :class="currentTab === 'products' ? 'text-emerald-700 font-bold' : ''" class="flex flex-col items-center">
-                <i class="fa-solid fa-boxes-stacked text-lg mb-0.5"></i>
-                <span x-text="labels[currentLang].navProducts"></span>
-            </button>
-            <button @click="currentTab = 'ledger'" :class="currentTab === 'ledger' ? 'text-emerald-700 font-bold' : ''" class="flex flex-col items-center">
-                <i class="fa-solid fa-book text-lg mb-0.5"></i>
-                <span x-text="labels[currentLang].navLedger"></span>
-            </button>
-        </div>
-    </nav>
-
-    <!-- NEW SALE MODAL -->
-    <div x-show="activeModal === 'sale'" class="fixed inset-0 bg-black/50 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4" x-cloak>
-        <div class="bg-white w-full max-w-md rounded-t-2xl sm:rounded-2xl p-5 space-y-4 max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-center border-b pb-2">
-                <h3 class="font-bold text-base" x-text="labels[currentLang].newSale"></h3>
-                <button @click="activeModal = null" class="text-slate-400 text-lg">&times;</button>
-            </div>
-
-            <!-- Customer -->
-            <div>
-                <label class="text-xs font-semibold text-slate-600" x-text="labels[currentLang].customer"></label>
-                <select x-model="newSale.customerId" class="w-full mt-1 p-2 border rounded-lg text-xs bg-slate-50">
-                    <template x-for="c in customers" :key="c.id">
-                        <option :value="c.id" x-text="c.name"></option>
-                    </template>
-                </select>
-            </div>
-
-            <!-- Select Product -->
-            <div>
-                <label class="text-xs font-semibold text-slate-600" x-text="labels[currentLang].addProduct"></label>
-                <select x-model="selectedProductId" @change="addItemToSale()" class="w-full mt-1 p-2 border rounded-lg text-xs bg-slate-50">
-                    <option value="" disabled selected>-- پروڈکٹ منتخب کریں --</option>
-                    <template x-for="p in products" :key="p.id">
-                        <option :value="p.id" x-text="p.name + ' (' + formatCurrency(p.price) + ')'"></option>
-                    </template>
-                </select>
-            </div>
-
-            <!-- Selected Items List -->
-            <div class="space-y-2 border-t border-b py-2 my-2">
-                <template x-for="(item, index) in newSale.items" :key="index">
-                    <div class="flex items-center justify-between text-xs bg-slate-50 p-2 rounded">
-                        <span class="font-semibold" x-text="item.name"></span>
-                        <div class="flex items-center gap-2">
-                            <input type="number" min="1" x-model.number="item.qty" class="w-12 p-1 border text-center rounded">
-                            <span class="font-bold" x-text="formatCurrency(item.qty * item.price)"></span>
+                <!-- LIVE CRICBUZZ SCOREBOARD HEADER -->
+                <div class="glass-panel rounded-2xl p-3 border border-slate-700/80 space-y-2 shadow-xl">
+                    <div class="flex justify-between items-center text-xs">
+                        <div class="flex items-center space-x-2">
+                            <span id="matchBatFlag" class="text-lg">🇦🇺</span>
+                            <span id="matchBatName" class="font-extrabold text-white">AUS</span>
+                            <span id="matchInningsBadge" class="text-[9px] bg-amber-500/20 text-amber-400 px-1.5 py-0.5 rounded font-bold uppercase">1st Inn</span>
+                        </div>
+                        <div class="text-right">
+                            <span id="matchTargetDisplay" class="text-[10px] text-slate-400 font-semibold block">RRR: --</span>
                         </div>
                     </div>
-                </template>
-            </div>
 
-            <!-- Summary & Submit -->
-            <div class="flex justify-between items-center font-bold text-sm">
-                <span>ٹوپیک کی کل رقم:</span>
-                <span class="text-emerald-700 text-base" x-text="formatCurrency(calculateNewSaleTotal())"></span>
-            </div>
+                    <!-- SCORE & OVERS BIG DISPLAY -->
+                    <div class="flex justify-between items-end py-0.5 border-y border-slate-800">
+                        <div>
+                            <span id="liveScore" class="text-3xl font-black text-white tracking-tight">0</span>
+                            <span class="text-2xl font-black text-amber-400">/</span>
+                            <span id="liveWickets" class="text-2xl font-black text-amber-400">0</span>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-xs font-bold text-slate-300">
+                                Overs: <span id="liveOvers" class="text-amber-400 font-black">0.0</span> / <span id="maxOversDisplay">5</span>
+                            </div>
+                            <div class="text-[10px] text-slate-400">
+                                CRR: <span id="liveCRR" class="font-semibold text-slate-200">0.00</span>
+                            </div>
+                        </div>
+                    </div>
 
-            <button @click="submitSale()" class="w-full bg-emerald-600 text-white font-bold py-3 rounded-xl text-sm hover:bg-emerald-700 transition">
-                محفوظ کریں (Save Sale)
-            </button>
-        </div>
-    </div>
+                    <!-- BATTER VS BOWLER MINI CARD -->
+                    <div class="grid grid-cols-2 gap-2 text-[11px] pt-1">
+                        <div class="bg-slate-900/60 p-1.5 rounded-lg border border-slate-800 space-y-0.5">
+                            <div class="flex justify-between text-slate-300">
+                                <span id="strikerName" class="font-bold truncate text-amber-400">Bat 1*</span>
+                                <span id="strikerRuns" class="font-black text-white">0 (0)</span>
+                            </div>
+                            <div class="flex justify-between text-slate-400 text-[10px]">
+                                <span id="nonStrikerName" class="truncate">Bat 2</span>
+                                <span id="nonStrikerRuns">0 (0)</span>
+                            </div>
+                        </div>
+                        <div class="bg-slate-900/60 p-1.5 rounded-lg border border-slate-800 space-y-0.5">
+                            <div class="flex justify-between text-slate-300">
+                                <span id="bowlerName" class="font-bold truncate text-emerald-400">Bowler</span>
+                                <span id="bowlerStats" class="font-black text-white">0/0</span>
+                            </div>
+                            <div class="flex justify-between text-slate-400 text-[10px]">
+                                <span>Econ:</span>
+                                <span id="bowlerEcon">0.00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-    <!-- APP STATE & LOGIC -->
-    <script>
-        function appData() {
-            return {
-                currentTab: 'dashboard',
-                currentLang: 'ur',
-                activeModal: null,
-                selectedProductId: '',
+                <!-- 3D FLIP BALL CANVAS CONTAINER -->
+                <div class="relative glass-panel rounded-2xl overflow-hidden border border-amber-500/30 shadow-2xl flex flex-col items-center justify-center p-2 bg-gradient-to-b from-slate-900 via-slate-950 to-slate-900" style="height: 250px;">
+                    
+                    <!-- Canvas Element for Three.js -->
+                    <div id="ballCanvasContainer" class="w-full h-full cursor-pointer flex items-center justify-center"></div>
 
-                // Labels Dictionary for Multi-language support
-                labels: {
-                    ur: {
-                        appName: 'فاروق چترالی آسان مارکیٹنگ',
-                        tagline: 'چھوٹے کاروبار کا آسان ڈیجیٹل حساب',
-                        today: 'آج',
-                        todaySales: 'آج کی کل سیلز',
-                        todayProfit: 'آج کا منافع',
-                        todayExpenses: 'آج کے اخراجات',
-                        receivables: 'کل واجب الوصول (اُدھار)',
-                        stockValue: 'اسٹاک کی مالیت',
-                        lowStockAlert: 'کم اسٹاک کی اطلاع',
-                        recentSales: 'حالیہ فروخت',
-                        salesHistory: 'سیلز کی تفصیل',
-                        newSale: 'نئی سیل درج کریں',
-                        inventory: 'اسٹاک / پروڈکٹس',
-                        addProduct: 'نئی پروڈکٹ شامل کریں',
-                        customerLedger: 'کسٹمر کھاتہ',
-                        addCustomer: 'نیا کسٹمر',
-                        reports: 'بزنس رپورٹس',
-                        pnlSummary: 'نفع و نقصان خلاصہ',
-                        totalRevenue: 'کل آمدنی',
-                        cogs: 'سامان کی خرید لاگت',
-                        netProfit: 'خالص منافع',
-                        customer: 'کسٹمر',
-                        b
+                    <!-- Canvas Spotlight Background Effect -->
+                    <div class="absolute inset-0 pointer-events-none bg-radial from-amber-500/10 via-transparent to-transparent"></div>
+
+                    <!-- Top Instruction -->
+                    <div class="absolute top-2 left-2 text-[10px] text-slate-400 bg-slate-950/70 px-2 py-0.5 rounded-full border border-slate-800">
+                        <i class="fa-solid fa-hand-pointer text-amber-400 mr-1"></i> Tap Ball or Flip Button
+                    </div>
+
+                    <!-- Selected Outcome Preview overlay banner -->
+  
