@@ -1,351 +1,676 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Flip Cricket 3D - Mobile Championship</title>
-    
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Three.js 3D Library CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    
-    <!-- FontAwesome & Google Fonts -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flip Cricket Tournament</title>
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --card-bg: #1e293b;
+      --accent-gold: #f59e0b;
+      --accent-blue: #3b82f6;
+      --accent-green: #10b981;
+      --accent-red: #ef4444;
+      --text-light: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: #334155;
+    }
 
-    <style>
-        * {
-            font-family: 'Inter', sans-serif;
-            user-select: none;
-            -webkit-user-select: none;
-            touch-action: manipulation;
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
 
-        body {
-            background-color: #090d16;
-            color: #f8fafc;
-            overflow-x: hidden;
-        }
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+      padding: 12px;
+      max-width: 500px;
+      margin: 0 auto;
+      min-height: 100vh;
+    }
 
-        /* Glassmorphism styling */
-        .glass-panel {
-            background: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
+    .header {
+      text-align: center;
+      padding: 16px 0 12px;
+      border-bottom: 2px solid var(--accent-gold);
+      margin-bottom: 16px;
+    }
 
-        .glass-card {
-            background: rgba(30, 41, 59, 0.6);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
+    .header h1 {
+      font-size: 1.4rem;
+      letter-spacing: 1px;
+      color: var(--accent-gold);
+      text-transform: uppercase;
+    }
 
-        /* Glowing accents */
-        .glow-gold {
-            box-shadow: 0 0 25px rgba(245, 158, 11, 0.35);
-        }
+    .header .subtitle {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
 
-        .glow-emerald {
-            box-shadow: 0 0 25px rgba(16, 185, 129, 0.35);
-        }
+    .card {
+      background-color: var(--card-bg);
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 14px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+    }
 
-        /* Pulse Animations */
-        @keyframes pulse-ring {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7); }
-            70% { transform: scale(1.03); box-shadow: 0 0 0 15px rgba(245, 158, 11, 0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
-        }
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      text-transform: uppercase;
+    }
 
-        .pulse-btn {
-            animation: pulse-ring 2s infinite;
-        }
+    .btn {
+      background: var(--accent-blue);
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+      font-size: 0.9rem;
+      transition: background 0.2s;
+    }
 
-        /* Custom scrollbar for commentary */
-        .custom-scroll::-webkit-scrollbar {
-            width: 4px;
-        }
-        .custom-scroll::-webkit-scrollbar-track {
-            background: rgba(15, 23, 42, 0.5);
-        }
-        .custom-scroll::-webkit-scrollbar-thumb {
-            background: rgba(245, 158, 11, 0.4);
-            border-radius: 4px;
-        }
+    .btn:hover {
+      filter: brightness(1.1);
+    }
 
-        /* Confetti overlay canvas */
-        #confettiCanvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            pointer-events: none;
-            z-index: 100;
-        }
+    .btn-gold { background: var(--accent-gold); color: #000; }
+    .btn-green { background: var(--accent-green); }
+    .btn-red { background: var(--accent-red); }
+    .btn-secondary { background: var(--border-color); color: var(--text-light); }
 
-        /* Wicket Flash Effect */
-        .wicket-flash {
-            animation: redFlash 0.6s ease-out;
-        }
-        @keyframes redFlash {
-            0% { background-color: rgba(239, 68, 68, 0.5); }
-            100% { background-color: transparent; }
-        }
-    </style>
+    .btn-group {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.78rem;
+      text-align: center;
+    }
+
+    th, td {
+      padding: 6px 4px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    th {
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    td.team-name {
+      text-align: left;
+      font-weight: 600;
+    }
+
+    tr.qualified {
+      background-color: rgba(16, 185, 129, 0.15);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: bold;
+    }
+
+    .badge-live { background: var(--accent-red); color: white; }
+    .badge-fmt { background: var(--border-color); color: var(--accent-gold); }
+
+    .match-box {
+      background: rgba(0,0,0,0.2);
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .match-teams {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: bold;
+      font-size: 1rem;
+      margin: 6px 0;
+    }
+
+    .match-score {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .flip-card-display {
+      width: 120px;
+      height: 120px;
+      margin: 16px auto;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      border: 3px solid var(--accent-gold);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .flip-card-val {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: white;
+    }
+
+    .banner-alert {
+      background: var(--accent-green);
+      color: #000;
+      font-weight: bold;
+      text-align: center;
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 14px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .champion-box {
+      text-align: center;
+      padding: 20px 10px;
+    }
+
+    .champion-box h2 {
+      color: var(--accent-gold);
+      font-size: 1.6rem;
+      margin-bottom: 8px;
+    }
+
+    .champion-team {
+      font-size: 2rem;
+      font-weight: 900;
+      margin: 12px 0;
+      color: var(--text-light);
+      text-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+    }
+
+    .author-tag {
+      margin-top: 20px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--border-color);
+      font-size: 0.8rem;
+      color: var(--accent-gold);
+      font-weight: bold;
+    }
+
+    .hidden { display: none !important; }
+  </style>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-start pb-6">
+<body>
 
-    <canvas id="confettiCanvas"></canvas>
+  <div class="header">
+    <h1>Flip Cricket</h1>
+    <div class="subtitle">Automated Tournament Session</div>
+  </div>
 
-    <!-- Toast / Event Announcement Banner -->
-    <div id="eventToast" class="fixed top-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 opacity-0 pointer-events-none transform -translate-y-4">
-        <div id="eventToastContent" class="px-6 py-3 rounded-full text-lg font-black tracking-wider shadow-2xl flex items-center space-x-2 border">
-            <span id="eventToastIcon">🔥</span>
-            <span id="eventToastText">FOUR RUNS!</span>
-        </div>
+  <!-- SELECT FORMAT SCREEN -->
+  <div id="screen-setup" class="card">
+    <div class="card-title">Select Tournament Format</div>
+    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 14px;">
+      Choose the match length. This format will remain active for the entire tournament session.
+    </p>
+    <div class="btn-group">
+      <button class="btn btn-gold" onclick="startTournament(5)">5-Over Format</button>
+      <button class="btn btn-gold" onclick="startTournament(10)">10-Over Format</button>
+    </div>
+  </div>
+
+  <!-- MAIN DASHBOARD -->
+  <div id="screen-dashboard" class="hidden">
+
+    <div id="banner-group-completed" class="banner-alert hidden">
+      GROUP STAGE COMPLETED
     </div>
 
-    <div class="w-full max-w-md min-h-screen flex flex-col justify-between p-3 relative z-10">
+    <!-- FORMAT HEADER BAR -->
+    <div class="card" style="padding: 10px; display: flex; justify-content: space-between; align-items: center;">
+      <span style="font-size:0.85rem; font-weight:bold;">Format: <span id="dash-format" class="badge badge-fmt">5 Overs</span></span>
+      <button class="btn btn-secondary" style="width: auto; padding: 4px 8px; font-size: 0.75rem;" onclick="resetTournament()">Reset All</button>
+    </div>
 
-        <!-- HEADER / NAVIGATION -->
-        <header class="flex items-center justify-between py-2 px-1">
-            <div class="flex items-center space-x-2">
-                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 to-emerald-400 flex items-center justify-center font-black text-slate-900 shadow-md">
-                    <i class="fa-solid fa-bowling-ball text-lg"></i>
-                </div>
-                <div>
-                    <h1 class="text-lg font-black tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-amber-400 via-amber-200 to-emerald-400">
-                        FLIP CRICKET
-                    </h1>
-                    <p class="text-[10px] text-slate-400 font-semibold uppercase tracking-widest -mt-1" id="subHeaderMode">3D Championship</p>
-                </div>
-            </div>
-            <div class="flex items-center space-x-2">
-                <button id="btnSoundToggle" onclick="toggleAudio()" class="w-8 h-8 rounded-lg glass-card flex items-center justify-center text-slate-300 hover:text-amber-400 transition">
-                    <i id="soundIcon" class="fa-solid fa-volume-high text-xs"></i>
-                </button>
-                <button onclick="showScorecard()" class="w-8 h-8 rounded-lg glass-card flex items-center justify-center text-slate-300 hover:text-amber-400 transition">
-                    <i class="fa-solid fa-clipboard-list text-xs"></i>
-                </button>
-                <button onclick="openMenuConfirm()" class="w-8 h-8 rounded-lg glass-card flex items-center justify-center text-slate-300 hover:text-rose-400 transition">
-                    <i class="fa-solid fa-house text-xs"></i>
-                </button>
-            </div>
-        </header>
+    <!-- NEXT MATCH WIDGET -->
+    <div class="card">
+      <div class="card-title">
+        <span>Next Match</span>
+        <span id="next-match-stage" class="badge badge-live">GROUP STAGE</span>
+      </div>
+      <div id="next-match-content" class="match-box">
+        <!-- Dynamic content -->
+      </div>
+      <div class="btn-group" style="margin-top: 10px;">
+        <button id="btn-play-match" class="btn btn-green" onclick="openMatchView()">Play Match</button>
+        <button id="btn-sim-match" class="btn btn-secondary" onclick="simulateNextMatch()">Auto Sim</button>
+      </div>
+    </div>
 
-        <main class="flex-1 flex flex-col justify-center my-1 relative">
+    <!-- RECENT RESULT -->
+    <div class="card">
+      <div class="card-title">Recent Result</div>
+      <div id="recent-result-content" style="font-size: 0.85rem; color: var(--text-muted); text-align: center;">
+        No matches completed yet.
+      </div>
+    </div>
 
-            <!-- VIEW 1: HOME & MODE SELECTION -->
-            <section id="viewHome" class="space-y-4 my-auto py-2">
-                <div class="text-center space-y-2">
-                    <div class="inline-block px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-semibold uppercase tracking-widest mb-1">
-                        Mobile Cricket Championship
-                    </div>
-                    <h2 class="text-3xl font-extrabold text-white">Select Game Mode</h2>
-                    <p class="text-xs text-slate-400 max-w-xs mx-auto">Tap the 3D outcomes ball to deliver shots, score boundaries, and conquer tournaments!</p>
-                </div>
+    <!-- GROUP A POINTS TABLE -->
+    <div class="card">
+      <div class="card-title">Group A — Live Standings</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align:left;">Team</th>
+            <th>P</th><th>W</th><th>L</th><th>T</th><th>Pts</th><th>NRR</th>
+          </tr>
+        </thead>
+        <tbody id="table-group-a"></tbody>
+      </table>
+    </div>
 
-                <!-- Game Mode Cards -->
-                <div class="grid grid-cols-1 gap-3 pt-2">
-                    <button onclick="selectGameMode('QUICK')" class="glass-panel p-4 rounded-2xl flex items-center justify-between border-l-4 border-amber-500 hover:bg-slate-800/80 transition text-left group">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-12 h-12 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl group-hover:scale-110 transition">
-                                <i class="fa-solid fa-bolt"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-white text-base">Quick Match</h3>
-                                <p class="text-xs text-slate-400">1 Match against CPU with custom overs</p>
-                            </div>
-                        </div>
-                        <i class="fa-solid fa-chevron-right text-slate-500 text-sm"></i>
-                    </button>
+    <!-- GROUP B POINTS TABLE -->
+    <div class="card">
+      <div class="card-title">Group B — Live Standings</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align:left;">Team</th>
+            <th>P</th><th>W</th><th>L</th><th>T</th><th>Pts</th><th>NRR</th>
+          </tr>
+        </thead>
+        <tbody id="table-group-b"></tbody>
+      </table>
+    </div>
 
-                    <button onclick="selectGameMode('SERIES')" class="glass-panel p-4 rounded-2xl flex items-center justify-between border-l-4 border-emerald-500 hover:bg-slate-800/80 transition text-left group">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl group-hover:scale-110 transition">
-                                <i class="fa-solid fa-trophy"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-white text-base">3-Match Series</h3>
-                                <p class="text-xs text-slate-400">Best of 3 series trophy challenge</p>
-                            </div>
-                        </div>
-                        <i class="fa-solid fa-chevron-right text-slate-500 text-sm"></i>
-                    </button>
+    <!-- QUALIFIED TEAMS -->
+    <div class="card">
+      <div class="card-title">Qualified Teams</div>
+      <div id="qualified-content" style="font-size: 0.85rem; text-align: center; color: var(--text-muted);">
+        Awaiting completion of group matches...
+      </div>
+    </div>
 
-                    <button onclick="selectGameMode('TOURNAMENT')" class="glass-panel p-4 rounded-2xl flex items-center justify-between border-l-4 border-purple-500 hover:bg-slate-800/80 transition text-left group">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-12 h-12 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center text-xl group-hover:scale-110 transition">
-                                <i class="fa-solid fa-sitemap"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-white text-base">Knockout Cup</h3>
-                                <p class="text-xs text-slate-400">8 Teams Quarterfinal to Final Bracket</p>
-                            </div>
-                        </div>
-                        <i class="fa-solid fa-chevron-right text-slate-500 text-sm"></i>
-                    </button>
-                </div>
-            </section>
+    <!-- KNOCKOUT BRACKET -->
+    <div class="card">
+      <div class="card-title">Knockout Stage</div>
+      <div id="knockout-content" style="font-size: 0.85rem;">
+        <div style="margin-bottom: 6px;"><strong>Semi-Final 1:</strong> <span id="sf1-label">Group A #1 vs Group B #2</span></div>
+        <div style="margin-bottom: 6px;"><strong>Semi-Final 2:</strong> <span id="sf2-label">Group B #1 vs Group A #2</span></div>
+        <div><strong>Final:</strong> <span id="final-label">SF1 Winner vs SF2 Winner</span></div>
+      </div>
+    </div>
+  </div>
 
-            <!-- VIEW 2: TEAM & OVER CONFIGURATION -->
-            <section id="viewTeamSelect" class="hidden space-y-4 my-auto">
-                <div class="flex items-center justify-between">
-                    <button onclick="showView('viewHome')" class="text-xs text-slate-400 hover:text-white flex items-center space-x-1">
-                        <i class="fa-solid fa-arrow-left"></i> <span>Back</span>
-                    </button>
-                    <span class="text-xs font-bold text-amber-400 uppercase tracking-widest">Match Setup</span>
-                </div>
+  <!-- MATCH PLAY SCREEN -->
+  <div id="screen-match" class="card hidden">
+    <div class="card-title" id="match-header-title">Live Match</div>
+    
+    <div class="match-box" style="margin-bottom: 12px;">
+      <div class="match-teams" id="live-match-teams">TEAM A vs TEAM B</div>
+      <div id="live-innings-info" style="font-size: 0.85rem; color: var(--accent-gold); font-weight: bold;">1st Innings</div>
+    </div>
 
-                <!-- Overs Selector -->
-                <div class="glass-card p-3 rounded-xl space-y-2">
-                    <label class="text-xs font-semibold text-slate-300 block">Select Match Length:</label>
-                    <div class="grid grid-cols-2 gap-2">
-                        <button id="btnOver5" onclick="setOvers(5)" class="py-2.5 rounded-lg border font-bold text-xs bg-amber-500 text-slate-950 border-amber-400 transition">
-                            5 Overs
-                        </button>
-                        <button id="btnOver10" onclick="setOvers(10)" class="py-2.5 rounded-lg border font-bold text-xs bg-slate-800 text-slate-300 border-slate-700 transition">
-                            10 Overs
-                        </button>
-                    </div>
-                </div>
+    <div style="text-align: center;">
+      <div style="font-size: 0.9rem; color: var(--text-muted);">Score</div>
+      <div id="live-score" style="font-size: 2rem; font-weight: 900; margin: 4px 0;">0/0</div>
+      <div id="live-overs" style="font-size: 0.85rem; color: var(--text-muted);">Overs: 0.0 / 5.0</div>
+      <div id="live-target" style="font-size: 0.85rem; color: var(--accent-gold); margin-top: 4px;" class="hidden">Target: 0</div>
+    </div>
 
-                <!-- Team Selection Grid -->
-                <div class="space-y-2">
-                    <div class="flex justify-between items-center">
-                        <label class="text-xs font-semibold text-slate-300" id="lblTeamSelectTitle">Select Your Team:</label>
-                        <span class="text-[10px] text-amber-400 font-bold" id="lblTeamSelectCount">10 Nations Available</span>
-                    </div>
+    <div class="flip-card-display" onclick="flipCard()">
+      <div id="card-val" class="flip-card-val">FLIP</div>
+      <span style="font-size:0.65rem; color: #cbd5e1; margin-top: 4px;">TAP TO PLAY</span>
+    </div>
 
-                    <div id="teamGrid" class="grid grid-cols-2 gap-2 max-h-[300px] overflow-y-auto custom-scroll pr-1">
-                        <!-- Dynamic Team Cards generated via JS -->
-                    </div>
-                </div>
+    <div id="ball-commentary" style="text-align: center; font-size: 0.85rem; min-height: 20px; color: var(--accent-gold);">
+      Tap card to bowl ball
+    </div>
 
-                <button id="btnStartMatch" onclick="confirmTeamsAndStart()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black text-sm tracking-wider uppercase shadow-lg hover:brightness-110 transition">
-                    Proceed to Toss <i class="fa-solid fa-arrow-right ml-1"></i>
-                </button>
-            </section>
+    <div class="btn-group" style="margin-top: 14px;">
+      <button class="btn btn-secondary" onclick="autoCompleteCurrentMatch()">Auto Complete Match</button>
+    </div>
+  </div>
 
-            <!-- VIEW 3: TOSS SCREEN -->
-            <section id="viewToss" class="hidden space-y-6 text-center my-auto py-6">
-                <div class="space-y-1">
-                    <span class="text-xs font-bold text-amber-400 uppercase tracking-widest">Pre-Match Ceremonies</span>
-                    <h2 class="text-2xl font-black text-white">The Coin Toss</h2>
-                </div>
+  <!-- CHAMPION SCREEN -->
+  <div id="screen-champion" class="card hidden">
+    <div class="champion-box">
+      <h2>🏆 FLIP CRICKET CHAMPION</h2>
+      <div id="champ-team" class="champion-team">TEAM NAME</div>
+      
+      <div class="card" style="background: rgba(0,0,0,0.3); text-align: left; margin-top: 16px;">
+        <div style="margin-bottom: 6px;"><strong>Final Score:</strong> <span id="champ-final-score"></span></div>
+        <div style="margin-bottom: 6px;"><strong>Format:</strong> <span id="champ-format"></span></div>
+        <div style="margin-bottom: 6px;"><strong>Tournament Wins:</strong> <span id="champ-wins"></span></div>
+        <div style="margin-bottom: 6px;"><strong>Total Points:</strong> <span id="champ-points"></span></div>
+        <div><strong>Final NRR:</strong> <span id="champ-nrr"></span></div>
+      </div>
 
-                <div class="flex justify-center items-center space-x-6 py-2">
-                    <div class="text-center space-y-1">
-                        <div id="tossUserFlag" class="w-16 h-16 rounded-full glass-panel mx-auto flex items-center justify-center text-3xl border-2 border-amber-400"></div>
-                        <p id="tossUserName" class="text-xs font-bold text-slate-200">Australia</p>
-                    </div>
-                    <span class="text-sm font-black text-slate-500 italic">VS</span>
-                    <div class="text-center space-y-1">
-                        <div id="tossOppFlag" class="w-16 h-16 rounded-full glass-panel mx-auto flex items-center justify-center text-3xl border-2 border-slate-700"></div>
-                        <p id="tossOppName" class="text-xs font-bold text-slate-200">England</p>
-                    </div>
-                </div>
+      <button class="btn btn-gold" style="margin-top: 14px;" onclick="resetTournament()">Start New Tournament</button>
 
-                <div id="tossChoiceArea" class="glass-panel p-4 rounded-2xl space-y-3">
-                    <p class="text-xs text-slate-300 font-medium">Choose your call for the coin spin:</p>
-                    <div class="grid grid-cols-2 gap-3">
-                        <button onclick="performToss('HEADS')" class="py-3 rounded-xl bg-slate-800 border border-slate-700 font-bold text-xs text-white hover:border-amber-400 transition flex items-center justify-center space-x-2">
-                            <i class="fa-solid fa-coins text-amber-400"></i>
-                            <span>HEADS</span>
-                        </button>
-                        <button onclick="performToss('TAILS')" class="py-3 rounded-xl bg-slate-800 border border-slate-700 font-bold text-xs text-white hover:border-amber-400 transition flex items-center justify-center space-x-2">
-                            <i class="fa-solid fa-circle-notch text-amber-400"></i>
-                            <span>TAILS</span>
-                        </button>
-                    </div>
-                </div>
+      <div class="author-tag">
+        Created by Farooq Ahmed Chitrali
+      </div>
+    </div>
+  </div>
 
-                <div id="tossResultArea" class="hidden glass-panel p-5 rounded-2xl space-y-4">
-                    <p id="tossResultMessage" class="text-sm font-bold text-amber-400">Australia won the toss!</p>
-                    <div id="tossDecisionButtons" class="grid grid-cols-2 gap-3">
-                        <button onclick="setTossDecision('BAT')" class="py-3 rounded-xl bg-amber-500 text-slate-950 font-black text-xs uppercase tracking-wider hover:bg-amber-400 transition">
-                            <i class="fa-solid fa-cricket-bat-ball mr-1"></i> Bat First
-                        </button>
-                        <button onclick="setTossDecision('BOWL')" class="py-3 rounded-xl bg-emerald-500 text-slate-950 font-black text-xs uppercase tracking-wider hover:bg-emerald-400 transition">
-                            <i class="fa-solid fa-baseball mr-1"></i> Bowl First
-                        </button>
-                    </div>
-                </div>
-            </section>
+  <script>
+    const GROUPS = {
+      A: ['India', 'Pakistan', 'South Africa', 'England', 'Bangladesh'],
+      B: ['Australia', 'New Zealand', 'West Indies', 'Sri Lanka', 'Afghanistan']
+    };
 
-            <section id="viewMatch" class="hidden space-y-2">
-                
-                <!-- LIVE CRICBUZZ SCOREBOARD HEADER -->
-                <div class="glass-panel rounded-2xl p-3 border border-slate-700/80 space-y-2 shadow-xl">
-                    <div class="flex justify-between items-center text-xs">
-                        <div class="flex items-center space-x-2">
-                            <span id="matchBatFlag" class="text-lg">🇦🇺</span>
-                            <span id="matchBatName" class="font-extrabold text-white">AUS</span>
-                            <span id="matchInningsBadge" class="text-[9px] bg-amber-500/20 text-amber-400 px-1.5 py-0.5 rounded font-bold uppercase">1st Inn</span>
-                        </div>
-                        <div class="text-right">
-                            <span id="matchTargetDisplay" class="text-[10px] text-slate-400 font-semibold block">RRR: --</span>
-                        </div>
-                    </div>
+    let state = null;
 
-                    <!-- SCORE & OVERS BIG DISPLAY -->
-                    <div class="flex justify-between items-end py-0.5 border-y border-slate-800">
-                        <div>
-                            <span id="liveScore" class="text-3xl font-black text-white tracking-tight">0</span>
-                            <span class="text-2xl font-black text-amber-400">/</span>
-                            <span id="liveWickets" class="text-2xl font-black text-amber-400">0</span>
-                        </div>
-                        <div class="text-right">
-                            <div class="text-xs font-bold text-slate-300">
-                                Overs: <span id="liveOvers" class="text-amber-400 font-black">0.0</span> / <span id="maxOversDisplay">5</span>
-                            </div>
-                            <div class="text-[10px] text-slate-400">
-                                CRR: <span id="liveCRR" class="font-semibold text-slate-200">0.00</span>
-                            </div>
-                        </div>
-                    </div>
+    function initDefaultState() {
+      return {
+        format: null,
+        stage: 'SETUP', // 'SETUP', 'GROUPS', 'SF1', 'SF2', 'FINAL', 'COMPLETED'
+        teams: {},
+        fixtures: [],
+        currentFixtureIdx: 0,
+        recentResult: null,
+        knockouts: {
+          sf1: { teamA: null, teamB: null, winner: null },
+          sf2: { teamA: null, teamB: null, winner: null },
+          final: { teamA: null, teamB: null, winner: null }
+        },
+        liveMatch: null
+      };
+    }
 
-                    <!-- BATTER VS BOWLER MINI CARD -->
-                    <div class="grid grid-cols-2 gap-2 text-[11px] pt-1">
-                        <div class="bg-slate-900/60 p-1.5 rounded-lg border border-slate-800 space-y-0.5">
-                            <div class="flex justify-between text-slate-300">
-                                <span id="strikerName" class="font-bold truncate text-amber-400">Bat 1*</span>
-                                <span id="strikerRuns" class="font-black text-white">0 (0)</span>
-                            </div>
-                            <div class="flex justify-between text-slate-400 text-[10px]">
-                                <span id="nonStrikerName" class="truncate">Bat 2</span>
-                                <span id="nonStrikerRuns">0 (0)</span>
-                            </div>
-                        </div>
-                        <div class="bg-slate-900/60 p-1.5 rounded-lg border border-slate-800 space-y-0.5">
-                            <div class="flex justify-between text-slate-300">
-                                <span id="bowlerName" class="font-bold truncate text-emerald-400">Bowler</span>
-                                <span id="bowlerStats" class="font-black text-white">0/0</span>
-                            </div>
-                            <div class="flex justify-between text-slate-400 text-[10px]">
-                                <span>Econ:</span>
-                                <span id="bowlerEcon">0.00</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    function saveState() {
+      localStorage.setItem('flip_cricket_tournament', JSON.stringify(state));
+    }
 
-                <!-- 3D FLIP BALL CANVAS CONTAINER -->
-                <div class="relative glass-panel rounded-2xl overflow-hidden border border-amber-500/30 shadow-2xl flex flex-col items-center justify-center p-2 bg-gradient-to-b from-slate-900 via-slate-950 to-slate-900" style="height: 250px;">
-                    
-                    <!-- Canvas Element for Three.js -->
-                    <div id="ballCanvasContainer" class="w-full h-full cursor-pointer flex items-center justify-center"></div>
+    function loadState() {
+      const saved = localStorage.getItem('flip_cricket_tournament');
+      if (saved) {
+        try {
+          state = JSON.parse(saved);
+        } catch (e) {
+          state = initDefaultState();
+        }
+      } else {
+        state = initDefaultState();
+      }
+    }
 
-                    <!-- Canvas Spotlight Background Effect -->
-                    <div class="absolute inset-0 pointer-events-none bg-radial from-amber-500/10 via-transparent to-transparent"></div>
+    function startTournament(formatOvers) {
+      state = initDefaultState();
+      state.format = formatOvers;
+      state.stage = 'GROUPS';
 
-                    <!-- Top Instruction -->
-                    <div class="absolute top-2 left-2 text-[10px] text-slate-400 bg-slate-950/70 px-2 py-0.5 rounded-full border border-slate-800">
-                        <i class="fa-solid fa-hand-pointer text-amber-400 mr-1"></i> Tap Ball or Flip Button
-                    </div>
+      // Initialize teams
+      ['A', 'B'].forEach(grp => {
+        GROUPS[grp].forEach(name => {
+          state.teams[name] = {
+            name,
+            group: grp,
+            P: 0, W: 0, L: 0, T: 0, Pts: 0,
+            runsScored: 0,
+            ballsFaced: 0,
+            runsConceded: 0,
+            ballsBowled: 0,
+            NRR: 0
+          };
+        });
+      });
 
-                    <!-- Selected Outcome Preview overlay banner -->
-  
+      // Generate Round Robin Fixtures
+      state.fixtures = [];
+      let matchNum = 1;
+
+      const scheduleGrpA = generateRoundRobin(GROUPS.A);
+      const scheduleGrpB = generateRoundRobin(GROUPS.B);
+
+      // Interleave Group A and B matches
+      const maxLen = Math.max(scheduleGrpA.length, scheduleGrpB.length);
+      for (let i = 0; i < maxLen; i++) {
+        if (i < scheduleGrpA.length) {
+          state.fixtures.push({
+            id: matchNum++,
+            group: 'A',
+            teamA: scheduleGrpA[i][0],
+            teamB: scheduleGrpA[i][1],
+            status: 'UPCOMING',
+            result: null
+          });
+        }
+        if (i < scheduleGrpB.length) {
+          state.fixtures.push({
+            id: matchNum++,
+            group: 'B',
+            teamA: scheduleGrpB[i][0],
+            teamB: scheduleGrpB[i][1],
+            status: 'UPCOMING',
+            result: null
+          });
+        }
+      }
+
+      saveState();
+      render();
+    }
+
+    function generateRoundRobin(teamList) {
+      const fixtures = [];
+      for (let i = 0; i < teamList.length; i++) {
+        for (let j = i + 1; j < teamList.length; j++) {
+          fixtures.push([teamList[i], teamList[j]]);
+        }
+      }
+      return fixtures;
+    }
+
+    function calculateNRR(team) {
+      if (team.ballsFaced === 0 || team.ballsBowled === 0) return 0;
+      const oversFaced = team.ballsFaced / 6;
+      const oversBowled = team.ballsBowled / 6;
+      const forRate = team.runsScored / oversFaced;
+      const againstRate = team.runsConceded / oversBowled;
+      return forRate - againstRate;
+    }
+
+    function updateStandings() {
+      Object.keys(state.teams).forEach(tName => {
+        const team = state.teams[tName];
+        team.NRR = calculateNRR(team);
+      });
+    }
+
+    function getSortedStandings(groupKey) {
+      const groupTeams = GROUPS[groupKey].map(name => state.teams[name]);
+      return groupTeams.sort((a, b) => {
+        if (b.Pts !== a.Pts) return b.Pts - a.Pts;
+        return b.NRR - a.NRR;
+      });
+    }
+
+    function checkGroupCompletion() {
+      if (state.stage !== 'GROUPS') return;
+      const allGroupMatchesFinished = state.fixtures.every(f => f.status === 'FINISHED');
+      if (allGroupMatchesFinished) {
+        state.stage = 'KNOCKOUTS';
+        const sortedA = getSortedStandings('A');
+        const sortedB = getSortedStandings('B');
+
+        const A1 = sortedA[0].name;
+        const A2 = sortedA[1].name;
+        const B1 = sortedB[0].name;
+        const B2 = sortedB[1].name;
+
+        state.knockouts.sf1 = { teamA: A1, teamB: B2, winner: null };
+        state.knockouts.sf2 = { teamA: B1, teamB: A2, winner: null };
+
+        // Add SF fixtures
+        state.fixtures.push({
+          id: state.fixtures.length + 1,
+          stage: 'SF1',
+          group: 'Semi-Final 1',
+          teamA: A1,
+          teamB: B2,
+          status: 'UPCOMING',
+          result: null
+        });
+
+        state.fixtures.push({
+          id: state.fixtures.length + 1,
+          stage: 'SF2',
+          group: 'Semi-Final 2',
+          teamA: B1,
+          teamB: A2,
+          status: 'UPCOMING',
+          result: null
+        });
+
+        saveState();
+      }
+    }
+
+    function recordMatchResult(fixtureIdx, res) {
+      const fix = state.fixtures[fixtureIdx];
+      fix.status = 'FINISHED';
+      fix.result = res;
+
+      state.recentResult = `${res.winner === 'TIE' ? 'Match Tied' : res.winner + ' won'} (${fix.teamA} ${res.scoreA} vs ${fix.teamB} ${res.scoreB})`;
+
+      // Update Group Stats if in Group Stage
+      if (state.stage === 'GROUPS') {
+        const teamA = state.teams[fix.teamA];
+        const teamB = state.teams[fix.teamB];
+
+        teamA.P += 1;
+        teamB.P += 1;
+
+        teamA.runsScored += res.runsA;
+        teamA.ballsFaced += res.allOutA ? (state.format * 6) : res.ballsA;
+        teamA.runsConceded += res.runsB;
+        teamA.ballsBowled += res.allOutB ? (state.format * 6) : res.ballsB;
+
+        teamB.runsScored += res.runsB;
+        teamB.ballsFaced += res.allOutB ? (state.format * 6) : res.ballsB;
+        teamB.runsConceded += res.runsA;
+        teamB.ballsBowled += res.allOutA ? (state.format * 6) : res.ballsA;
+
+        if (res.winner === fix.teamA) {
+          teamA.W += 1; teamA.Pts += 2;
+          teamB.L += 1;
+        } else if (res.winner === fix.teamB) {
+          teamB.W += 1; teamB.Pts += 2;
+          teamA.L += 1;
+        } else {
+          teamA.T += 1; teamA.Pts += 1;
+          teamB.T += 1; teamB.Pts += 1;
+        }
+
+        updateStandings();
+        checkGroupCompletion();
+      } else {
+        // Knockout Stage handling
+        if (fix.stage === 'SF1') {
+          state.knockouts.sf1.winner = res.winner;
+        } else if (fix.stage === 'SF2') {
+          state.knockouts.sf2.winner = res.winner;
+        } else if (fix.stage === 'FINAL') {
+          state.knockouts.final.winner = res.winner;
+          state.stage = 'COMPLETED';
+        }
+
+        // Check if both SFs completed to unlock Final
+        if (state.knockouts.sf1.winner && state.knockouts.sf2.winner && !state.knockouts.final.teamA) {
+          const finalA = state.knockouts.sf1.winner;
+          const finalB = state.knockouts.sf2.winner;
+          state.knockouts.final.teamA = finalA;
+          state.knockouts.final.teamB = finalB;
+
+          state.fixtures.push({
+            id: state.fixtures.length + 1,
+            stage: 'FINAL',
+            group: 'Final',
+            teamA: finalA,
+            teamB: finalB,
+            status: 'UPCOMING',
+            result: null
+          });
+        }
+      }
+
+      state.currentFixtureIdx += 1;
+      saveState();
+      render();
+    }
+
+    function simulateInnings(overs) {
+      const totalBalls = overs * 6;
+      let runs = 0;
+      let wickets = 0;
+      let balls = 0;
+
+      const outcomes = [0, 1, 1, 2, 2, 3, 4, 4, 6, 'W'];
+
+      for (let i = 0; i < totalBalls; i++) {
+        balls++;
+        const card = outcomes[Math.floor(Math.random() * outcomes.length)];
+        if (card === 'W') {
+          wickets++;
+          if (wickets === 10) break;
+        } else {
+          runs += card;
+        }
+      }
+
+      return { runs, wickets, balls, allOut: wickets === 10 };
+    }
+
+    function simulateNextMatch() {
+      if (state.currentFixtureIdx >= state.fixtures.length) return;
+
+      const fix = state.fixtures[state.currentFixtureIdx];
+      const inn1 = simulateInnings(state.format);
+      
+      // Innings 2 with target logic
+      const target = inn1.runs + 1;
+      const totalBalls = state.format * 6;
+      let runs2 = 0, wickets2 = 0, balls2 = 0;
+      const outcomes = [0, 1, 1, 2, 2, 3, 4, 4, 6, 'W'];
+
+      for (let i = 0; i < totalBalls; i++) {
+        balls2++;
+        const card = outcomes[Math.floor(Math.random() * outcomes.length)];
+        if (card === 'W') {
+          wickets2++;
+          if (wickets2 === 10) break;
+        } else {
+          runs2 += card;
+        }
+        if (runs2 >= target) break;
+      }
+
+      let winner = 'TIE';
+      if (runs2 > inn1.runs) winner = fix.teamB;
+      else if (i
