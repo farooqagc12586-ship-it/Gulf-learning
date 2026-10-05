@@ -1,416 +1,376 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Flip Cricket - Farooq Ahmed Chitrali</title>
-  
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- Google Fonts: Inter & Outfit -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  
-  <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            display: ['Outfit', 'sans-serif'],
-          },
-          colors: {
-            cricket: {
-              green: '#059669',
-              darkGreen: '#022c22',
-              gold: '#fbbf24',
-              accent: '#38bdf8',
-            }
-          }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Flip Cricket - Farooq Ahmed Chitrali</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
         }
-      }
-    }
-  </script>
-
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #090d16;
-      color: #f8fafc;
-      touch-action: manipulation;
-      user-select: none;
-      -webkit-user-select: none;
-    }
-    
-    .font-display {
-      font-family: 'Outfit', sans-serif;
-    }
-
-    /* Custom Glassmorphism */
-    .glass-card {
-      background: rgba(15, 23, 42, 0.75);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-    
-    .glass-card-gold {
-      background: rgba(30, 27, 75, 0.85);
-      border: 1px solid rgba(251, 191, 36, 0.3);
-    }
-
-    /* Wheel Glow */
-    .wheel-shadow {
-      box-shadow: 0 0 35px rgba(16, 185, 129, 0.25);
-    }
-
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar {
-      width: 4px;
-      height: 4px;
-    }
-    ::-webkit-scrollbar-track {
-      background: rgba(15, 23, 42, 0.6);
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #334155;
-      border-radius: 4px;
-    }
-  </style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #4B5563;
+            border-radius: 4px;
+        }
+        .glow-button {
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+        }
+        .card-glass {
+            background: rgba(30, 41, 59, 0.85);
+            backdrop-filter: blur(8px);
+        }
+    </style>
 </head>
-<body class="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between overflow-x-hidden">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col items-center justify-start p-2 sm:p-4">
 
-  <!-- Top Navigation Header -->
-  <header class="sticky top-0 z-50 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 shadow-lg px-4 py-3">
-    <div class="max-w-md mx-auto flex items-center justify-between">
-      <div class="flex items-center gap-2">
-        <button id="navBackBtn" onclick="goBack()" class="hidden p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 transition-all active:scale-95">
-          <i class="fa-solid fa-arrow-left text-lg"></i>
-        </button>
-        <div>
-          <h1 class="text-lg font-extrabold font-display tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-amber-300 flex items-center gap-1.5">
-            <i class="fa-solid fa-compact-disc text-emerald-400 animate-spin-slow"></i> FLIP CRICKET
-          </h1>
-          <p class="text-[10px] font-semibold text-amber-400 tracking-wider uppercase flex items-center gap-1">
-            <i class="fa-solid fa-crown text-[9px]"></i> Farooq Ahmed Chitrali
-          </p>
-        </div>
-      </div>
-
-      <div class="flex items-center gap-2">
-        <button onclick="toggleAudio()" id="audioBtn" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-emerald-400 transition-all active:scale-95">
-          <i id="audioIcon" class="fa-solid fa-volume-high text-base"></i>
-        </button>
-        <button onclick="openStatsModal()" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-400 transition-all active:scale-95" title="Leaderboards">
-          <i class="fa-solid fa-trophy text-base"></i>
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <!-- Main Container -->
-  <main class="flex-1 max-w-md w-full mx-auto p-4 flex flex-col gap-4 relative pb-20">
-
-    <!-- VIEW: HOME DASHBOARD -->
-    <section id="viewHome" class="flex flex-col gap-5">
-      <!-- Banner -->
-      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-900/80 via-slate-900 to-indigo-950 p-5 border border-emerald-500/20 shadow-2xl">
-        <div class="absolute -right-6 -bottom-6 opacity-10 text-emerald-400">
-          <i class="fa-solid fa-baseball text-9xl"></i>
-        </div>
-        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 uppercase tracking-widest">
-          Official Tournament Edition
-        </span>
-        <h2 class="text-2xl font-black font-display mt-2 text-white leading-tight">
-          SPIN TO WIN THE CUP
-        </h2>
-        <p class="text-xs text-slate-300 mt-1 leading-relaxed">
-          10 World Teams. 2 Groups. Complete player career stats & live leaderboards!
-        </p>
-      </div>
-
-      <!-- Main Action Cards -->
-      <div class="grid grid-cols-1 gap-3">
-        <button onclick="openTournamentHub()" class="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-700 p-4 shadow-xl hover:shadow-emerald-500/20 transition-all active:scale-[0.98] text-left">
-          <div class="flex items-center justify-between relative z-10">
-            <div>
-              <span class="text-[11px] font-bold text-emerald-200 uppercase tracking-wider">World Cup Mode</span>
-              <h3 class="text-xl font-extrabold font-display text-white flex items-center gap-2">
-                <i class="fa-solid fa-trophy text-amber-300"></i> World Tournament
-              </h3>
-              <p class="text-xs text-emerald-100/80 mt-0.5">10 Teams, Group Matches, Semi-Finals & Final</p>
-            </div>
-            <i class="fa-solid fa-chevron-right text-emerald-200 text-lg group-hover:translate-x-1 transition-transform"></i>
-          </div>
-        </button>
-
-        <button onclick="setupQuickMatchModal()" class="group rounded-2xl bg-slate-900 p-4 border border-slate-800 hover:border-slate-700 shadow-lg transition-all active:scale-[0.98] text-left">
-          <div class="flex items-center justify-between">
-            <div>
-              <span class="text-[11px] font-bold text-amber-400 uppercase tracking-wider">Instant Action</span>
-              <h3 class="text-lg font-bold font-display text-white flex items-center gap-2">
-                <i class="fa-solid fa-bolt text-amber-400"></i> Quick Exhibition Match
-              </h3>
-              <p class="text-xs text-slate-400 mt-0.5">Play a custom 5 or 10 over match anytime</p>
-            </div>
-            <i class="fa-solid fa-play text-slate-400 text-sm group-hover:text-white transition-colors"></i>
-          </div>
-        </button>
-
-        <button onclick="openLeaderboardsPage()" class="group rounded-2xl bg-slate-900 p-4 border border-slate-800 hover:border-slate-700 shadow-lg transition-all active:scale-[0.98] text-left">
-          <div class="flex items-center justify-between">
-            <div>
-              <span class="text-[11px] font-bold text-sky-400 uppercase tracking-wider">Player Career Stats</span>
-              <h3 class="text-lg font-bold font-display text-white flex items-center gap-2">
-                <i class="fa-solid fa-chart-line text-sky-400"></i> Leaderboards & Records
-              </h3>
-              <p class="text-xs text-slate-400 mt-0.5">Orange & Purple Cap holders, Top Performers</p>
-            </div>
-            <i class="fa-solid fa-ranking-star text-slate-400 text-sm group-hover:text-white transition-colors"></i>
-          </div>
-        </button>
-      </div>
-
-      <!-- Creator Badge Footer -->
-      <div class="mt-4 p-3 rounded-xl bg-slate-900/60 border border-slate-800/80 text-center">
-        <p class="text-xs text-slate-400 flex items-center justify-center gap-1.5">
-          Engineered by <span class="text-amber-400 font-bold">Farooq Ahmed Chitrali</span>
-        </p>
-      </div>
-    </section>
-
-    <!-- VIEW: TOURNAMENT HUB -->
-    <section id="viewTournament" class="hidden flex-col gap-4">
-      <!-- Tournament Header Banner -->
-      <div class="glass-card-gold rounded-2xl p-4 flex items-center justify-between">
-        <div>
-          <span class="text-[10px] font-bold uppercase tracking-widest text-amber-400">10-Team World Championship</span>
-          <h2 class="text-xl font-extrabold font-display text-white flex items-center gap-2">
-            <i class="fa-solid fa-trophy text-amber-400"></i> Tournament Center
-          </h2>
-          <p id="tournamentStageText" class="text-xs text-slate-300 mt-0.5">Stage: Group Stage</p>
-        </div>
-        <button onclick="resetTournamentPrompt()" class="px-3 py-1.5 rounded-lg bg-rose-500/20 text-rose-300 border border-rose-500/30 text-xs font-semibold hover:bg-rose-500/30">
-          Reset Cup
-        </button>
-      </div>
-
-      <!-- Tournament Tabs -->
-      <div class="flex rounded-xl bg-slate-900 p-1 border border-slate-800 text-xs font-bold">
-        <button id="tabBtnGroups" onclick="switchTournTab('groups')" class="flex-1 py-2 rounded-lg bg-emerald-600 text-white transition-all">
-          Groups & Points
-        </button>
-        <button id="tabBtnFixtures" onclick="switchTournTab('fixtures')" class="flex-1 py-2 rounded-lg text-slate-400 hover:text-white transition-all">
-          Match Schedule
-        </button>
-        <button id="tabBtnKnockout" onclick="switchTournTab('knockout')" class="flex-1 py-2 rounded-lg text-slate-400 hover:text-white transition-all">
-          Knockouts
-        </button>
-      </div>
-
-      <!-- TAB CONTENT: GROUPS -->
-      <div id="tournTabGroups" class="flex flex-col gap-4">
-        <!-- Group A Table -->
-        <div class="glass-card rounded-2xl p-3 border border-slate-800">
-          <h3 class="text-sm font-bold text-emerald-400 font-display mb-2 flex items-center justify-between">
-            <span><i class="fa-solid fa-layer-group"></i> GROUP A</span>
-            <span class="text-[10px] text-slate-400">Top 2 Qualify</span>
-          </h3>
-          <div class="overflow-x-auto">
-            <table class="w-full text-xs text-left">
-              <thead class="text-[10px] text-slate-400 uppercase bg-slate-900/80">
-                <tr>
-                  <th class="p-2 rounded-l-md">Team</th>
-                  <th class="p-2 text-center">P</th>
-                  <th class="p-2 text-center">W</th>
-                  <th class="p-2 text-center">L</th>
-                  <th class="p-2 text-center">Pts</th>
-                  <th class="p-2 text-right rounded-r-md">NRR</th>
-                </tr>
-              </thead>
-              <tbody id="groupATableBody" class="divide-y divide-slate-800/60 font-medium">
-                <!-- Injected via JS -->
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- Group B Table -->
-        <div class="glass-card rounded-2xl p-3 border border-slate-800">
-          <h3 class="text-sm font-bold text-sky-400 font-display mb-2 flex items-center justify-between">
-            <span><i class="fa-solid fa-layer-group"></i> GROUP B</span>
-            <span class="text-[10px] text-slate-400">Top 2 Qualify</span>
-          </h3>
-          <div class="overflow-x-auto">
-            <table class="w-full text-xs text-left">
-              <thead class="text-[10px] text-slate-400 uppercase bg-slate-900/80">
-                <tr>
-                  <th class="p-2 rounded-l-md">Team</th>
-                  <th class="p-2 text-center">P</th>
-                  <th class="p-2 text-center">W</th>
-                  <th class="p-2 text-center">L</th>
-                  <th class="p-2 text-center">Pts</th>
-                  <th class="p-2 text-right rounded-r-md">NRR</th>
-                </tr>
-              </thead>
-              <tbody id="groupBTableBody" class="divide-y divide-slate-800/60 font-medium">
-                <!-- Injected via JS -->
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <!-- TAB CONTENT: FIXTURES -->
-      <div id="tournTabFixtures" class="hidden flex-col gap-2">
-        <div id="fixturesListContainer" class="flex flex-col gap-2 max-h-[480px] overflow-y-auto pr-1">
-          <!-- Injected via JS -->
-        </div>
-      </div>
-
-      <!-- TAB CONTENT: KNOCKOUTS -->
-      <div id="tournTabKnockout" class="hidden flex-col gap-3">
-        <div id="knockoutsContainer" class="flex flex-col gap-3">
-          <!-- Semi Finals and Final cards injected here -->
-        </div>
-      </div>
-    </section>
-
-    <!-- VIEW: MATCH PLAY ARENA -->
-    <section id="viewMatch" class="hidden flex-col gap-3">
-      <!-- Match Header Scoreboard -->
-      <div class="glass-card rounded-2xl p-3 border border-slate-800 flex flex-col gap-2">
-        <!-- Teams & Current Innings -->
-        <div class="flex items-center justify-between text-xs font-bold border-b border-slate-800 pb-2">
-          <div class="flex items-center gap-2" id="batTeamDisplay">
-            <span id="batTeamFlag" class="text-lg">🇵🇰</span>
-            <span id="batTeamName" class="text-white font-display">PAKISTAN</span>
-            <span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">BAT</span>
-          </div>
-          <div class="text-right text-slate-400 text-[11px]" id="matchInningsLabel">
-            1st Innings
-          </div>
-        </div>
-
-        <!-- Big Score Display -->
-        <div class="flex items-baseline justify-between pt-1">
-          <div>
-            <div class="text-3xl font-black font-display text-white tracking-tight flex items-baseline gap-1">
-              <span id="liveScoreRuns">0</span><span class="text-emerald-400 text-2xl">/</span><span id="liveScoreWickets">0</span>
-            </div>
-            <div class="text-xs text-slate-400 font-medium mt-0.5">
-              Overs: <span id="liveOvers" class="text-white font-bold">0.0</span> / <span id="maxOversDisplay">5.0</span>
-            </div>
-          </div>
-
-          <div class="text-right">
-            <div class="text-xs text-slate-300 font-bold" id="targetDisplay">
-              Target: --
-            </div>
-            <div class="text-[11px] text-slate-400 mt-0.5">
-              CRR: <span id="liveCRR" class="text-amber-400 font-bold">0.00</span> | RRR: <span id="liveRRR" class="text-sky-400 font-bold">--</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Batter & Bowler Current Stats -->
-        <div class="grid grid-cols-2 gap-2 mt-1 bg-slate-950/60 p-2 rounded-xl text-xs">
-          <div class="flex flex-col gap-1 border-r border-slate-800 pr-2">
-            <div class="text-[10px] uppercase font-bold text-slate-400">At Crease</div>
-            <div id="strikerName" class="font-bold text-amber-300 truncate">Batter 1 *</div>
-            <div id="strikerStats" class="text-[11px] text-slate-300">0 (0b)</div>
-            <div id="nonStrikerName" class="font-medium text-slate-400 truncate">Batter 2</div>
-            <div id="nonStrikerStats" class="text-[10px] text-slate-500">0 (0b)</div>
-          </div>
-          <div class="flex flex-col gap-1 pl-1">
-            <div class="text-[10px] uppercase font-bold text-slate-400">Current Bowler</div>
-            <div id="bowlerName" class="font-bold text-sky-300 truncate">Bowler 1</div>
-            <div id="bowlerStats" class="text-[11px] text-slate-300">0/0 (0.0 ov)</div>
-            <div class="text-[10px] text-slate-400 mt-1">This Over:</div>
-            <div id="thisOverBalls" class="flex items-center gap-1 overflow-x-auto text-[10px] font-bold">
-              <!-- Ball icons -->
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- WHEEL SPINNER CONTAINER -->
-      <div class="relative flex flex-col items-center justify-center my-1">
+    <!-- Main Mobile Container -->
+    <div class="w-full max-w-md mx-auto flex flex-col min-h-[95vh] bg-slate-900 rounded-2xl border border-slate-800 shadow-2xl overflow-hidden relative">
         
-        <!-- CANVAS WHEEL WRAPPER -->
-        <div class="relative p-2 rounded-full bg-slate-900 border-2 border-slate-800 wheel-shadow">
-          
-          <!-- TOP YELLOW POINTER ARROW (Strict 12 o'clock position) -->
-          <div class="absolute -top-3 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center drop-shadow-[0_4px_10px_rgba(251,191,36,0.8)]">
-            <div class="w-0 h-0 border-l-[14px] border-l-transparent border-r-[14px] border-r-transparent border-t-[22px] border-t-amber-400"></div>
-          </div>
+        <!-- Header -->
+        <header class="bg-gradient-to-r from-emerald-800 via-emerald-700 to-teal-800 p-3 text-center border-b border-emerald-600/40 shadow-md relative">
+            <div class="inline-block bg-amber-400 text-slate-950 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider mb-1">
+                Designed for Mobile
+            </div>
+            <h1 class="text-2xl font-extrabold tracking-tight text-white drop-shadow-md">
+                FLIP CRICKET <span class="text-amber-300">2026</span>
+            </h1>
+            <p class="text-xs text-emerald-200 font-semibold tracking-wide">
+                Developed by <span class="text-amber-300 underline font-bold">Farooq Ahmed Chitrali</span>
+            </p>
+        </header>
 
-          <!-- The Canvas Wheel -->
-          <canvas id="wheelCanvas" width="310" height="310" class="rounded-full cursor-pointer touch-none"></canvas>
-          
-          <!-- Wheel Center Hub -->
-          <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-slate-950 border-2 border-amber-400 shadow-inner flex items-center justify-center z-20 pointer-events-none">
-            <i class="fa-solid fa-baseball text-amber-400 text-lg"></i>
-          </div>
+        <!-- Dynamic Content Screen Area -->
+        <main id="appScreen" class="flex-1 p-3 flex flex-col justify-between overflow-y-auto custom-scrollbar">
+            <!-- Screen content injected via JavaScript -->
+        </main>
+
+        <!-- Footer / Sound Toggle -->
+        <footer class="bg-slate-950/80 p-2 text-center text-xs text-slate-400 border-t border-slate-800 flex justify-between items-center px-4">
+            <span>© Farooq Ahmed Chitrali</span>
+            <button id="audioToggleBtn" onclick="toggleAudio()" class="flex items-center gap-1 text-amber-400 bg-slate-800 px-2 py-1 rounded-md text-[11px] border border-slate-700">
+                🔊 Sound: ON
+            </button>
+        </footer>
+    </div>
+
+    <!-- Stats / Leaderboard Modal -->
+    <div id="statsModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3">
+        <div class="bg-slate-900 border border-slate-700 w-full max-w-md rounded-2xl p-4 flex flex-col max-h-[85vh] shadow-2xl">
+            <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-800">
+                <h3 id="modalTitle" class="text-lg font-bold text-amber-400">Tournament Leaderboards</h3>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-white font-bold text-xl px-2">✕</button>
+            </div>
+            <div id="modalContent" class="flex-1 overflow-y-auto custom-scrollbar text-sm space-y-3">
+                <!-- Modal content dynamically injected -->
+            </div>
         </div>
+    </div>
 
-        <!-- Spin Button -->
-        <button id="spinBtn" onclick="spinWheel()" class="w-full max-w-xs mt-3 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black font-display text-lg tracking-wider shadow-lg shadow-emerald-500/20 active:scale-95 transition-all flex items-center justify-center gap-2">
-          <i class="fa-solid fa-rotate text-xl"></i> SPIN WHEEL
-        </button>
-      </div>
+    <script>
+        // Audio Engine using Web Audio API (No external sound assets required)
+        let soundEnabled = true;
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
 
-      <!-- Live Outcome & Commentary Log -->
-      <div class="glass-card rounded-2xl p-3 border border-slate-800 flex flex-col gap-2">
-        <div class="flex items-center justify-between border-b border-slate-800 pb-1.5">
-          <span class="text-xs font-bold text-slate-400 flex items-center gap-1">
-            <i class="fa-solid fa-comment-dots text-emerald-400"></i> Live Commentary
-          </span>
-          <span id="lastOutcomeBadge" class="text-xs font-extrabold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">
-            READY
-          </span>
-        </div>
-        <div id="commentaryBox" class="text-xs text-slate-300 h-16 overflow-y-auto flex flex-col gap-1 font-medium pr-1">
-          <p class="text-slate-500 italic">Tap SPIN WHEEL to start the over!</p>
-        </div>
-      </div>
-    </section>
+        function initAudio() {
+            if (!audioCtx) audioCtx = new AudioCtx();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+        }
 
-    <!-- VIEW: LEADERBOARDS & PLAYER STATS -->
-    <section id="viewLeaderboard" class="hidden flex-col gap-4">
-      <div class="glass-card rounded-2xl p-4 border border-slate-800">
-        <h2 class="text-xl font-extrabold font-display text-white flex items-center gap-2">
-          <i class="fa-solid fa-chart-column text-amber-400"></i> Tournament Leaderboards
-        </h2>
-        <p class="text-xs text-slate-400 mt-0.5">Live career statistics tracked across all matches</p>
-      </div>
+        function toggleAudio() {
+            soundEnabled = !soundEnabled;
+            document.getElementById('audioToggleBtn').innerText = soundEnabled ? '🔊 Sound: ON' : 'Mute Sound';
+        }
 
-      <!-- Stats Tabs -->
-      <div class="flex rounded-xl bg-slate-900 p-1 border border-slate-800 text-xs font-bold">
-        <button id="tabBtnOrange" onclick="switchStatsTab('orange')" class="flex-1 py-2 rounded-lg bg-amber-500 text-slate-950 transition-all">
-          <i class="fa-solid fa-hat-cowboy"></i> Orange Cap (Runs)
-        </button>
-        <button id="tabBtnPurple" onclick="switchStatsTab('purple')" class="flex-1 py-2 rounded-lg text-slate-400 hover:text-white transition-all">
-          <i class="fa-solid fa-bowling-ball"></i> Purple Cap (Wkts)
-        </button>
-      </div>
+        function playBeep(freq = 440, duration = 0.08, type = 'sine') {
+            if (!soundEnabled) return;
+            try {
+                initAudio();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e){}
+        }
 
-      <!-- ORANGE CAP LEADERBOARD -->
-      <div id="statsTabOrange" class="flex flex-col gap-2">
-        <div class="glass-card rounded-2xl p-3 border border-slate-800">
-          <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2">
-            🥇 Top 3 Tournament Batsmen
-          </h3>
-          <div id="orangeCapList" class="flex flex-col gap-2">
-            <!-- Injected via JS -->
-          </div>
-        </div>
-      </div>
+        function playCheer() {
+            if (!soundEnabled) return;
+            try {
+                initAudio();
+                const bufferSize = audioCtx.sampleRate * 0.4;
+                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    data[i] = Math.random() * 2 - 1;
+                }
+                const noise = audioCtx.createBufferSource();
+                noise.buffer = buffer;
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = 'bandpass';
+                filter.frequency.value = 1000;
+                const gain = audioCtx.createGain();
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+                noise.connect(filter);
+                filter.connect(gain);
+                gain.connect(audioCtx.destination);
+                noise.start();
+            } catch(e){}
+        }
 
-      <!-- PURPLE CAP LEADERBOARD -->
-      <div id="stat
+        // Teams & Squads Setup
+        const TEAMS = {
+            // Group A
+            PAK: { name: 'Pakistan', flag: '🇵🇰', group: 'A' },
+            IND: { name: 'India', flag: '🇮🇳', group: 'A' },
+            SA:  { name: 'South Africa', flag: '🇿🇦', group: 'A' },
+            NZ:  { name: 'New Zealand', flag: '🇳🇿', group: 'A' },
+            BAN: { name: 'Bangladesh', flag: '🇧🇩', group: 'A' },
+            // Group B
+            AUS: { name: 'Australia', flag: '🇦🇺', group: 'B' },
+            ENG: { name: 'England', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', group: 'B' },
+            SL:  { name: 'Sri Lanka', flag: '🇱🇰', group: 'B' },
+            WI:  { name: 'West Indies', flag: '🌴', group: 'B' },
+            AFG: { name: 'Afghanistan', flag: '🇦🇫', group: 'B' }
+        };
+
+        // Player Roster Generator with Unique Player IDs
+        let playerStats = {};
+
+        function generatePlayers() {
+            playerStats = {};
+            Object.keys(TEAMS).forEach(teamKey => {
+                for (let i = 1; i <= 11; i++) {
+                    const playerId = `${teamKey}_P${i}`;
+                    let role = i <= 5 ? 'Batsman' : (i <= 7 ? 'All-Rounder' : 'Bowler');
+                    playerStats[playerId] = {
+                        id: playerId,
+                        teamKey: teamKey,
+                        name: `${TEAMS[teamKey].name} Player ${i}`,
+                        role: role,
+                        runs: 0,
+                        ballsFaced: 0,
+                        fours: 0,
+                        sixes: 0,
+                        wicketsTaken: 0,
+                        runsConceded: 0,
+                        oversBowled: 0,
+                        matches: 0
+                    };
+                }
+            });
+        }
+
+        // Global Tournament State
+        let tournament = {
+            overs: 5, // 5 or 10 overs option
+            userTeam: 'PAK',
+            currentStage: 'GROUP', // GROUP, SEMI, FINAL, COMPLETED
+            matches: [],
+            currentMatchIndex: 0,
+            standings: {
+                A: {},
+                B: {}
+            }
+        };
+
+        function resetStandings() {
+            ['A', 'B'].forEach(grp => {
+                tournament.standings[grp] = {};
+                Object.keys(TEAMS).filter(k => TEAMS[k].group === grp).forEach(t => {
+                    tournament.standings[grp][t] = {
+                        played: 0, won: 0, lost: 0, points: 0, runsFor: 0, oversFor: 0, runsAgainst: 0, oversAgainst: 0, nrr: 0
+                    };
+                });
+            });
+        }
+
+        function createSchedule() {
+            tournament.matches = [];
+            // Round Robin inside groups
+            ['A', 'B'].forEach(grp => {
+                const grpTeams = Object.keys(TEAMS).filter(k => TEAMS[k].group === grp);
+                for (let i = 0; i < grpTeams.length; i++) {
+                    for (let j = i + 1; j < grpTeams.length; j++) {
+                        tournament.matches.push({
+                            id: `G_${grpTeams[i]}_${grpTeams[j]}`,
+                            stage: 'GROUP',
+                            group: grp,
+                            team1: grpTeams[i],
+                            team2: grpTeams[j],
+                            played: false,
+                            winner: null,
+                            summary: ''
+                        });
+                    }
+                }
+            });
+            // Shuffle group matches slightly
+            tournament.matches.sort(() => Math.random() - 0.5);
+        }
+
+        function renderSetupScreen() {
+            const screen = document.getElementById('appScreen');
+            screen.innerHTML = `
+                <div class="flex flex-col h-full justify-between gap-4 py-2">
+                    <div class="text-center space-y-1">
+                        <h2 class="text-xl font-bold text-amber-400">Tournament Setup</h2>
+                        <p class="text-xs text-slate-300">Choose match duration & select your team</p>
+                    </div>
+
+                    <!-- Overs Selector -->
+                    <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700 text-center">
+                        <label class="block text-xs font-bold text-emerald-400 uppercase tracking-wider mb-2">
+                            Select Tournament Overs
+                        </label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button onclick="setOvers(5)" id="btnOver5" class="py-2.5 px-4 rounded-lg font-bold text-sm border-2 transition-all bg-emerald-600 border-emerald-400 text-white shadow-lg">
+                                ⚡ 5 Overs
+                                <span class="block text-[10px] font-normal text-emerald-100">Quick Matches (~3 mins)</span>
+                            </button>
+                            <button onclick="setOvers(10)" id="btnOver10" class="py-2.5 px-4 rounded-lg font-bold text-sm border-2 transition-all bg-slate-900 border-slate-700 text-slate-400">
+                                🏏 10 Overs
+                                <span class="block text-[10px] font-normal text-slate-400">Full Experience</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Team Selector -->
+                    <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700 flex-1 flex flex-col min-h-0">
+                        <label class="block text-xs font-bold text-amber-400 uppercase tracking-wider mb-2 text-center">
+                            Select Your Country
+                        </label>
+                        <div class="grid grid-cols-2 gap-2 overflow-y-auto custom-scrollbar p-1 flex-1">
+                            ${Object.keys(TEAMS).map(key => `
+                                <button onclick="selectTeam('${key}')" id="teamBtn_${key}" class="team-select-btn flex items-center gap-2 p-2 rounded-lg border text-left text-xs font-bold transition-all ${key === 'PAK' ? 'bg-amber-500/20 border-amber-400 text-amber-300' : 'bg-slate-900 border-slate-800 text-slate-300 hover:border-slate-600'}">
+                                    <span class="text-xl">${TEAMS[key].flag}</span>
+                                    <div class="truncate">
+                                        <div>${TEAMS[key].name}</div>
+                                        <span class="text-[9px] text-slate-400 font-normal">Grp ${TEAMS[key].group}</span>
+                                    </div>
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Start Button -->
+                    <button onclick="startTournament()" class="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-extrabold py-3.5 px-6 rounded-xl text-base shadow-xl transform active:scale-95 transition-all text-center glow-button">
+                        🚀 START TOURNAMENT
+                    </button>
+                </div>
+            `;
+        }
+
+        function setOvers(num) {
+            tournament.overs = num;
+            playBeep(600, 0.05);
+            document.getElementById('btnOver5').className = num === 5 ? 
+                'py-2.5 px-4 rounded-lg font-bold text-sm border-2 transition-all bg-emerald-600 border-emerald-400 text-white shadow-lg' : 
+                'py-2.5 px-4 rounded-lg font-bold text-sm border-2 transition-all bg-slate-900 border-slate-700 text-slate-400';
+            document.getElementById('btnOver10').className = num === 10 ? 
+                'py-2.5 px-4 rounded-lg font-bold text-sm border-2 transition-all bg-emerald-600 border-emerald-400 text-white shadow-lg' : 
+                'py-2.5 px-4 rounded-lg font-bold text-sm border-2 transition-all bg-slate-900 border-slate-700 text-slate-400';
+        }
+
+        function selectTeam(key) {
+            tournament.userTeam = key;
+            playBeep(700, 0.05);
+            document.querySelectorAll('.team-select-btn').forEach(btn => {
+                btn.className = 'team-select-btn flex items-center gap-2 p-2 rounded-lg border text-left text-xs font-bold transition-all bg-slate-900 border-slate-800 text-slate-300 hover:border-slate-600';
+            });
+            const sel = document.getElementById(`teamBtn_${key}`);
+            if (sel) sel.className = 'team-select-btn flex items-center gap-2 p-2 rounded-lg border text-left text-xs font-bold transition-all bg-amber-500/20 border-amber-400 text-amber-300';
+        }
+
+        function startTournament() {
+            playBeep(900, 0.15);
+            generatePlayers();
+            resetStandings();
+            createSchedule();
+            tournament.currentStage = 'GROUP';
+            tournament.currentMatchIndex = 0;
+            renderDashboard();
+        }
+
+        function renderDashboard() {
+            const screen = document.getElementById('appScreen');
+            const nextMatch = tournament.matches.find(m => !m.played);
+
+            screen.innerHTML = `
+                <div class="flex flex-col h-full gap-3 py-1">
+                    <!-- Dashboard Header & Leaderboard buttons -->
+                    <div class="flex justify-between items-center bg-slate-800/90 p-2.5 rounded-xl border border-slate-700">
+                        <div>
+                            <span class="text-[10px] text-amber-400 font-bold uppercase tracking-wider block">Your Country</span>
+                            <span class="text-sm font-extrabold flex items-center gap-1">
+                                ${TEAMS[tournament.userTeam].flag} ${TEAMS[tournament.userTeam].name}
+                            </span>
+                        </div>
+                        <div class="flex gap-1.5">
+                            <button onclick="showLeaderboards()" class="bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2 py-1 rounded-lg text-xs font-bold hover:bg-amber-500/30">
+                                👑 Caps
+                            </button>
+                            <button onclick="showPlayerStatsModal()" class="bg-blue-500/20 text-blue-300 border border-blue-500/40 px-2 py-1 rounded-lg text-xs font-bold hover:bg-blue-500/30">
+                                📊 Stats
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Points Table Tabs -->
+                    <div class="bg-slate-800/60 rounded-xl p-2 border border-slate-700/80 flex-1 flex flex-col min-h-0">
+                        <div class="flex justify-between items-center mb-1.5">
+                            <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Group Standings</h3>
+                            <span class="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full font-semibold border border-emerald-500/30">
+                                ${tournament.overs} Overs Format
+                            </span>
+                        </div>
+                        
+                        <div class="space-y-3 overflow-y-auto custom-scrollbar flex-1 pr-1">
+                            ${renderPointsTable('A')}
+                            ${renderPointsTable('B')}
+                        </div>
+                    </div>
+
+                    <!-- Action Card for Next Match -->
+                    <div class="bg-gradient-to-r from-slate-800 to-slate-900 p-3 rounded-xl border border-amber-500/30 shadow-lg text-center space-y-2">
+                        ${nextMatch ? `
+                            <div class="text-[11px] font-bold text-amber-400 uppercase tracking-wide">
+                                Next Fixture (${nextMatch.stage})
+                            </div>
+                            <div class="flex justify-center items-center gap-3 text-sm font-extrabold py-1">
+                                <span>${TEAMS[nextMatch.team1].flag} ${TEAMS[nextMatch.team1].name}</span>
+                                <span class="bg-amber-400 text-slate-950 text-[10px] px-2 py-0.5 rounded-full">VS</span>
+                                <span>${TEAMS[nextMatch.team2].flag} ${TEAMS[nextMatch.team2].name}</span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2 pt-1">
+                                ${ (nextMatch.team1 !== tournament.userTeam && nextMatch.team2 !== tournament.userTeam) ? `
+                                    <button onclick="simulateCurrentMatch()" class="bg-slate-700 hover:bg-slate-600 text-slate-200 font-bold py-2 px-3 rounded-lg text-xs border border-slate-600">
+                                        ⚡ Auto Simulate
+                                    </button>
+                                ` : ''}
+                                <button onclick="playMatch('${nextMatch.id}')" class="${(nextMatch.team1 === tournament.userTeam || nextMatch.team2 === tournament.userTeam) ? 'col-span-2' : ''} bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold py-2 px-3 rounded-lg text-xs shadow-md glow-button">
+                                    🏏 PLAY MATCH NOW
+                                </button>
+                            </div>
+                        ` : `
+                            <div class="text-center py-2">
+                                <h3 class="text-base font-extrabold text-amber-400">Tournament Finished!</h3>
+                                <button onclick="renderSetupScreen()" class="mt-2 bg-amber-500 text-slate-950 font-bold px-4 py-2 rounded-lg text-xs">
+                                    🔄 New Tournament
+                              
