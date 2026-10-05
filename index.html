@@ -1,676 +1,416 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Flip Cricket Tournament</title>
-  <style>
-    :root {
-      --bg-dark: #0f172a;
-      --card-bg: #1e293b;
-      --accent-gold: #f59e0b;
-      --accent-blue: #3b82f6;
-      --accent-green: #10b981;
-      --accent-red: #ef4444;
-      --text-light: #f8fafc;
-      --text-muted: #94a3b8;
-      --border-color: #334155;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    }
-
-    body {
-      background-color: var(--bg-dark);
-      color: var(--text-light);
-      padding: 12px;
-      max-width: 500px;
-      margin: 0 auto;
-      min-height: 100vh;
-    }
-
-    .header {
-      text-align: center;
-      padding: 16px 0 12px;
-      border-bottom: 2px solid var(--accent-gold);
-      margin-bottom: 16px;
-    }
-
-    .header h1 {
-      font-size: 1.4rem;
-      letter-spacing: 1px;
-      color: var(--accent-gold);
-      text-transform: uppercase;
-    }
-
-    .header .subtitle {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-top: 4px;
-    }
-
-    .card {
-      background-color: var(--card-bg);
-      border-radius: 10px;
-      padding: 14px;
-      margin-bottom: 14px;
-      border: 1px solid var(--border-color);
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
-    }
-
-    .card-title {
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: var(--accent-gold);
-      margin-bottom: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      text-transform: uppercase;
-    }
-
-    .btn {
-      background: var(--accent-blue);
-      color: white;
-      border: none;
-      padding: 10px 16px;
-      border-radius: 6px;
-      font-weight: bold;
-      cursor: pointer;
-      width: 100%;
-      font-size: 0.9rem;
-      transition: background 0.2s;
-    }
-
-    .btn:hover {
-      filter: brightness(1.1);
-    }
-
-    .btn-gold { background: var(--accent-gold); color: #000; }
-    .btn-green { background: var(--accent-green); }
-    .btn-red { background: var(--accent-red); }
-    .btn-secondary { background: var(--border-color); color: var(--text-light); }
-
-    .btn-group {
-      display: flex;
-      gap: 8px;
-      margin-top: 8px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.78rem;
-      text-align: center;
-    }
-
-    th, td {
-      padding: 6px 4px;
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    th {
-      color: var(--text-muted);
-      font-weight: 600;
-    }
-
-    td.team-name {
-      text-align: left;
-      font-weight: 600;
-    }
-
-    tr.qualified {
-      background-color: rgba(16, 185, 129, 0.15);
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-size: 0.7rem;
-      font-weight: bold;
-    }
-
-    .badge-live { background: var(--accent-red); color: white; }
-    .badge-fmt { background: var(--border-color); color: var(--accent-gold); }
-
-    .match-box {
-      background: rgba(0,0,0,0.2);
-      border-radius: 8px;
-      padding: 10px;
-      text-align: center;
-    }
-
-    .match-teams {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-weight: bold;
-      font-size: 1rem;
-      margin: 6px 0;
-    }
-
-    .match-score {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-    }
-
-    .flip-card-display {
-      width: 120px;
-      height: 120px;
-      margin: 16px auto;
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
-      border: 3px solid var(--accent-gold);
-      border-radius: 12px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.4);
-      cursor: pointer;
-      user-select: none;
-    }
-
-    .flip-card-val {
-      font-size: 2.2rem;
-      font-weight: 900;
-      color: white;
-    }
-
-    .banner-alert {
-      background: var(--accent-green);
-      color: #000;
-      font-weight: bold;
-      text-align: center;
-      padding: 10px;
-      border-radius: 6px;
-      margin-bottom: 14px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .champion-box {
-      text-align: center;
-      padding: 20px 10px;
-    }
-
-    .champion-box h2 {
-      color: var(--accent-gold);
-      font-size: 1.6rem;
-      margin-bottom: 8px;
-    }
-
-    .champion-team {
-      font-size: 2rem;
-      font-weight: 900;
-      margin: 12px 0;
-      color: var(--text-light);
-      text-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
-    }
-
-    .author-tag {
-      margin-top: 20px;
-      padding-top: 10px;
-      border-top: 1px dashed var(--border-color);
-      font-size: 0.8rem;
-      color: var(--accent-gold);
-      font-weight: bold;
-    }
-
-    .hidden { display: none !important; }
-  </style>
-</head>
-<body>
-
-  <div class="header">
-    <h1>Flip Cricket</h1>
-    <div class="subtitle">Automated Tournament Session</div>
-  </div>
-
-  <!-- SELECT FORMAT SCREEN -->
-  <div id="screen-setup" class="card">
-    <div class="card-title">Select Tournament Format</div>
-    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 14px;">
-      Choose the match length. This format will remain active for the entire tournament session.
-    </p>
-    <div class="btn-group">
-      <button class="btn btn-gold" onclick="startTournament(5)">5-Over Format</button>
-      <button class="btn btn-gold" onclick="startTournament(10)">10-Over Format</button>
-    </div>
-  </div>
-
-  <!-- MAIN DASHBOARD -->
-  <div id="screen-dashboard" class="hidden">
-
-    <div id="banner-group-completed" class="banner-alert hidden">
-      GROUP STAGE COMPLETED
-    </div>
-
-    <!-- FORMAT HEADER BAR -->
-    <div class="card" style="padding: 10px; display: flex; justify-content: space-between; align-items: center;">
-      <span style="font-size:0.85rem; font-weight:bold;">Format: <span id="dash-format" class="badge badge-fmt">5 Overs</span></span>
-      <button class="btn btn-secondary" style="width: auto; padding: 4px 8px; font-size: 0.75rem;" onclick="resetTournament()">Reset All</button>
-    </div>
-
-    <!-- NEXT MATCH WIDGET -->
-    <div class="card">
-      <div class="card-title">
-        <span>Next Match</span>
-        <span id="next-match-stage" class="badge badge-live">GROUP STAGE</span>
-      </div>
-      <div id="next-match-content" class="match-box">
-        <!-- Dynamic content -->
-      </div>
-      <div class="btn-group" style="margin-top: 10px;">
-        <button id="btn-play-match" class="btn btn-green" onclick="openMatchView()">Play Match</button>
-        <button id="btn-sim-match" class="btn btn-secondary" onclick="simulateNextMatch()">Auto Sim</button>
-      </div>
-    </div>
-
-    <!-- RECENT RESULT -->
-    <div class="card">
-      <div class="card-title">Recent Result</div>
-      <div id="recent-result-content" style="font-size: 0.85rem; color: var(--text-muted); text-align: center;">
-        No matches completed yet.
-      </div>
-    </div>
-
-    <!-- GROUP A POINTS TABLE -->
-    <div class="card">
-      <div class="card-title">Group A — Live Standings</div>
-      <table>
-        <thead>
-          <tr>
-            <th style="text-align:left;">Team</th>
-            <th>P</th><th>W</th><th>L</th><th>T</th><th>Pts</th><th>NRR</th>
-          </tr>
-        </thead>
-        <tbody id="table-group-a"></tbody>
-      </table>
-    </div>
-
-    <!-- GROUP B POINTS TABLE -->
-    <div class="card">
-      <div class="card-title">Group B — Live Standings</div>
-      <table>
-        <thead>
-          <tr>
-            <th style="text-align:left;">Team</th>
-            <th>P</th><th>W</th><th>L</th><th>T</th><th>Pts</th><th>NRR</th>
-          </tr>
-        </thead>
-        <tbody id="table-group-b"></tbody>
-      </table>
-    </div>
-
-    <!-- QUALIFIED TEAMS -->
-    <div class="card">
-      <div class="card-title">Qualified Teams</div>
-      <div id="qualified-content" style="font-size: 0.85rem; text-align: center; color: var(--text-muted);">
-        Awaiting completion of group matches...
-      </div>
-    </div>
-
-    <!-- KNOCKOUT BRACKET -->
-    <div class="card">
-      <div class="card-title">Knockout Stage</div>
-      <div id="knockout-content" style="font-size: 0.85rem;">
-        <div style="margin-bottom: 6px;"><strong>Semi-Final 1:</strong> <span id="sf1-label">Group A #1 vs Group B #2</span></div>
-        <div style="margin-bottom: 6px;"><strong>Semi-Final 2:</strong> <span id="sf2-label">Group B #1 vs Group A #2</span></div>
-        <div><strong>Final:</strong> <span id="final-label">SF1 Winner vs SF2 Winner</span></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- MATCH PLAY SCREEN -->
-  <div id="screen-match" class="card hidden">
-    <div class="card-title" id="match-header-title">Live Match</div>
-    
-    <div class="match-box" style="margin-bottom: 12px;">
-      <div class="match-teams" id="live-match-teams">TEAM A vs TEAM B</div>
-      <div id="live-innings-info" style="font-size: 0.85rem; color: var(--accent-gold); font-weight: bold;">1st Innings</div>
-    </div>
-
-    <div style="text-align: center;">
-      <div style="font-size: 0.9rem; color: var(--text-muted);">Score</div>
-      <div id="live-score" style="font-size: 2rem; font-weight: 900; margin: 4px 0;">0/0</div>
-      <div id="live-overs" style="font-size: 0.85rem; color: var(--text-muted);">Overs: 0.0 / 5.0</div>
-      <div id="live-target" style="font-size: 0.85rem; color: var(--accent-gold); margin-top: 4px;" class="hidden">Target: 0</div>
-    </div>
-
-    <div class="flip-card-display" onclick="flipCard()">
-      <div id="card-val" class="flip-card-val">FLIP</div>
-      <span style="font-size:0.65rem; color: #cbd5e1; margin-top: 4px;">TAP TO PLAY</span>
-    </div>
-
-    <div id="ball-commentary" style="text-align: center; font-size: 0.85rem; min-height: 20px; color: var(--accent-gold);">
-      Tap card to bowl ball
-    </div>
-
-    <div class="btn-group" style="margin-top: 14px;">
-      <button class="btn btn-secondary" onclick="autoCompleteCurrentMatch()">Auto Complete Match</button>
-    </div>
-  </div>
-
-  <!-- CHAMPION SCREEN -->
-  <div id="screen-champion" class="card hidden">
-    <div class="champion-box">
-      <h2>🏆 FLIP CRICKET CHAMPION</h2>
-      <div id="champ-team" class="champion-team">TEAM NAME</div>
-      
-      <div class="card" style="background: rgba(0,0,0,0.3); text-align: left; margin-top: 16px;">
-        <div style="margin-bottom: 6px;"><strong>Final Score:</strong> <span id="champ-final-score"></span></div>
-        <div style="margin-bottom: 6px;"><strong>Format:</strong> <span id="champ-format"></span></div>
-        <div style="margin-bottom: 6px;"><strong>Tournament Wins:</strong> <span id="champ-wins"></span></div>
-        <div style="margin-bottom: 6px;"><strong>Total Points:</strong> <span id="champ-points"></span></div>
-        <div><strong>Final NRR:</strong> <span id="champ-nrr"></span></div>
-      </div>
-
-      <button class="btn btn-gold" style="margin-top: 14px;" onclick="resetTournament()">Start New Tournament</button>
-
-      <div class="author-tag">
-        Created by Farooq Ahmed Chitrali
-      </div>
-    </div>
-  </div>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Flip Cricket - Farooq Ahmed Chitrali</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Inter & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
   <script>
-    const GROUPS = {
-      A: ['India', 'Pakistan', 'South Africa', 'England', 'Bangladesh'],
-      B: ['Australia', 'New Zealand', 'West Indies', 'Sri Lanka', 'Afghanistan']
-    };
-
-    let state = null;
-
-    function initDefaultState() {
-      return {
-        format: null,
-        stage: 'SETUP', // 'SETUP', 'GROUPS', 'SF1', 'SF2', 'FINAL', 'COMPLETED'
-        teams: {},
-        fixtures: [],
-        currentFixtureIdx: 0,
-        recentResult: null,
-        knockouts: {
-          sf1: { teamA: null, teamB: null, winner: null },
-          sf2: { teamA: null, teamB: null, winner: null },
-          final: { teamA: null, teamB: null, winner: null }
-        },
-        liveMatch: null
-      };
-    }
-
-    function saveState() {
-      localStorage.setItem('flip_cricket_tournament', JSON.stringify(state));
-    }
-
-    function loadState() {
-      const saved = localStorage.getItem('flip_cricket_tournament');
-      if (saved) {
-        try {
-          state = JSON.parse(saved);
-        } catch (e) {
-          state = initDefaultState();
-        }
-      } else {
-        state = initDefaultState();
-      }
-    }
-
-    function startTournament(formatOvers) {
-      state = initDefaultState();
-      state.format = formatOvers;
-      state.stage = 'GROUPS';
-
-      // Initialize teams
-      ['A', 'B'].forEach(grp => {
-        GROUPS[grp].forEach(name => {
-          state.teams[name] = {
-            name,
-            group: grp,
-            P: 0, W: 0, L: 0, T: 0, Pts: 0,
-            runsScored: 0,
-            ballsFaced: 0,
-            runsConceded: 0,
-            ballsBowled: 0,
-            NRR: 0
-          };
-        });
-      });
-
-      // Generate Round Robin Fixtures
-      state.fixtures = [];
-      let matchNum = 1;
-
-      const scheduleGrpA = generateRoundRobin(GROUPS.A);
-      const scheduleGrpB = generateRoundRobin(GROUPS.B);
-
-      // Interleave Group A and B matches
-      const maxLen = Math.max(scheduleGrpA.length, scheduleGrpB.length);
-      for (let i = 0; i < maxLen; i++) {
-        if (i < scheduleGrpA.length) {
-          state.fixtures.push({
-            id: matchNum++,
-            group: 'A',
-            teamA: scheduleGrpA[i][0],
-            teamB: scheduleGrpA[i][1],
-            status: 'UPCOMING',
-            result: null
-          });
-        }
-        if (i < scheduleGrpB.length) {
-          state.fixtures.push({
-            id: matchNum++,
-            group: 'B',
-            teamA: scheduleGrpB[i][0],
-            teamB: scheduleGrpB[i][1],
-            status: 'UPCOMING',
-            result: null
-          });
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Outfit', 'sans-serif'],
+          },
+          colors: {
+            cricket: {
+              green: '#059669',
+              darkGreen: '#022c22',
+              gold: '#fbbf24',
+              accent: '#38bdf8',
+            }
+          }
         }
       }
+    }
+  </script>
 
-      saveState();
-      render();
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #090d16;
+      color: #f8fafc;
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    
+    .font-display {
+      font-family: 'Outfit', sans-serif;
     }
 
-    function generateRoundRobin(teamList) {
-      const fixtures = [];
-      for (let i = 0; i < teamList.length; i++) {
-        for (let j = i + 1; j < teamList.length; j++) {
-          fixtures.push([teamList[i], teamList[j]]);
-        }
-      }
-      return fixtures;
+    /* Custom Glassmorphism */
+    .glass-card {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    
+    .glass-card-gold {
+      background: rgba(30, 27, 75, 0.85);
+      border: 1px solid rgba(251, 191, 36, 0.3);
     }
 
-    function calculateNRR(team) {
-      if (team.ballsFaced === 0 || team.ballsBowled === 0) return 0;
-      const oversFaced = team.ballsFaced / 6;
-      const oversBowled = team.ballsBowled / 6;
-      const forRate = team.runsScored / oversFaced;
-      const againstRate = team.runsConceded / oversBowled;
-      return forRate - againstRate;
+    /* Wheel Glow */
+    .wheel-shadow {
+      box-shadow: 0 0 35px rgba(16, 185, 129, 0.25);
     }
 
-    function updateStandings() {
-      Object.keys(state.teams).forEach(tName => {
-        const team = state.teams[tName];
-        team.NRR = calculateNRR(team);
-      });
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
     }
-
-    function getSortedStandings(groupKey) {
-      const groupTeams = GROUPS[groupKey].map(name => state.teams[name]);
-      return groupTeams.sort((a, b) => {
-        if (b.Pts !== a.Pts) return b.Pts - a.Pts;
-        return b.NRR - a.NRR;
-      });
+    ::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.6);
     }
-
-    function checkGroupCompletion() {
-      if (state.stage !== 'GROUPS') return;
-      const allGroupMatchesFinished = state.fixtures.every(f => f.status === 'FINISHED');
-      if (allGroupMatchesFinished) {
-        state.stage = 'KNOCKOUTS';
-        const sortedA = getSortedStandings('A');
-        const sortedB = getSortedStandings('B');
-
-        const A1 = sortedA[0].name;
-        const A2 = sortedA[1].name;
-        const B1 = sortedB[0].name;
-        const B2 = sortedB[1].name;
-
-        state.knockouts.sf1 = { teamA: A1, teamB: B2, winner: null };
-        state.knockouts.sf2 = { teamA: B1, teamB: A2, winner: null };
-
-        // Add SF fixtures
-        state.fixtures.push({
-          id: state.fixtures.length + 1,
-          stage: 'SF1',
-          group: 'Semi-Final 1',
-          teamA: A1,
-          teamB: B2,
-          status: 'UPCOMING',
-          result: null
-        });
-
-        state.fixtures.push({
-          id: state.fixtures.length + 1,
-          stage: 'SF2',
-          group: 'Semi-Final 2',
-          teamA: B1,
-          teamB: A2,
-          status: 'UPCOMING',
-          result: null
-        });
-
-        saveState();
-      }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
     }
+  </style>
+</head>
+<body class="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between overflow-x-hidden">
 
-    function recordMatchResult(fixtureIdx, res) {
-      const fix = state.fixtures[fixtureIdx];
-      fix.status = 'FINISHED';
-      fix.result = res;
+  <!-- Top Navigation Header -->
+  <header class="sticky top-0 z-50 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 shadow-lg px-4 py-3">
+    <div class="max-w-md mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <button id="navBackBtn" onclick="goBack()" class="hidden p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 transition-all active:scale-95">
+          <i class="fa-solid fa-arrow-left text-lg"></i>
+        </button>
+        <div>
+          <h1 class="text-lg font-extrabold font-display tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-amber-300 flex items-center gap-1.5">
+            <i class="fa-solid fa-compact-disc text-emerald-400 animate-spin-slow"></i> FLIP CRICKET
+          </h1>
+          <p class="text-[10px] font-semibold text-amber-400 tracking-wider uppercase flex items-center gap-1">
+            <i class="fa-solid fa-crown text-[9px]"></i> Farooq Ahmed Chitrali
+          </p>
+        </div>
+      </div>
 
-      state.recentResult = `${res.winner === 'TIE' ? 'Match Tied' : res.winner + ' won'} (${fix.teamA} ${res.scoreA} vs ${fix.teamB} ${res.scoreB})`;
+      <div class="flex items-center gap-2">
+        <button onclick="toggleAudio()" id="audioBtn" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-emerald-400 transition-all active:scale-95">
+          <i id="audioIcon" class="fa-solid fa-volume-high text-base"></i>
+        </button>
+        <button onclick="openStatsModal()" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-400 transition-all active:scale-95" title="Leaderboards">
+          <i class="fa-solid fa-trophy text-base"></i>
+        </button>
+      </div>
+    </div>
+  </header>
 
-      // Update Group Stats if in Group Stage
-      if (state.stage === 'GROUPS') {
-        const teamA = state.teams[fix.teamA];
-        const teamB = state.teams[fix.teamB];
+  <!-- Main Container -->
+  <main class="flex-1 max-w-md w-full mx-auto p-4 flex flex-col gap-4 relative pb-20">
 
-        teamA.P += 1;
-        teamB.P += 1;
+    <!-- VIEW: HOME DASHBOARD -->
+    <section id="viewHome" class="flex flex-col gap-5">
+      <!-- Banner -->
+      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-900/80 via-slate-900 to-indigo-950 p-5 border border-emerald-500/20 shadow-2xl">
+        <div class="absolute -right-6 -bottom-6 opacity-10 text-emerald-400">
+          <i class="fa-solid fa-baseball text-9xl"></i>
+        </div>
+        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 uppercase tracking-widest">
+          Official Tournament Edition
+        </span>
+        <h2 class="text-2xl font-black font-display mt-2 text-white leading-tight">
+          SPIN TO WIN THE CUP
+        </h2>
+        <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+          10 World Teams. 2 Groups. Complete player career stats & live leaderboards!
+        </p>
+      </div>
 
-        teamA.runsScored += res.runsA;
-        teamA.ballsFaced += res.allOutA ? (state.format * 6) : res.ballsA;
-        teamA.runsConceded += res.runsB;
-        teamA.ballsBowled += res.allOutB ? (state.format * 6) : res.ballsB;
+      <!-- Main Action Cards -->
+      <div class="grid grid-cols-1 gap-3">
+        <button onclick="openTournamentHub()" class="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-700 p-4 shadow-xl hover:shadow-emerald-500/20 transition-all active:scale-[0.98] text-left">
+          <div class="flex items-center justify-between relative z-10">
+            <div>
+              <span class="text-[11px] font-bold text-emerald-200 uppercase tracking-wider">World Cup Mode</span>
+              <h3 class="text-xl font-extrabold font-display text-white flex items-center gap-2">
+                <i class="fa-solid fa-trophy text-amber-300"></i> World Tournament
+              </h3>
+              <p class="text-xs text-emerald-100/80 mt-0.5">10 Teams, Group Matches, Semi-Finals & Final</p>
+            </div>
+            <i class="fa-solid fa-chevron-right text-emerald-200 text-lg group-hover:translate-x-1 transition-transform"></i>
+          </div>
+        </button>
 
-        teamB.runsScored += res.runsB;
-        teamB.ballsFaced += res.allOutB ? (state.format * 6) : res.ballsB;
-        teamB.runsConceded += res.runsA;
-        teamB.ballsBowled += res.allOutA ? (state.format * 6) : res.ballsA;
+        <button onclick="setupQuickMatchModal()" class="group rounded-2xl bg-slate-900 p-4 border border-slate-800 hover:border-slate-700 shadow-lg transition-all active:scale-[0.98] text-left">
+          <div class="flex items-center justify-between">
+            <div>
+              <span class="text-[11px] font-bold text-amber-400 uppercase tracking-wider">Instant Action</span>
+              <h3 class="text-lg font-bold font-display text-white flex items-center gap-2">
+                <i class="fa-solid fa-bolt text-amber-400"></i> Quick Exhibition Match
+              </h3>
+              <p class="text-xs text-slate-400 mt-0.5">Play a custom 5 or 10 over match anytime</p>
+            </div>
+            <i class="fa-solid fa-play text-slate-400 text-sm group-hover:text-white transition-colors"></i>
+          </div>
+        </button>
 
-        if (res.winner === fix.teamA) {
-          teamA.W += 1; teamA.Pts += 2;
-          teamB.L += 1;
-        } else if (res.winner === fix.teamB) {
-          teamB.W += 1; teamB.Pts += 2;
-          teamA.L += 1;
-        } else {
-          teamA.T += 1; teamA.Pts += 1;
-          teamB.T += 1; teamB.Pts += 1;
-        }
+        <button onclick="openLeaderboardsPage()" class="group rounded-2xl bg-slate-900 p-4 border border-slate-800 hover:border-slate-700 shadow-lg transition-all active:scale-[0.98] text-left">
+          <div class="flex items-center justify-between">
+            <div>
+              <span class="text-[11px] font-bold text-sky-400 uppercase tracking-wider">Player Career Stats</span>
+              <h3 class="text-lg font-bold font-display text-white flex items-center gap-2">
+                <i class="fa-solid fa-chart-line text-sky-400"></i> Leaderboards & Records
+              </h3>
+              <p class="text-xs text-slate-400 mt-0.5">Orange & Purple Cap holders, Top Performers</p>
+            </div>
+            <i class="fa-solid fa-ranking-star text-slate-400 text-sm group-hover:text-white transition-colors"></i>
+          </div>
+        </button>
+      </div>
 
-        updateStandings();
-        checkGroupCompletion();
-      } else {
-        // Knockout Stage handling
-        if (fix.stage === 'SF1') {
-          state.knockouts.sf1.winner = res.winner;
-        } else if (fix.stage === 'SF2') {
-          state.knockouts.sf2.winner = res.winner;
-        } else if (fix.stage === 'FINAL') {
-          state.knockouts.final.winner = res.winner;
-          state.stage = 'COMPLETED';
-        }
+      <!-- Creator Badge Footer -->
+      <div class="mt-4 p-3 rounded-xl bg-slate-900/60 border border-slate-800/80 text-center">
+        <p class="text-xs text-slate-400 flex items-center justify-center gap-1.5">
+          Engineered by <span class="text-amber-400 font-bold">Farooq Ahmed Chitrali</span>
+        </p>
+      </div>
+    </section>
 
-        // Check if both SFs completed to unlock Final
-        if (state.knockouts.sf1.winner && state.knockouts.sf2.winner && !state.knockouts.final.teamA) {
-          const finalA = state.knockouts.sf1.winner;
-          const finalB = state.knockouts.sf2.winner;
-          state.knockouts.final.teamA = finalA;
-          state.knockouts.final.teamB = finalB;
+    <!-- VIEW: TOURNAMENT HUB -->
+    <section id="viewTournament" class="hidden flex-col gap-4">
+      <!-- Tournament Header Banner -->
+      <div class="glass-card-gold rounded-2xl p-4 flex items-center justify-between">
+        <div>
+          <span class="text-[10px] font-bold uppercase tracking-widest text-amber-400">10-Team World Championship</span>
+          <h2 class="text-xl font-extrabold font-display text-white flex items-center gap-2">
+            <i class="fa-solid fa-trophy text-amber-400"></i> Tournament Center
+          </h2>
+          <p id="tournamentStageText" class="text-xs text-slate-300 mt-0.5">Stage: Group Stage</p>
+        </div>
+        <button onclick="resetTournamentPrompt()" class="px-3 py-1.5 rounded-lg bg-rose-500/20 text-rose-300 border border-rose-500/30 text-xs font-semibold hover:bg-rose-500/30">
+          Reset Cup
+        </button>
+      </div>
 
-          state.fixtures.push({
-            id: state.fixtures.length + 1,
-            stage: 'FINAL',
-            group: 'Final',
-            teamA: finalA,
-            teamB: finalB,
-            status: 'UPCOMING',
-            result: null
-          });
-        }
-      }
+      <!-- Tournament Tabs -->
+      <div class="flex rounded-xl bg-slate-900 p-1 border border-slate-800 text-xs font-bold">
+        <button id="tabBtnGroups" onclick="switchTournTab('groups')" class="flex-1 py-2 rounded-lg bg-emerald-600 text-white transition-all">
+          Groups & Points
+        </button>
+        <button id="tabBtnFixtures" onclick="switchTournTab('fixtures')" class="flex-1 py-2 rounded-lg text-slate-400 hover:text-white transition-all">
+          Match Schedule
+        </button>
+        <button id="tabBtnKnockout" onclick="switchTournTab('knockout')" class="flex-1 py-2 rounded-lg text-slate-400 hover:text-white transition-all">
+          Knockouts
+        </button>
+      </div>
 
-      state.currentFixtureIdx += 1;
-      saveState();
-      render();
-    }
+      <!-- TAB CONTENT: GROUPS -->
+      <div id="tournTabGroups" class="flex flex-col gap-4">
+        <!-- Group A Table -->
+        <div class="glass-card rounded-2xl p-3 border border-slate-800">
+          <h3 class="text-sm font-bold text-emerald-400 font-display mb-2 flex items-center justify-between">
+            <span><i class="fa-solid fa-layer-group"></i> GROUP A</span>
+            <span class="text-[10px] text-slate-400">Top 2 Qualify</span>
+          </h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs text-left">
+              <thead class="text-[10px] text-slate-400 uppercase bg-slate-900/80">
+                <tr>
+                  <th class="p-2 rounded-l-md">Team</th>
+                  <th class="p-2 text-center">P</th>
+                  <th class="p-2 text-center">W</th>
+                  <th class="p-2 text-center">L</th>
+                  <th class="p-2 text-center">Pts</th>
+                  <th class="p-2 text-right rounded-r-md">NRR</th>
+                </tr>
+              </thead>
+              <tbody id="groupATableBody" class="divide-y divide-slate-800/60 font-medium">
+                <!-- Injected via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
 
-    function simulateInnings(overs) {
-      const totalBalls = overs * 6;
-      let runs = 0;
-      let wickets = 0;
-      let balls = 0;
+        <!-- Group B Table -->
+        <div class="glass-card rounded-2xl p-3 border border-slate-800">
+          <h3 class="text-sm font-bold text-sky-400 font-display mb-2 flex items-center justify-between">
+            <span><i class="fa-solid fa-layer-group"></i> GROUP B</span>
+            <span class="text-[10px] text-slate-400">Top 2 Qualify</span>
+          </h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs text-left">
+              <thead class="text-[10px] text-slate-400 uppercase bg-slate-900/80">
+                <tr>
+                  <th class="p-2 rounded-l-md">Team</th>
+                  <th class="p-2 text-center">P</th>
+                  <th class="p-2 text-center">W</th>
+                  <th class="p-2 text-center">L</th>
+                  <th class="p-2 text-center">Pts</th>
+                  <th class="p-2 text-right rounded-r-md">NRR</th>
+                </tr>
+              </thead>
+              <tbody id="groupBTableBody" class="divide-y divide-slate-800/60 font-medium">
+                <!-- Injected via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
 
-      const outcomes = [0, 1, 1, 2, 2, 3, 4, 4, 6, 'W'];
+      <!-- TAB CONTENT: FIXTURES -->
+      <div id="tournTabFixtures" class="hidden flex-col gap-2">
+        <div id="fixturesListContainer" class="flex flex-col gap-2 max-h-[480px] overflow-y-auto pr-1">
+          <!-- Injected via JS -->
+        </div>
+      </div>
 
-      for (let i = 0; i < totalBalls; i++) {
-        balls++;
-        const card = outcomes[Math.floor(Math.random() * outcomes.length)];
-        if (card === 'W') {
-          wickets++;
-          if (wickets === 10) break;
-        } else {
-          runs += card;
-        }
-      }
+      <!-- TAB CONTENT: KNOCKOUTS -->
+      <div id="tournTabKnockout" class="hidden flex-col gap-3">
+        <div id="knockoutsContainer" class="flex flex-col gap-3">
+          <!-- Semi Finals and Final cards injected here -->
+        </div>
+      </div>
+    </section>
 
-      return { runs, wickets, balls, allOut: wickets === 10 };
-    }
+    <!-- VIEW: MATCH PLAY ARENA -->
+    <section id="viewMatch" class="hidden flex-col gap-3">
+      <!-- Match Header Scoreboard -->
+      <div class="glass-card rounded-2xl p-3 border border-slate-800 flex flex-col gap-2">
+        <!-- Teams & Current Innings -->
+        <div class="flex items-center justify-between text-xs font-bold border-b border-slate-800 pb-2">
+          <div class="flex items-center gap-2" id="batTeamDisplay">
+            <span id="batTeamFlag" class="text-lg">🇵🇰</span>
+            <span id="batTeamName" class="text-white font-display">PAKISTAN</span>
+            <span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">BAT</span>
+          </div>
+          <div class="text-right text-slate-400 text-[11px]" id="matchInningsLabel">
+            1st Innings
+          </div>
+        </div>
 
-    function simulateNextMatch() {
-      if (state.currentFixtureIdx >= state.fixtures.length) return;
+        <!-- Big Score Display -->
+        <div class="flex items-baseline justify-between pt-1">
+          <div>
+            <div class="text-3xl font-black font-display text-white tracking-tight flex items-baseline gap-1">
+              <span id="liveScoreRuns">0</span><span class="text-emerald-400 text-2xl">/</span><span id="liveScoreWickets">0</span>
+            </div>
+            <div class="text-xs text-slate-400 font-medium mt-0.5">
+              Overs: <span id="liveOvers" class="text-white font-bold">0.0</span> / <span id="maxOversDisplay">5.0</span>
+            </div>
+          </div>
 
-      const fix = state.fixtures[state.currentFixtureIdx];
-      const inn1 = simulateInnings(state.format);
-      
-      // Innings 2 with target logic
-      const target = inn1.runs + 1;
-      const totalBalls = state.format * 6;
-      let runs2 = 0, wickets2 = 0, balls2 = 0;
-      const outcomes = [0, 1, 1, 2, 2, 3, 4, 4, 6, 'W'];
+          <div class="text-right">
+            <div class="text-xs text-slate-300 font-bold" id="targetDisplay">
+              Target: --
+            </div>
+            <div class="text-[11px] text-slate-400 mt-0.5">
+              CRR: <span id="liveCRR" class="text-amber-400 font-bold">0.00</span> | RRR: <span id="liveRRR" class="text-sky-400 font-bold">--</span>
+            </div>
+          </div>
+        </div>
 
-      for (let i = 0; i < totalBalls; i++) {
-        balls2++;
-        const card = outcomes[Math.floor(Math.random() * outcomes.length)];
-        if (card === 'W') {
-          wickets2++;
-          if (wickets2 === 10) break;
-        } else {
-          runs2 += card;
-        }
-        if (runs2 >= target) break;
-      }
+        <!-- Batter & Bowler Current Stats -->
+        <div class="grid grid-cols-2 gap-2 mt-1 bg-slate-950/60 p-2 rounded-xl text-xs">
+          <div class="flex flex-col gap-1 border-r border-slate-800 pr-2">
+            <div class="text-[10px] uppercase font-bold text-slate-400">At Crease</div>
+            <div id="strikerName" class="font-bold text-amber-300 truncate">Batter 1 *</div>
+            <div id="strikerStats" class="text-[11px] text-slate-300">0 (0b)</div>
+            <div id="nonStrikerName" class="font-medium text-slate-400 truncate">Batter 2</div>
+            <div id="nonStrikerStats" class="text-[10px] text-slate-500">0 (0b)</div>
+          </div>
+          <div class="flex flex-col gap-1 pl-1">
+            <div class="text-[10px] uppercase font-bold text-slate-400">Current Bowler</div>
+            <div id="bowlerName" class="font-bold text-sky-300 truncate">Bowler 1</div>
+            <div id="bowlerStats" class="text-[11px] text-slate-300">0/0 (0.0 ov)</div>
+            <div class="text-[10px] text-slate-400 mt-1">This Over:</div>
+            <div id="thisOverBalls" class="flex items-center gap-1 overflow-x-auto text-[10px] font-bold">
+              <!-- Ball icons -->
+            </div>
+          </div>
+        </div>
+      </div>
 
-      let winner = 'TIE';
-      if (runs2 > inn1.runs) winner = fix.teamB;
-      else if (i
+      <!-- WHEEL SPINNER CONTAINER -->
+      <div class="relative flex flex-col items-center justify-center my-1">
+        
+        <!-- CANVAS WHEEL WRAPPER -->
+        <div class="relative p-2 rounded-full bg-slate-900 border-2 border-slate-800 wheel-shadow">
+          
+          <!-- TOP YELLOW POINTER ARROW (Strict 12 o'clock position) -->
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center drop-shadow-[0_4px_10px_rgba(251,191,36,0.8)]">
+            <div class="w-0 h-0 border-l-[14px] border-l-transparent border-r-[14px] border-r-transparent border-t-[22px] border-t-amber-400"></div>
+          </div>
+
+          <!-- The Canvas Wheel -->
+          <canvas id="wheelCanvas" width="310" height="310" class="rounded-full cursor-pointer touch-none"></canvas>
+          
+          <!-- Wheel Center Hub -->
+          <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-slate-950 border-2 border-amber-400 shadow-inner flex items-center justify-center z-20 pointer-events-none">
+            <i class="fa-solid fa-baseball text-amber-400 text-lg"></i>
+          </div>
+        </div>
+
+        <!-- Spin Button -->
+        <button id="spinBtn" onclick="spinWheel()" class="w-full max-w-xs mt-3 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black font-display text-lg tracking-wider shadow-lg shadow-emerald-500/20 active:scale-95 transition-all flex items-center justify-center gap-2">
+          <i class="fa-solid fa-rotate text-xl"></i> SPIN WHEEL
+        </button>
+      </div>
+
+      <!-- Live Outcome & Commentary Log -->
+      <div class="glass-card rounded-2xl p-3 border border-slate-800 flex flex-col gap-2">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-1.5">
+          <span class="text-xs font-bold text-slate-400 flex items-center gap-1">
+            <i class="fa-solid fa-comment-dots text-emerald-400"></i> Live Commentary
+          </span>
+          <span id="lastOutcomeBadge" class="text-xs font-extrabold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">
+            READY
+          </span>
+        </div>
+        <div id="commentaryBox" class="text-xs text-slate-300 h-16 overflow-y-auto flex flex-col gap-1 font-medium pr-1">
+          <p class="text-slate-500 italic">Tap SPIN WHEEL to start the over!</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW: LEADERBOARDS & PLAYER STATS -->
+    <section id="viewLeaderboard" class="hidden flex-col gap-4">
+      <div class="glass-card rounded-2xl p-4 border border-slate-800">
+        <h2 class="text-xl font-extrabold font-display text-white flex items-center gap-2">
+          <i class="fa-solid fa-chart-column text-amber-400"></i> Tournament Leaderboards
+        </h2>
+        <p class="text-xs text-slate-400 mt-0.5">Live career statistics tracked across all matches</p>
+      </div>
+
+      <!-- Stats Tabs -->
+      <div class="flex rounded-xl bg-slate-900 p-1 border border-slate-800 text-xs font-bold">
+        <button id="tabBtnOrange" onclick="switchStatsTab('orange')" class="flex-1 py-2 rounded-lg bg-amber-500 text-slate-950 transition-all">
+          <i class="fa-solid fa-hat-cowboy"></i> Orange Cap (Runs)
+        </button>
+        <button id="tabBtnPurple" onclick="switchStatsTab('purple')" class="flex-1 py-2 rounded-lg text-slate-400 hover:text-white transition-all">
+          <i class="fa-solid fa-bowling-ball"></i> Purple Cap (Wkts)
+        </button>
+      </div>
+
+      <!-- ORANGE CAP LEADERBOARD -->
+      <div id="statsTabOrange" class="flex flex-col gap-2">
+        <div class="glass-card rounded-2xl p-3 border border-slate-800">
+          <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2">
+            🥇 Top 3 Tournament Batsmen
+          </h3>
+          <div id="orangeCapList" class="flex flex-col gap-2">
+            <!-- Injected via JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- PURPLE CAP LEADERBOARD -->
+      <div id="stat
