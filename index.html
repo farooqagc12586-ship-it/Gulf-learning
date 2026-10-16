@@ -1,376 +1,199 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Flip Cricket - Farooq Ahmed Chitrali</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            touch-action: manipulation;
-            -webkit-tap-highlight-color: transparent;
-            user-select: none;
-        }
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 4px;
-            height: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #4B5563;
-            border-radius: 4px;
-        }
-        .glow-button {
-            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
-        }
-        .card-glass {
-            background: rgba(30, 41, 59, 0.85);
-            backdrop-filter: blur(8px);
-        }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#0b1220">
+<title>HSE Professional Examination</title>
+<style>
+:root{
+  --bg:#0a1120; --bg2:#0e172a; --card:#131d33; --card2:#1a2740; --line:#25355a;
+  --txt:#e9eefb; --muted:#93a4c6; --acc:#22c55e; --acc2:#3b82f6; --acc3:#8b5cf6;
+  --warn:#f59e0b; --bad:#ef4444; --good:#22c55e; --gold:#fbbf24; --silver:#cbd5e1;
+  --diamond:#22d3ee; --radius:16px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--txt);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  font-size:15px;line-height:1.45;overscroll-behavior-y:none}
+body{min-height:100vh;background:radial-gradient(1200px 600px at 50% -200px,#16264a 0%,var(--bg) 60%)}
+button{font-family:inherit;font-size:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select{font-family:inherit;font-size:inherit}
+.hidden{display:none !important}
+
+.app{max-width:640px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;position:relative}
+
+/* ---------- TOP BAR ---------- */
+.topbar{position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;
+  gap:10px;padding:10px 14px;background:rgba(10,17,32,.92);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.logo{width:38px;height:38px;border-radius:11px;flex:0 0 auto;display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--acc),#0ea5e9);color:#04140a;font-weight:900;font-size:12px;letter-spacing:.5px;
+  box-shadow:0 4px 14px rgba(34,197,94,.28)}
+.brand-title{font-weight:800;font-size:14px;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand-sub{font-size:9.5px;color:var(--muted);letter-spacing:.4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#topRight{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+.timer-chip{display:flex;align-items:center;gap:6px;background:var(--card2);border:1px solid var(--line);
+  padding:7px 11px;border-radius:999px;font-weight:800;font-variant-numeric:tabular-nums;font-size:14px}
+
+/* ---------- LAYOUT ---------- */
+#screen{flex:1;padding:14px 14px 100px}
+.card{background:linear-gradient(180deg,var(--card),#111a2c);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+.row{display:flex;align-items:center;gap:10px}
+.muted{color:var(--muted)}
+.mt12{margin-top:12px}
+
+/* ---------- BUTTONS ---------- */
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px 16px;border-radius:13px;
+  font-weight:800;font-size:15px;background:var(--card2);border:1px solid var(--line);color:var(--txt);
+  transition:transform .08s ease}
+.btn:active{transform:scale(.975)}
+.btn.primary{background:linear-gradient(135deg,#22c55e,#16a34a);color:#04140a;border-color:transparent;
+  box-shadow:0 6px 20px rgba(34,197,94,.28)}
+
+/* ---------- EXAM ---------- */
+.qtext{font-size:16.5px;font-weight:700;line-height:1.5;margin:6px 0 14px}
+.opt{display:flex;gap:11px;align-items:center;width:100%;text-align:left;padding:13px 14px;border-radius:13px;
+  background:var(--card);border:1.5px solid var(--line);margin-bottom:9px;transition:all .14s ease;font-size:14.5px}
+.opt:active{transform:scale(.99)}
+.opt .key{width:24px;height:24px;flex:0 0 auto;border-radius:7px;background:var(--card2);border:1px solid var(--line);
+  display:grid;place-items:center;font-size:11.5px;font-weight:900;color:var(--muted)}
+.opt.sel{border-color:var(--acc);background:rgba(34,197,94,.10)}
+.opt.sel .key{background:var(--acc);color:#04140a;border-color:transparent}
+.opt.correct{border-color:var(--good);background:rgba(34,197,94,.2)}
+.opt.wrong{border-color:var(--bad);background:rgba(239,68,68,.2)}
+</style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col items-center justify-start p-2 sm:p-4">
-
-    <!-- Main Mobile Container -->
-    <div class="w-full max-w-md mx-auto flex flex-col min-h-[95vh] bg-slate-900 rounded-2xl border border-slate-800 shadow-2xl overflow-hidden relative">
-        
-        <!-- Header -->
-        <header class="bg-gradient-to-r from-emerald-800 via-emerald-700 to-teal-800 p-3 text-center border-b border-emerald-600/40 shadow-md relative">
-            <div class="inline-block bg-amber-400 text-slate-950 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider mb-1">
-                Designed for Mobile
-            </div>
-            <h1 class="text-2xl font-extrabold tracking-tight text-white drop-shadow-md">
-                FLIP CRICKET <span class="text-amber-300">2026</span>
-            </h1>
-            <p class="text-xs text-emerald-200 font-semibold tracking-wide">
-                Developed by <span class="text-amber-300 underline font-bold">Farooq Ahmed Chitrali</span>
-            </p>
-        </header>
-
-        <!-- Dynamic Content Screen Area -->
-        <main id="appScreen" class="flex-1 p-3 flex flex-col justify-between overflow-y-auto custom-scrollbar">
-            <!-- Screen content injected via JavaScript -->
-        </main>
-
-        <!-- Footer / Sound Toggle -->
-        <footer class="bg-slate-950/80 p-2 text-center text-xs text-slate-400 border-t border-slate-800 flex justify-between items-center px-4">
-            <span>© Farooq Ahmed Chitrali</span>
-            <button id="audioToggleBtn" onclick="toggleAudio()" class="flex items-center gap-1 text-amber-400 bg-slate-800 px-2 py-1 rounded-md text-[11px] border border-slate-700">
-                🔊 Sound: ON
-            </button>
-        </footer>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">HSE</div>
+      <div style="min-width:0">
+        <div class="brand-title">HSE Professional Exam</div>
+        <div class="brand-sub">NEBOSH · OSHA · IOSH · ISO 45001</div>
+      </div>
     </div>
-
-    <!-- Stats / Leaderboard Modal -->
-    <div id="statsModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3">
-        <div class="bg-slate-900 border border-slate-700 w-full max-w-md rounded-2xl p-4 flex flex-col max-h-[85vh] shadow-2xl">
-            <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-800">
-                <h3 id="modalTitle" class="text-lg font-bold text-amber-400">Tournament Leaderboards</h3>
-                <button onclick="closeModal()" class="text-slate-400 hover:text-white font-bold text-xl px-2">✕</button>
-            </div>
-            <div id="modalContent" class="flex-1 overflow-y-auto custom-scrollbar text-sm space-y-3">
-                <!-- Modal content dynamically injected -->
-            </div>
-        </div>
+    <div id="topRight">
+      <div class="timer-chip" id="timer">10:00</div>
     </div>
+  </header>
+  
+  <main id="screen"></main>
+</div>
 
-    <script>
-        // Audio Engine using Web Audio API (No external sound assets required)
-        let soundEnabled = true;
-        const AudioCtx = window.AudioContext || window.webkitAudioContext;
-        let audioCtx = null;
+<script>
+"use strict";
 
-        function initAudio() {
-            if (!audioCtx) audioCtx = new AudioCtx();
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-        }
+const questions = [
+  {
+    q: "What is the primary objective of a Risk Assessment in workplace health & safety?",
+    opts: [
+      "To eliminate all workplace hazards completely",
+      "To identify hazards and implement adequate control measures",
+      "To fulfill insurance policy documentation requirements",
+      "To pass government inspections without penalties"
+    ],
+    ans: 1
+  },
+  {
+    q: "According to the Hierarchy of Controls, which method is considered the most effective?",
+    opts: [
+      "Personal Protective Equipment (PPE)",
+      "Engineering Controls",
+      "Elimination",
+      "Administrative Controls"
+    ],
+    ans: 2
+  },
+  {
+    q: "Under ISO 45001, what does PDCA stand for?",
+    opts: [
+      "Plan-Do-Check-Act",
+      "Prevent-Detect-Control-Assess",
+      "Prepare-Document-Comply-Analyze",
+      "Policy-Design-Check-Audit"
+    ],
+    ans: 0
+  }
+];
 
-        function toggleAudio() {
-            soundEnabled = !soundEnabled;
-            document.getElementById('audioToggleBtn').innerText = soundEnabled ? '🔊 Sound: ON' : 'Mute Sound';
-        }
+let currentQ = 0;
+let score = 0;
+let selectedOpt = null;
 
-        function playBeep(freq = 440, duration = 0.08, type = 'sine') {
-            if (!soundEnabled) return;
-            try {
-                initAudio();
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = type;
-                osc.frequency.value = freq;
-                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + duration);
-            } catch (e){}
-        }
+const screenEl = document.getElementById("screen");
 
-        function playCheer() {
-            if (!soundEnabled) return;
-            try {
-                initAudio();
-                const bufferSize = audioCtx.sampleRate * 0.4;
-                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-                const data = buffer.getChannelData(0);
-                for (let i = 0; i < bufferSize; i++) {
-                    data[i] = Math.random() * 2 - 1;
-                }
-                const noise = audioCtx.createBufferSource();
-                noise.buffer = buffer;
-                const filter = audioCtx.createBiquadFilter();
-                filter.type = 'bandpass';
-                filter.frequency.value = 1000;
-                const gain = audioCtx.createGain();
-                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
-                noise.connect(filter);
-                filter.connect(gain);
-                gain.connect(audioCtx.destination);
-                noise.start();
-            } catch(e){}
-        }
+function renderQuestion() {
+  if (currentQ >= questions.length) {
+    renderResult();
+    return;
+  }
+  
+  const qData = questions[currentQ];
+  selectedOpt = null;
+  
+  screenEl.innerHTML = `
+    <div class="card">
+      <div class="muted tiny" style="font-weight:800;letter-spacing:1px;text-transform:uppercase;">Question ${currentQ + 1} of ${questions.length}</div>
+      <div class="qtext">${qData.q}</div>
+      
+      <div id="optionsContainer">
+        ${qData.opts.map((opt, i) => `
+          <button class="opt" onclick="selectOption(${i})">
+            <span class="key">${String.fromCharCode(65 + i)}</span>
+            <span>${opt}</span>
+          </button>
+        `).join('')}
+      </div>
+      
+      <button id="nextBtn" class="btn primary mt12" onclick="nextQuestion()" disabled>Next Question</button>
+    </div>
+  `;
+}
 
-        // Teams & Squads Setup
-        const TEAMS = {
-            // Group A
-            PAK: { name: 'Pakistan', flag: '🇵🇰', group: 'A' },
-            IND: { name: 'India', flag: '🇮🇳', group: 'A' },
-            SA:  { name: 'South Africa', flag: '🇿🇦', group: 'A' },
-            NZ:  { name: 'New Zealand', flag: '🇳🇿', group: 'A' },
-            BAN: { name: 'Bangladesh', flag: '🇧🇩', group: 'A' },
-            // Group B
-            AUS: { name: 'Australia', flag: '🇦🇺', group: 'B' },
-            ENG: { name: 'England', flag: '🇬🇧', group: 'B' },
-            SL:  { name: 'Sri Lanka', flag: '🇱🇰', group: 'B' },
-            WI:  { name: 'West Indies', flag: '🌴', group: 'B' },
-            AFG: { name: 'Afghanistan', flag: '🇦🇫', group: 'B' }
-        };
+function selectOption(index) {
+  selectedOpt = index;
+  const opts = document.querySelectorAll(".opt");
+  opts.forEach((btn, i) => {
+    if (i === index) {
+      btn.classList.add("sel");
+    } else {
+      btn.classList.remove("sel");
+    }
+  });
+  document.getElementById("nextBtn").disabled = false;
+}
 
-        // Player Roster Generator with Unique Player IDs
-        let playerStats = {};
+function nextQuestion() {
+  if (selectedOpt === questions[currentQ].ans) {
+    score++;
+  }
+  currentQ++;
+  renderQuestion();
+}
 
-        function generatePlayers() {
-            playerStats = {};
-            Object.keys(TEAMS).forEach(teamKey => {
-                for (let i = 1; i <= 11; i++) {
-                    const playerId = `${teamKey}_P${i}`;
-                    let role = i <= 5 ? 'Batsman' : (i <= 7 ? 'All-Rounder' : 'Bowler');
-                    playerStats[playerId] = {
-                        id: playerId,
-                        teamKey: teamKey,
-                        name: `${TEAMS[teamKey].name} Player ${i}`,
-                        role: role,
-                        runs: 0,
-                        ballsFaced: 0,
-                        fours: 0,
-                        sixes: 0,
-                        wicketsTaken: 0,
-                        runsConceded: 0,
-                        oversBowled: 0,
-                        matches: 0
-                    };
-                }
-            });
-        }
+function renderResult() {
+  const percentage = Math.round((score / questions.length) * 100);
+  screenEl.innerHTML = `
+    <div class="card" style="text-align:center;padding:30px 16px;">
+      <h2 style="margin:0 0 10px;">Examination Completed</h2>
+      <div style="font-size:48px;font-weight:900;color:var(--acc);">${percentage}%</div>
+      <p class="muted">You scored ${score} out of ${questions.length}</p>
+      <button class="btn primary mt12" onclick="restart()">Try Again</button>
+    </div>
+  `;
+}
 
-        // Global Tournament State
-        let tournament = {
-            overs: 5, // 5 or 10 overs option
-            userTeam: 'PAK',
-            currentStage: 'GROUP', // GROUP, SEMI, FINAL, COMPLETED
-            matches: [],
-            currentMatchIndex: 0,
-            standings: {
-                A: {},
-                B: {}
-            }
-        };
+function restart() {
+  currentQ = 0;
+  score = 0;
+  renderQuestion();
+}
 
-        function resetStandings() {
-            ['A', 'B'].forEach(grp => {
-                tournament.standings[grp] = {};
-                Object.keys(TEAMS).filter(k => TEAMS[k].group === grp).forEach(t => {
-                    tournament.standings[grp][t] = {
-                        played: 0, won: 0, lost: 0, points: 0, runsFor: 0, oversFor: 0, runsAgainst: 0, oversAgainst: 0, nrr: 0
-                    };
-                });
-            });
-        }
-
-        function createSchedule() {
-            tournament.matches = [];
-            // Round Robin inside groups
-            ['A', 'B'].forEach(grp => {
-                const grpTeams = Object.keys(TEAMS).filter(k => TEAMS[k].group === grp);
-                for (let i = 0; i < grpTeams.length; i++) {
-                    for (let j = i + 1; j < grpTeams.length; j++) {
-                        tournament.matches.push({
-                            id: `G_${grpTeams[i]}_${grpTeams[j]}`,
-                            stage: 'GROUP',
-                            group: grp,
-                            team1: grpTeams[i],
-                            team2: grpTeams[j],
-                            played: false,
-                            winner: null,
-                            summary: ''
-                        });
-                    }
-                }
-            });
-            // Shuffle group matches slightly
-            tournament.matches.sort(() => Math.random() - 0.5);
-        }
-
-        function renderSetupScreen() {
-            const screen = document.getElementById('appScreen');
-            screen.innerHTML = `
-                <div class="flex flex-col h-full justify-between gap-4 py-2">
-                    <div class="text-center space-y-1">
-                        <h2 class="text-xl font-bold text-amber-400">Tournament Setup</h2>
-                        <p class="text-xs text-slate-300">Choose match duration & select your team</p>
-                    </div>
-
-                    <!-- Overs Selector -->
-                    <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700 text-center">
-                        <label class="block text-xs font-bold text-emerald-400 uppercase tracking-wider mb-2">
-                            Select Tournament Overs
-                        </label>
-                        <div class="grid grid-cols-2 gap-3">
-                            <button onclick="setOvers(5)" id="btnOver5" class="py-2.5 px-4 rounded-lg font-bold text-sm border-2 transition-all bg-emerald-600 border-emerald-400 text-white shadow-lg">
-                                ⚡ 5 Overs
-                                <span class="block text-[10px] font-normal text-emerald-100">Quick Matches (~3 mins)</span>
-                            </button>
-                            <button onclick="setOvers(10)" id="btnOver10" class="py-2.5 px-4 rounded-lg font-bold text-sm border-2 transition-all bg-slate-900 border-slate-700 text-slate-400">
-                                🏏 10 Overs
-                                <span class="block text-[10px] font-normal text-slate-400">Full Experience</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Team Selector -->
-                    <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700 flex-1 flex flex-col min-h-0">
-                        <label class="block text-xs font-bold text-amber-400 uppercase tracking-wider mb-2 text-center">
-                            Select Your Country
-                        </label>
-                        <div class="grid grid-cols-2 gap-2 overflow-y-auto custom-scrollbar p-1 flex-1">
-                            ${Object.keys(TEAMS).map(key => `
-                                <button onclick="selectTeam('${key}')" id="teamBtn_${key}" class="team-select-btn flex items-center gap-2 p-2 rounded-lg border text-left text-xs font-bold transition-all ${key === 'PAK' ? 'bg-amber-500/20 border-amber-400 text-amber-300' : 'bg-slate-900 border-slate-800 text-slate-300 hover:border-slate-600'}">
-                                    <span class="text-xl">${TEAMS[key].flag}</span>
-                                    <div class="truncate">
-                                        <div>${TEAMS[key].name}</div>
-                                        <span class="text-[9px] text-slate-400 font-normal">Grp ${TEAMS[key].group}</span>
-                                    </div>
-                                </button>
-                            `).join('')}
-                        </div>
-                    </div>
-
-                    <!-- Start Button -->
-                    <button onclick="startTournament()" class="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-extrabold py-3.5 px-6 rounded-xl text-base shadow-xl transform active:scale-95 transition-all text-center glow-button">
-                        🚀 START TOURNAMENT
-                    </button>
-                </div>
-            `;
-        }
-
-        function setOvers(num) {
-            tournament.overs = num;
-            playBeep(600, 0.05);
-            document.getElementById('btnOver5').className = num === 5 ? 
-                'py-2.5 px-4 rounded-lg font-bold text-sm border-2 transition-all bg-emerald-600 border-emerald-400 text-white shadow-lg' : 
-                'py-2.5 px-4 rounded-lg font-bold text-sm border-2 transition-all bg-slate-900 border-slate-700 text-slate-400';
-            document.getElementById('btnOver10').className = num === 10 ? 
-                'py-2.5 px-4 rounded-lg font-bold text-sm border-2 transition-all bg-emerald-600 border-emerald-400 text-white shadow-lg' : 
-                'py-2.5 px-4 rounded-lg font-bold text-sm border-2 transition-all bg-slate-900 border-slate-700 text-slate-400';
-        }
-
-        function selectTeam(key) {
-            tournament.userTeam = key;
-            playBeep(700, 0.05);
-            document.querySelectorAll('.team-select-btn').forEach(btn => {
-                btn.className = 'team-select-btn flex items-center gap-2 p-2 rounded-lg border text-left text-xs font-bold transition-all bg-slate-900 border-slate-800 text-slate-300 hover:border-slate-600';
-            });
-            const sel = document.getElementById(`teamBtn_${key}`);
-            if (sel) sel.className = 'team-select-btn flex items-center gap-2 p-2 rounded-lg border text-left text-xs font-bold transition-all bg-amber-500/20 border-amber-400 text-amber-300';
-        }
-
-        function startTournament() {
-            playBeep(900, 0.15);
-            generatePlayers();
-            resetStandings();
-            createSchedule();
-            tournament.currentStage = 'GROUP';
-            tournament.currentMatchIndex = 0;
-            renderDashboard();
-        }
-
-        function renderDashboard() {
-            const screen = document.getElementById('appScreen');
-            const nextMatch = tournament.matches.find(m => !m.played);
-
-            screen.innerHTML = `
-                <div class="flex flex-col h-full gap-3 py-1">
-                    <!-- Dashboard Header & Leaderboard buttons -->
-                    <div class="flex justify-between items-center bg-slate-800/90 p-2.5 rounded-xl border border-slate-700">
-                        <div>
-                            <span class="text-[10px] text-amber-400 font-bold uppercase tracking-wider block">Your Country</span>
-                            <span class="text-sm font-extrabold flex items-center gap-1">
-                                ${TEAMS[tournament.userTeam].flag} ${TEAMS[tournament.userTeam].name}
-                            </span>
-                        </div>
-                        <div class="flex gap-1.5">
-                            <button onclick="showLeaderboards()" class="bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2 py-1 rounded-lg text-xs font-bold hover:bg-amber-500/30">
-                                👑 Caps
-                            </button>
-                            <button onclick="showPlayerStatsModal()" class="bg-blue-500/20 text-blue-300 border border-blue-500/40 px-2 py-1 rounded-lg text-xs font-bold hover:bg-blue-500/30">
-                                📊 Stats
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Points Table Tabs -->
-                    <div class="bg-slate-800/60 rounded-xl p-2 border border-slate-700/80 flex-1 flex flex-col min-h-0">
-                        <div class="flex justify-between items-center mb-1.5">
-                            <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Group Standings</h3>
-                            <span class="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full font-semibold border border-emerald-500/30">
-                                ${tournament.overs} Overs Format
-                            </span>
-                        </div>
-                        
-                        <div class="space-y-3 overflow-y-auto custom-scrollbar flex-1 pr-1">
-                            ${renderPointsTable('A')}
-                            ${renderPointsTable('B')}
-                        </div>
-                    </div>
-
-                    <!-- Action Card for Next Match -->
-                    <div class="bg-gradient-to-r from-slate-800 to-slate-900 p-3 rounded-xl border border-amber-500/30 shadow-lg text-center space-y-2">
-                        ${nextMatch ? `
-                            <div class="text-[11px] font-bold text-amber-400 uppercase tracking-wide">
-                                Next Fixture (${nextMatch.stage})
-                            </div>
-                            <div class="flex justify-center items-center gap-3 text-sm font-extrabold py-1">
-                                <span>${TEAMS[nextMatch.team1].flag} ${TEAMS[nextMatch.team1].name}</span>
-                                <span class="bg-amber-400 text-slate-950 text-[10px] px-2 py-0.5 rounded-full">VS</span>
-                                <span>${TEAMS[nextMatch.team2].flag} ${TEAMS[nextMatch.team2].name}</span>
-                            </div>
-                            <div class="grid grid-cols-2 gap-2 pt-1">
-                                ${ (nextMatch.team1 !== tournament.userTeam && nextMatch.team2 !== tournament.userTeam) ? `
-                                    <button onclick="simulateCurrentMatch()" class="bg-slate-700 hover:bg-slate-600 text-slate-200 font-bold py-2 px-3 rounded-lg text-xs border border-slate-600">
-                                        ⚡ Auto Simulate
-                                    </button>
-                                ` : ''}
-                                <button onclick="playMatch('${nextMatch.id}')" class="${(nextMatch.team1 === tournament.userTeam || nextMatch.team2 === tournament.userTeam) ? 'col-span-2' : ''} bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold py-2 px-3 rounded-lg text-xs shadow-md glow-button">
-                                    🏏 PLAY MATCH NOW
-                                </button>
-                            </div>
-                        ` : `
-                            <div class="text-center py-2">
-                                <h3 class="text-base font-extrabold text-amber-400">Tournament Finished!</h3>
-                                <button onclick="renderSetupScreen()" class="mt-2 bg-amber-500 text-slate-950 font-bold px-4 py-2 rounded-lg text-xs">
-                                    🔄 New Tournament
-                              
+// Start app
+renderQuestion();
+</script>
+</body>
+</html>
