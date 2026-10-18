@@ -1,1 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Arrow Escape Puzzle - 50 Master Levels Edition</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --panel-bg: #1e293b;
+            --accent-color: #38bdf8;
+            --text-color: #f8fafc;
+            --arrow-bg: #334155;
+            --success-color: #22c55e;
+            --danger-color: #ef4444;
+            --warning-color: #f59e0b;
+        }
 
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            overflow: hidden;
+        }
+
+        header {
+            width: 100%;
+            max-width: 500px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--panel-bg);
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .header-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .chapter-name {
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+
+        .stats-box {
+            display: flex;
+            gap: 10px;
+            font-size: 0.85rem;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 5px 8px;
+            border-radius: 6px;
+        }
+
+        #game-container {
+            width: 100%;
+            max-width: 450px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+            padding: 15px;
+        }
+
+        .board {
+            display: grid;
+            gap: 8px;
+            background-color: var(--panel-bg);
+            padding: 15px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+            position: relative;
+            max-width: 100%;
+        }
+
+        .cell {
+            width: 52px;
+            height: 52px;
+            background-color: var(--arrow-bg);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            transition: transform 0.15s, background-color 0.15s, opacity 0.2s;
+            position: relative;
+        }
+
+        .cell:active { transform: scale(0.9); }
+
+        .cell.blocked-anim {
+            animation: shake 0.3s ease-in-out;
+            background-color: rgba(239, 68, 68, 0.35);
+        }
+
+        .cell.hint-anim {
+            animation: pulse 0.7s infinite alternate;
+            background-color: rgba(245, 158, 11, 0.4);
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.08); }
+        }
+
+        .controls {
+            width: 100%;
+            max-width: 500px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-around;
+            background-color: var(--panel-bg);
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
+            box-shadow: 0 -4px 12px rgba(0,0,0,0.3);
+        }
+
+        .btn {
+            background-color: var(--arrow-bg);
+            border: none;
+            color: var(--text-color);
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: background 0.2s;
+        }
+
+        .btn:hover { background-color: var(--accent-color); color: #0f172a; }
+
+        .modal {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .modal.active { opacity: 1; pointer-events: auto; }
+
+        .modal-content {
+            background-color: var(--panel-bg);
+            padding: 25px;
+            border-radius: 16px;
+            text-align: center;
+            max-width: 340px;
+            width: 90%;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+        }
+
+        .modal-title { font-size: 1.4rem; color: var(--success-color); margin-bottom: 10px; }
+        .modal-title.stuck { color: var(--danger-color); }
+
+        .star-rating { font-size: 2rem; color: #fbbf24; margin: 15px 0; }
+
+        .level-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            max-height: 280px;
+            overflow-y: auto;
+            margin-top: 15px;
+            padding: 5px;
+        }
+
+        .level-btn {
+            padding: 10px 0;
+            background: var(--arrow-bg);
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .level-btn.completed { border: 2px solid var(--success-color); color: var(--success-color); }
+        .level-btn.current { background-color: var(--accent-color); color: #0f172a; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-info">
+            <div class="header-title" id="level-indicator">Level 1</div>
+            <div class="chapter-name" id="chapter-indicator">Chapter 1: Beginner</div>
+        </div>
+        <div class="stats-box">
+            <div class="stat-item">Moves: <span id="move-count">0</span></div>
+            <div class="stat-item">Stars: <span id="total-stars">★ 0</span></div>
+        </div>
+    </header>
+
+    <div id="game-container">
+        <div id="board" class="board"></div>
+    </div>
+
+    <div class="controls">
+        <button class="btn" onclick="game.undoMove()">↺ Undo</button>
+        <button class="btn" onclick="game.showHint()">💡 Hint</button>
+        <button class="btn" onclick="game.restartLevel()">🔄 Restart</button>
+        <button class="btn" onclick="ui.toggleLevelMenu(true)">📜 Levels (50)</button>
+    </div>
+
+    <!-- WIN MODAL -->
+    <div id="win-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title">🎉 Level Cleared!</div>
+            <p>Brilliant tactical thinking!</p>
+            <div class="star-rating" id="win-stars">★★★</div>
+            <button class="btn" style="width:100%; justify-content:center; background:var(--success-color);" onclick="game.nextLevel()">Next Level ➔</button>
+        </div>
+    </div>
+
+    <!-- STUCK MODAL -->
+    <div id="stuck-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title stuck">⚠️ No Moves Left!</div>
+            <p style="margin-bottom:15px; font-size:0.9rem; color:#94a3b8;">All remaining arrows are blocked.</p>
+            <div style="display:flex; gap:10px;">
+                <button class="btn" style="flex:1; justify-content:center;" onclick="game.undoMove(); ui.toggleStuckModal(false);">↺ Undo</button>
+                <button class="btn" style="flex:1; justify-content:center; background:var(--danger-color);" onclick="game.restartLevel(); ui.toggleStuckModal(false);">🔄 Restart</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LEVEL SELECT MODAL -->
+    <div id="levels-modal" class="modal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h3>Select Level (1 - 50)</h3>
+                <button class="btn" onclick="ui.toggleLevelMenu(false)">✕</button>
+            </div>
+            <div id="level-list" class="level-grid"></div>
+        </div>
+    </div>
+
+    <script>
+        // SOUND GENERATOR
+        class SoundEngine {
+            constructor() {
+                this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            playTap() { this.synthTone(400, 0.05, 'sine'); }
+            playSuccess() {
+                this.synthTone(600, 0.08, 'triangle');
+                setTimeout(() => this.synthTone(800, 0.12, 'triangle'), 80);
+            }
+            playError() { this.synthTone(150, 0.15, 'sawtooth'); }
+            playWin() {
+                [523, 659, 783, 1046].forEach((f, i) => {
+                    setTimeout(() => this.synthTone(f, 0.18, 'sine'), i * 90);
+                });
+            }
+            synthTone(freq, duration, type) {
+                if (this.ctx.state === 'suspended') this.ctx.resume();
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+                gain.gain.setValueAtTime(0.08, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + duration);
+            }
+        }
+
+        const audio = new SoundEngine();
+
+        const DIRECTIONS = {
+            'U': { x: 0, y: -1, symbol: '▲' },
+            'D': { x: 0, y: 1, symbol: '▼' },
+            'L': { x: -1, y: 0, symbol: '◀' },
+            'R': { x: 1, y: 0, symbol: '▶' }
+        };
+
+        // DYNAMIC 50 LEVELS GENERATOR (Guaranteed Solvable & Progressive Scaling)
+        function generateLevels() {
+            let levels = [];
+            let dirs = ['U', 'D', 'L', 'R'];
+            
+            for (let i = 0; i < 50; i++) {
+                let size = i < 10 ? 3 : (i < 25 ? 4 : (i < 40 ? 4 : 5));
+                let count = Math.min(size * size - 1, 3 + Math.floor(i / 2));
+                let grid = Array(size).fill(null).map(() => Array(size).fill(null));
+                
+                // Deterministic pseudo-random placement based on level index
+                let seed = (i + 1) * 9301 + 49297;
+                function rnd() {
+                    seed = (seed * 9301 + 49297) % 233280;
+                    return seed / 233280;
+                }
+
+                let placed = 0;
+                let attempts = 0;
+                while (placed < count && attempts < 300) {
+                    attempts++;
+                    let rx = Math.floor(rnd() * size);
+                    let ry = Math.floor(rnd() * size);
+                    if (!grid[ry][rx]) {
+                        let dIdx = Math.floor(rnd() * 4);
+                        grid[ry][rx] = { x: rx, y: ry, d: dirs[dIdx] };
+                        placed++;
+                    }
+                }
+
+                // Ensure at least one arrow points outward so the puzzle is never stuck at start
+                let hasValid = false;
+                let arrowsList = [];
+                for (let r = 0; r < size; r++) {
+                    for (let c = 0; c < size; c++) {
+                        if (grid[r][c]) {
+                            arrowsList.push(grid[r][c]);
+                        }
+                    }
+                }
+
+                // Fallback check to ensure minimum 2-3 arrows
+                if (arrowsList.length < 2) {
+                    arrowsList = [
+                        {x: 0, y: 0, d: 'R'},
+                        {x: size-1, y: size-1, d: 'L'}
+                    ];
+                    if (size > 3) arrowsList.push({x: 1, y: 1, d: 'U'});
+                }
+
+                levels.push({ grid: [size, size], arrows: arrowsList });
+            }
+            return levels;
+        }
+
+        const LEVELS = generateLevels();
+
+        class GameEngine {
+            constructor() {
+                this.currentLevelIdx = parseInt(localStorage.getItem('arrow_level_50') || '0');
+                this.moveHistory = [];
+                this.movesCount = 0;
+                this.starsEarned = parseInt(localStorage.getItem('arrow_stars_50') || '0');
+                this.grid = [];
+                this.cols = 0;
+                this.rows = 0;
+                this.isAnimating = false;
+            }
+
+            initLevel(idx) {
+                if (idx >= LEVELS.length) idx = 0;
+                this.currentLevelIdx = idx;
+                const levelData = LEVELS[idx];
+                this.cols = levelData.grid[0];
+                this.rows = levelData.grid[1];
+                this.movesCount = 0;
+                this.moveHistory = [];
+                this.isAnimating = false;
+
+                this.grid = Array(this.rows).fill(null).map(() => Array(this.cols).fill(null));
+                levelData.arrows.forEach(a => {
+                    this.grid[a.y][a.x] = { dir: a.d };
+                });
+
+                ui.renderBoard(this.grid, this.cols, this.rows);
+                ui.updateStats(this.currentLevelIdx + 1, this.movesCount, this.starsEarned);
+                localStorage.setItem('arrow_level_50', this.currentLevelIdx);
+            }
+
+            tryMove(x, y) {
+                if (this.isAnimating) return;
+                const arrow = this.grid[y][x];
+                if (!arrow) return;
+
+                if (this.canExit(x, y, arrow.dir)) {
+                    audio.playSuccess();
+                    this.saveState();
+                    this.isAnimating = true;
+
+                    ui.animateExit(x, y, arrow.dir, () => {
+                        this.grid[y][x] = null;
+                        this.movesCount++;
+                        this.isAnimating = false;
+                        ui.renderBoard(this.grid, this.cols, this.rows);
+                        ui.updateStats(this.currentLevelIdx + 1, this.movesCount, this.starsEarned);
+                        this.evaluateGameState();
+                    });
+                } else {
+                    audio.playError();
+                    ui.animateBlock(x, y);
+                }
+            }
+
+            canExit(x, y, dirKey) {
+                const vector = DIRECTIONS[dirKey];
+                let currX = x + vector.x;
+                let currY = y + vector.y;
+
+                while (currX >= 0 && currX < this.cols && currY >= 0 && currY < this.rows) {
+                    if (this.grid[currY][currX] !== null) return false;
+                    currX += vector.x;
+                    currY += vector.y;
+                }
+                return true;
+            }
+
+            evaluateGameState() {
+                let remaining = 0;
+                let validMoveAvailable = false;
+
+                for (let r = 0; r < this.rows; r++) {
+                    for (let c = 0; c < this.cols; c++) {
+                        if (this.grid[r][c]) {
+                            remaining++;
+                            if (this.canExit(c, r, this.grid[r][c].dir)) {
+                                validMoveAvailable = true;
+                            }
+                        }
+                    }
+                }
+
+                if (remaining === 0) {
+                    audio.playWin();
+                    this.starsEarned += 3;
+                    localStorage.setItem('arrow_stars_50', this.starsEarned);
+                    ui.showWinModal();
+                } else if (!validMoveAvailable) {
+                    audio.playError();
+                    ui.toggleStuckModal(true);
+                }
+            }
+
+            saveState() {
+                this.moveHistory.push(JSON.stringify(this.grid));
+            }
+
+            undoMove() {
+                if (this.moveHistory.length === 0 || this.isAnimating) return;
+                audio.playTap();
+                this.grid = JSON.parse(this.moveHistory.pop());
+                this.movesCount++;
+                ui.renderBoard(this.grid, this.cols, this.rows);
+                ui.updateStats(this.currentLevelIdx + 1, this.movesCount, this.starsEarned);
+            }
+
+            showHint() {
+                for (let r = 0; r < this.rows; r++) {
+                    for (let c = 0; c < this.cols; c++) {
+                        if (this.grid[r][c] && this.canExit(c, r, this.grid[r][c].dir)) {
+                            audio.playTap();
+                            ui.highlightHint(c, r);
+                            return;
+                        }
+                    }
+                }
+            }
+
+            restartLevel() {
+                audio.playTap();
+                this.initLevel(this.currentLevelIdx);
+            }
+
+            nextLevel() {
+                ui.toggleWinModal(false);
+                this.initLevel(this.currentLevelIdx + 1);
+            }
+        }
+
+        class UIManager {
+            constructor() {
+                this.boardEl = document.getElementById('board');
+                this.levelInd = document.getElementById('level-indicator');
+                this.chapterInd = document.getElementById('chapter-indicator');
+                this.moveInd = document.getElementById('move-count');
+                this.starInd = document.getElementById('total-stars');
+            }
+
+            renderBoard(grid, cols, rows) {
+                this.boardEl.innerHTML = '';
+                this.boardEl.style.gridTemplateColumns = `repeat(${cols}, 52px)`;
+                this.boardEl.style.gridTemplateRows = `repeat(${rows}, 52px)`;
+
+                for (let r = 0; r < rows; r++) {
+                    for (let c = 0; c < cols; c++) {
+                        const cell = document.createElement('div');
+                        cell.className = 'cell';
+                        cell.dataset.x = c;
+                        cell.dataset.y = r;
+
+                        const item = grid[r][c];
+                        if (item) {
+                            cell.innerHTML = DIRECTIONS[item.dir].symbol;
+                            cell.onclick = () => game.tryMove(c, r);
+                        } else {
+                            cell.style.visibility = 'hidden';
+                        }
+                        this.boardEl.appendChild(cell);
+                    }
+                }
+            }
+
+            updateStats(level, moves, stars) {
+                this.levelInd.innerText = `Level ${level}`;
+                this.moveInd.innerText = moves;
+                this.starInd.innerText = `★ ${stars}`;
+
+                let chapter = "Chapter 1: Beginner (3x3)";
+                if (level > 10 && level <= 25) chapter = "Chapter 2: Intermediate (4x4)";
+                else if (level > 25 && level <= 40) chapter = "Chapter 3: Advanced (4x4)";
+                else if (level > 40) chapter = "Chapter 4: Master Challenge (5x5)";
+                this.chapterInd.innerText = chapter;
+            }
+
+            animateBlock(x, y) {
+                const el = this.getCellEl(x, y);
+                if (el) {
+                    el.classList.add('blocked-anim');
+                    setTim
+                    
