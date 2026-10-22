@@ -1,561 +1,452 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Arrow Escape Puzzle - 50 Master Levels Edition</title>
-    <style>
-        :root {
-            --bg-color: #0f172a;
-            --panel-bg: #1e293b;
-            --accent-color: #38bdf8;
-            --text-color: #f8fafc;
-            --arrow-bg: #334155;
-            --success-color: #22c55e;
-            --danger-color: #ef4444;
-            --warning-color: #f59e0b;
-        }
+```react
+import React, { useState, useEffect, useMemo } from 'react';
+import { 
+  Users, UserCheck, Shield, GraduationCap, DollarSign, Calendar, BookOpen, 
+  FileText, QrCode, Bell, Settings, Award, Layers, Plus, Search, Filter, 
+  CheckCircle, XCircle, Clock, AlertTriangle, Printer, Download, Share2, 
+  RefreshCw, ChevronRight, Eye, Edit3, Trash2, Check, Lock, Unlock, LogOut,
+  Globe, Sparkles, Building, Phone, Mail, MapPin, CreditCard, ChevronDown,
+  BarChart2, TrendingUp, CheckSquare, XSquare, Camera, ArrowRight, ArrowLeft,
+  UserPlus, FileCheck, Bookmark, Send, HelpCircle, CheckCircle2, ChevronUp
+} from 'lucide-react';
 
-        * {
-            box-sizing: border-box;
-            user-select: none;
-            -webkit-user-select: none;
-            touch-action: manipulation;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+// ==========================================
+// 1. DICTIONARIES & LOCALIZATION (EN, UR, AR, HI)
+// ==========================================
+const TRANSLATIONS = {
+  en: {
+    appName: "EduSmart ERP",
+    schoolName: "Bright Horizon Academy",
+    tagline: "Class 1-12 Complete School Management System",
+    dir: "ltr",
+    roles: {
+      admin: "Super Admin / Principal",
+      accountant: "Accountant",
+      teacher: "Teacher",
+      student: "Student",
+      parent: "Parent",
+      scanner: "Gate Scanner"
+    },
+    nav: {
+      dashboard: "Dashboard",
+      academic: "Academic & Classes",
+      students: "Student Roster",
+      admissions: "Admissions Workflow",
+      attendance: "QR Attendance",
+      fees: "Fee Management",
+      exams: "Exams & Results",
+      idCards: "Student ID Cards",
+      certificates: "SLC & Certificates",
+      notices: "Notices & Broadcast",
+      settings: "System Settings"
+    },
+    common: {
+      save: "Save Changes",
+      cancel: "Cancel",
+      search: "Search...",
+      filter: "Filter",
+      export: "Export CSV/PDF",
+      print: "Print Document",
+      actions: "Actions",
+      status: "Status",
+      view: "View",
+      edit: "Edit",
+      delete: "Delete",
+      submit: "Submit",
+      approved: "Approved",
+      pending: "Pending",
+      rejected: "Rejected",
+      enrolled: "Enrolled",
+      all: "All",
+      currency: "PKR (Rs.)"
+    },
+    dashboard: {
+      totalStudents: "Total Active Students",
+      todayAttendance: "Today's Attendance",
+      feeCollection: "Fee Collected (This Month)",
+      pendingDues: "Total Outstanding Dues",
+      quickActions: "Quick Actions & Operations",
+      recentActivities: "System Audit Log & Activity Stream",
+      attendanceOverview: "Weekly Attendance Trend"
+    }
+  },
+  ur: {
+    appName: "ایجو سمارٹ ERP",
+    schoolName: "برائٹ ہورائزن اکیڈمی",
+    tagline: "جماعت 1 تا 12 مکمل اسکول مینجمنٹ سسٹم",
+    dir: "rtl",
+    roles: {
+      admin: "سپر ایڈمن / پرنسپل",
+      accountant: "اکاؤنٹنٹ",
+      teacher: "استاد / ٹیچر",
+      student: "طالب علم",
+      parent: "والدین",
+      scanner: "گیٹ اسکینر"
+    },
+    nav: {
+      dashboard: "ڈیش بورڈ",
+      academic: "تعليمى شعبہ و کلاسز",
+      students: "طلباء کی فہرست",
+      admissions: "نئے داخلے",
+      attendance: "کیو آر حاضری",
+      fees: "فیس کی وصولی",
+      exams: "امتحانات و نتائج",
+      idCards: "اسٹوڈنٹ شناختی کارڈ",
+      certificates: "سرٹیفکیٹ و ایس ایل سی",
+      notices: "نوٹس بورڈ",
+      settings: "سسٹم سیٹنگز"
+    },
+    common: {
+      save: "محفوظ کریں",
+      cancel: "منسوخ کریں",
+      search: "تلاش کریں...",
+      filter: "فلٹر",
+      export: "ایکسپورٹ کریں",
+      print: "پرنٹ کریں",
+      actions: "کارروائی",
+      status: "حالت",
+      view: "دیکھیں",
+      edit: "ترمیم",
+      delete: "حذف کریں",
+      submit: "جمع کرائیں",
+      approved: "منظور شدہ",
+      pending: "زیر التواء",
+      rejected: "مسترد",
+      enrolled: "داخل شدہ",
+      all: "تمام",
+      currency: "روپے"
+    },
+    dashboard: {
+      totalStudents: "کل فعال طلباء",
+      todayAttendance: "آج کی حاضری",
+      feeCollection: "اس ماہ کی وصولی",
+      pendingDues: "بقایا جات",
+      quickActions: "فوری اقدامات",
+      recentActivities: "سسٹم کی سرگرمیاں",
+      attendanceOverview: "ہفتہ وار حاضری کی صورتحال"
+    }
+  },
+  ar: {
+    appName: "إديوسمارت ERP",
+    schoolName: "أكاديمية الأفق المشرق",
+    tagline: "نظام إدارة المدارس الشامل (من الصف 1 إلى 12)",
+    dir: "rtl",
+    roles: {
+      admin: "المشرف العام / مدیر",
+      accountant: "المحاسب",
+      teacher: "المعلم",
+      student: "الطالب",
+      parent: "ولي الأمر",
+      scanner: "ماسح البوابة"
+    },
+    nav: {
+      dashboard: "لوحة التحكم",
+      academic: "الأكاديمية والفصول",
+      students: "قائمة الطلاب",
+      admissions: "إجراءات القبول",
+      attendance: "حضور رمز QR",
+      fees: "إدارة الرسوم",
+      exams: "الامتحانات والنتائج",
+      idCards: "بطاقات الهوية",
+      certificates: "الشهادات والترك",
+      notices: "الإعلانات",
+      settings: "إعدادات النظام"
+    },
+    common: {
+      save: "حفظ التغييرات",
+      cancel: "إلغاء",
+      search: "بحث...",
+      filter: "تصفية",
+      export: "تصدير",
+      print: "طباعة",
+      actions: "إجراءات",
+      status: "الحالة",
+      view: "عرض",
+      edit: "تعديل",
+      delete: "حذف",
+      submit: "إرسال",
+      approved: "مقبول",
+      pending: "قيد الانتظار",
+      rejected: "مرفوض",
+      enrolled: "مسجل",
+      all: "الكل",
+      currency: "روبية"
+    },
+    dashboard: {
+      totalStudents: "إجمالي الطلاب النشطين",
+      todayAttendance: "حضور اليوم",
+      feeCollection: "الرسوم المحصلة هذا الشهر",
+      pendingDues: "إجمالي المستحقات المتبقية",
+      quickActions: "الإجراءات السريعة",
+      recentActivities: "سجل أنشطة النظام",
+      attendanceOverview: "اتجاه الحضور الأسبوعي"
+    }
+  },
+  hi: {
+    appName: "एड्यूसर्माट ERP",
+    schoolName: "ब्राइट हॉराइजन एकेडमी",
+    tagline: "कक्षा 1 से 12 तक पूर्ण विद्यालय प्रबंधन प्रणाली",
+    dir: "ltr",
+    roles: {
+      admin: "सुपर एडमिन / प्रधानाचार्य",
+      accountant: "लेखापाल (अकाउंटेंट)",
+      teacher: "शिक्षक",
+      student: "छात्र",
+      parent: "अभिभावक",
+      scanner: "गेट स्कैनर"
+    },
+    nav: {
+      dashboard: "डैशबोर्ड",
+      academic: "अकादमिक और कक्षाएं",
+      students: "छात्र सूची",
+      admissions: "प्रवेश प्रक्रिया",
+      attendance: "क्यूआर उपस्थिति",
+      fees: "शुल्क प्रबंधन",
+      exams: "परीक्षा एवं परिणाम",
+      idCards: "छात्र पहचान पत्र",
+      certificates: "प्रमाण पत्र और एसएलसी",
+      notices: "सूचना पट्ट",
+      settings: "सिस्टम सेटिंग्स"
+    },
+    common: {
+      save: "सहेजें",
+      cancel: "रद्द करें",
+      search: "खोजें...",
+      filter: "फ़िल्टर",
+      export: "निर्यात करें",
+      print: "प्रिंट करें",
+      actions: "कार्रवाई",
+      status: "स्थिति",
+      view: "देखें",
+      edit: "संपादित करें",
+      delete: "हटाएं",
+      submit: "जमा करें",
+      approved: "स्वीकृत",
+      pending: "लंबित",
+      rejected: "अस्वीकृत",
+      enrolled: "नामांकित",
+      all: "सभी",
+      currency: "रुपये"
+    },
+    dashboard: {
+      totalStudents: "कुल सक्रिय छात्र",
+      todayAttendance: "आज की उपस्थिति",
+      feeCollection: "इस महीने की फीस संग्रह",
+      pendingDues: "कुल बकाया राशि",
+      quickActions: "त्वरित कार्रवाई",
+      recentActivities: "सिस्टम ऑडिट लॉग",
+      attendanceOverview: "साप्ताहिक उपस्थिति रुझान"
+    }
+  }
+};
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-            overflow: hidden;
-        }
+// ==========================================
+// 2. MOCK DATA GENERATOR FOR CLASSES 1-12
+// ==========================================
+const INITIAL_CLASSES = Array.from({ length: 12 }, (_, i) => {
+  const grade = i + 1;
+  let stream = 'General';
+  if (grade >= 9) stream = 'Science / Computer Science / Arts';
+  return {
+    id: `c${grade}`,
+    grade: grade,
+    name: `Class ${grade}`,
+    sections: ['A', 'B', 'C'],
+    stream: stream,
+    studentCount: 35 + Math.floor(Math.random() * 15),
+    classTeacher: `Teacher ${['Ahmed', 'Fatima', 'Zaid', 'Ayesha', 'Bilal', 'Sana', 'Usman', 'Hina', 'Tariq', 'Zainab', 'Hamza', 'Maryam'][i]}`
+  };
+});
 
-        header {
-            width: 100%;
-            max-width: 500px;
-            padding: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: var(--panel-bg);
-            border-bottom-left-radius: 12px;
-            border-bottom-right-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        }
+const INITIAL_STUDENTS = [
+  { id: 'STU-1001', name: 'Muhammad Ali', fatherName: 'Tariq Mehmood', classId: 'c10', section: 'A', bForm: '35202-1234567-1', phone: '0300-1234567', status: 'Enrolled', balance: 0, rollNo: '101', stream: 'Science', photoUrl: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&auto=format&fit=crop&q=80' },
+  { id: 'STU-1002', name: 'Ayesha Khan', fatherName: 'Imran Khan', classId: 'c10', section: 'A', bForm: '35202-7654321-2', phone: '0301-7654321', status: 'Enrolled', balance: 3500, rollNo: '102', stream: 'Science', photoUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80' },
+  { id: 'STU-1003', name: 'Zaid Hussain', fatherName: 'Shabbir Hussain', classId: 'c9', section: 'B', bForm: '35202-9988776-3', phone: '0321-9988776', status: 'Enrolled', balance: 0, rollNo: '201', stream: 'Computer Science', photoUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80' },
+  { id: 'STU-1004', name: 'Fatima Zahra', fatherName: 'Ali Raza', classId: 'c8', section: 'A', bForm: '35202-4455667-4', phone: '0333-4455667', status: 'Enrolled', balance: 7000, rollNo: '301', stream: 'General', photoUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80' },
+  { id: 'STU-1005', name: 'Hamza Farooq', fatherName: 'Farooq Ahmed', classId: 'c12', section: 'A', bForm: '35202-1122334-5', phone: '0345-1122334', status: 'Enrolled', balance: 0, rollNo: '1201', stream: 'Pre-Engineering', photoUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80' },
+  { id: 'STU-1006', name: 'Sara Usman', fatherName: 'Usman Ghani', classId: 'c5', section: 'C', bForm: '35202-5566778-6', phone: '0302-5566778', status: 'Under Review', balance: 0, rollNo: '501', stream: 'General', photoUrl: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&auto=format&fit=crop&q=80' },
+];
 
-        .header-info {
-            display: flex;
-            flex-direction: column;
-        }
+const MOCK_NOTICES = [
+  { id: 'N-1', title: 'Mid-Term Examination Date Sheet Released', date: '2026-10-20', audience: 'All', priority: 'High', content: 'Mid-term exams for Classes 1-12 start on November 5th. Detailed date sheets are available in the student portal.' },
+  { id: 'N-2', title: 'Parent-Teacher Meeting (PTM)', date: '2026-10-18', audience: 'Parents', priority: 'Medium', content: 'PTM for Q2 performance review will be held on Saturday from 9:00 AM to 1:00 PM.' },
+  { id: 'N-3', title: 'Annual Sports Gala Registration Open', date: '2026-10-15', audience: 'Students', priority: 'Low', content: 'Interested students can submit their names to physical education instructors by October 25th.' }
+];
 
-        .header-title {
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: var(--accent-color);
-        }
+const MOCK_FEE_VOUCHERS = [
+  { voucherNo: 'V-2026-1001', studentId: 'STU-1001', studentName: 'Muhammad Ali', class: 'Class 10-A', month: 'October 2026', amount: 8500, fine: 0, paidAmount: 8500, status: 'Paid', date: '2026-10-05' },
+  { voucherNo: 'V-2026-1002', studentId: 'STU-1002', studentName: 'Ayesha Khan', class: 'Class 10-A', month: 'October 2026', amount: 8500, fine: 500, paidAmount: 5500, status: 'Partial', date: '2026-10-10' },
+  { voucherNo: 'V-2026-1004', studentId: 'STU-1004', studentName: 'Fatima Zahra', class: 'Class 8-A', month: 'October 2026', amount: 7000, fine: 0, paidAmount: 0, status: 'Unpaid', date: '2026-10-01' }
+];
 
-        .chapter-name {
-            font-size: 0.75rem;
-            color: #94a3b8;
-        }
+const MOCK_EXAM_MARKS = [
+  { studentId: 'STU-1001', name: 'Muhammad Ali', math: 92, english: 85, urdu: 88, science: 94, computer: 96 },
+  { studentId: 'STU-1002', name: 'Ayesha Khan', math: 78, english: 90, urdu: 82, science: 85, computer: 89 },
+  { studentId: 'STU-1003', name: 'Zaid Hussain', math: 65, english: 72, urdu: 70, science: 68, computer: 80 }
+];
 
-        .stats-box {
-            display: flex;
-            gap: 10px;
-            font-size: 0.85rem;
-        }
+// ==========================================
+// MAIN APP COMPONENT
+// ==========================================
+export default function App() {
+  const [lang, setLang] = useState('en');
+  const [role, setRole] = useState('admin'); // admin, accountant, teacher, student, parent, scanner
+  const [activeTab, setActiveTab] = useState('dashboard');
+  const [classes, setClasses] = useState(INITIAL_CLASSES);
+  const [students, setStudents] = useState(INITIAL_STUDENTS);
+  const [notices, setNotices] = useState(MOCK_NOTICES);
+  const [vouchers, setVouchers] = useState(MOCK_FEE_VOUCHERS);
+  const [examMarks, setExamMarks] = useState(MOCK_EXAM_MARKS);
+  const [selectedStudentForID, setSelectedStudentForID] = useState(INITIAL_STUDENTS[0]);
+  const [selectedStudentForSLC, setSelectedStudentForSLC] = useState(INITIAL_STUDENTS[0]);
+  const [resultsPublished, setResultsPublished] = useState(true);
+  const [scannerActive, setScannerActive] = useState(false);
+  const [scanResult, setScanResult] = useState(null);
+  const [auditLog, setAuditLog] = useState([
+    { id: 1, user: 'Admin Principal', action: 'Published Mid-Term Date Sheet', time: '10 mins ago' },
+    { id: 2, user: 'Accountant', action: 'Issued October Fee Vouchers for Class 10', time: '1 hour ago' },
+    { id: 3, user: 'Teacher Zaid', action: 'Updated Class 9-B Mathematics Marks', time: '3 hours ago' }
+  ]);
 
-        .stat-item {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 5px 8px;
-            border-radius: 6px;
-        }
+  const t = TRANSLATIONS[lang];
+  const isRTL = t.dir === 'rtl';
 
-        #game-container {
-            width: 100%;
-            max-width: 450px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            flex-grow: 1;
-            padding: 15px;
-        }
+  // Synchronize layout direction with language state
+  useEffect(() => {
+    document.documentElement.dir = t.dir;
+    document.documentElement.lang = lang;
+  }, [lang, t.dir]);
 
-        .board {
-            display: grid;
-            gap: 8px;
-            background-color: var(--panel-bg);
-            padding: 15px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
-            position: relative;
-            max-width: 100%;
-        }
+  // Toast Notification state
+  const [toast, setToast] = useState(null);
+  const showToast = (message, type = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  };
 
-        .cell {
-            width: 52px;
-            height: 52px;
-            background-color: var(--arrow-bg);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: var(--accent-color);
-            transition: transform 0.15s, background-color 0.15s, opacity 0.2s;
-            position: relative;
-        }
+  // Metric summaries
+  const totalStudentsCount = useMemo(() => students.length * 32, [students]);
+  const totalCollectedFees = useMemo(() => vouchers.reduce((acc, v) => acc + v.paidAmount, 0), [vouchers]);
+  const totalOutstandingFees = useMemo(() => vouchers.reduce((acc, v) => acc + (acc + (v.amount + v.fine - v.paidAmount)), 0), [vouchers]);
 
-        .cell:active { transform: scale(0.9); }
-
-        .cell.blocked-anim {
-            animation: shake 0.3s ease-in-out;
-            background-color: rgba(239, 68, 68, 0.35);
-        }
-
-        .cell.hint-anim {
-            animation: pulse 0.7s infinite alternate;
-            background-color: rgba(245, 158, 11, 0.4);
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            20%, 60% { transform: translateX(-5px); }
-            40%, 80% { transform: translateX(5px); }
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.08); }
-        }
-
-        .controls {
-            width: 100%;
-            max-width: 500px;
-            padding: 15px;
-            display: flex;
-            justify-content: space-around;
-            background-color: var(--panel-bg);
-            border-top-left-radius: 16px;
-            border-top-right-radius: 16px;
-            box-shadow: 0 -4px 12px rgba(0,0,0,0.3);
-        }
-
-        .btn {
-            background-color: var(--arrow-bg);
-            border: none;
-            color: var(--text-color);
-            padding: 10px 14px;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            transition: background 0.2s;
-        }
-
-        .btn:hover { background-color: var(--accent-color); color: #0f172a; }
-
-        .modal {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.85);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s;
-        }
-
-        .modal.active { opacity: 1; pointer-events: auto; }
-
-        .modal-content {
-            background-color: var(--panel-bg);
-            padding: 25px;
-            border-radius: 16px;
-            text-align: center;
-            max-width: 340px;
-            width: 90%;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.5);
-        }
-
-        .modal-title { font-size: 1.4rem; color: var(--success-color); margin-bottom: 10px; }
-        .modal-title.stuck { color: var(--danger-color); }
-
-        .star-rating { font-size: 2rem; color: #fbbf24; margin: 15px 0; }
-
-        .level-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 8px;
-            max-height: 280px;
-            overflow-y: auto;
-            margin-top: 15px;
-            padding: 5px;
-        }
-
-        .level-btn {
-            padding: 10px 0;
-            background: var(--arrow-bg);
-            border-radius: 8px;
-            cursor: pointer;
-            text-align: center;
-            font-weight: bold;
-            font-size: 0.9rem;
-        }
-
-        .level-btn.completed { border: 2px solid var(--success-color); color: var(--success-color); }
-        .level-btn.current { background-color: var(--accent-color); color: #0f172a; }
-    </style>
-</head>
-<body>
-
-    <header>
-        <div class="header-info">
-            <div class="header-title" id="level-indicator">Level 1</div>
-            <div class="chapter-name" id="chapter-indicator">Chapter 1: Beginner</div>
+  return (
+    <div className={`min-h-screen bg-slate-50 text-slate-800 flex flex-col font-sans ${isRTL ? 'text-right' : 'text-left'}`} dir={t.dir}>
+      
+      {/* ================= TOP SWITCHER BAR ================= */}
+      <header className="bg-slate-900 text-white px-4 py-2 text-xs flex flex-wrap justify-between items-center border-b border-slate-800 gap-2 sticky top-0 z-50 shadow-md">
+        <div className="flex items-center gap-3">
+          <span className="bg-amber-500 text-slate-950 font-extrabold px-2 py-0.5 rounded tracking-wide uppercase text-[10px]">
+            Demo Controls
+          </span>
+          <div className="flex items-center gap-1 overflow-x-auto py-1">
+            <span className="text-slate-400 mr-1 hidden sm:inline">Active Role:</span>
+            {Object.keys(t.roles).map((rKey) => (
+              <button
+                key={rKey}
+                onClick={() => {
+                  setRole(rKey);
+                  showToast(`Switched view to ${t.roles[rKey]} mode`, 'info');
+                }}
+                className={`px-2.5 py-1 rounded-md transition-all font-medium whitespace-nowrap text-xs ${
+                  role === rKey 
+                    ? 'bg-blue-600 text-white shadow-sm ring-1 ring-blue-400' 
+                    : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                }`}
+              >
+                {t.roles[rKey]}
+              </button>
+            ))}
+          </div>
         </div>
-        <div class="stats-box">
-            <div class="stat-item">Moves: <span id="move-count">0</span></div>
-            <div class="stat-item">Stars: <span id="total-stars">★ 0</span></div>
+
+        {/* Language Switcher */}
+        <div className="flex items-center gap-2">
+          <Globe className="w-3.5 h-3.5 text-slate-400" />
+          <select 
+            value={lang} 
+            onChange={(e) => setLang(e.target.value)}
+            className="bg-slate-800 text-slate-200 border border-slate-700 rounded px-2 py-0.5 text-xs focus:outline-none focus:ring-1 focus:ring-amber-500"
+          >
+            <option value="en">English (EN)</option>
+            <option value="ur">اردو (Urdu)</option>
+            <option value="ar">العربية (Arabic)</option>
+            <option value="hi">हिंदी (Hindi)</option>
+          </select>
         </div>
-    </header>
+      </header>
 
-    <div id="game-container">
-        <div id="board" class="board"></div>
-    </div>
-
-    <div class="controls">
-        <button class="btn" onclick="game.undoMove()">↺ Undo</button>
-        <button class="btn" onclick="game.showHint()">💡 Hint</button>
-        <button class="btn" onclick="game.restartLevel()">🔄 Restart</button>
-        <button class="btn" onclick="ui.toggleLevelMenu(true)">📜 Levels (50)</button>
-    </div>
-
-    <!-- WIN MODAL -->
-    <div id="win-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-title">🎉 Level Cleared!</div>
-            <p>Brilliant tactical thinking!</p>
-            <div class="star-rating" id="win-stars">★★★</div>
-            <button class="btn" style="width:100%; justify-content:center; background:var(--success-color);" onclick="game.nextLevel()">Next Level ➔</button>
-        </div>
-    </div>
-
-    <!-- STUCK MODAL -->
-    <div id="stuck-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-title stuck">⚠️ No Moves Left!</div>
-            <p style="margin-bottom:15px; font-size:0.9rem; color:#94a3b8;">All remaining arrows are blocked.</p>
-            <div style="display:flex; gap:10px;">
-                <button class="btn" style="flex:1; justify-content:center;" onclick="game.undoMove(); ui.toggleStuckModal(false);">↺ Undo</button>
-                <button class="btn" style="flex:1; justify-content:center; background:var(--danger-color);" onclick="game.restartLevel(); ui.toggleStuckModal(false);">🔄 Restart</button>
+      {/* ================= MAIN BRANDING & HEADER ================= */}
+      <div className="bg-blue-900 text-white px-6 py-4 shadow-lg flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div className="flex items-center gap-4">
+          <div className="bg-amber-500 p-2.5 rounded-xl shadow-inner text-blue-950">
+            <GraduationCap className="w-8 h-8" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <h1 className="text-2xl font-black tracking-tight">{t.schoolName}</h1>
+              <span className="bg-blue-800 text-blue-200 text-xs px-2 py-0.5 rounded-full border border-blue-700 font-semibold">
+                Class 1 - 12
+              </span>
             </div>
+            <p className="text-blue-200 text-xs mt-0.5">{t.tagline} • Academic Year 2026-2027</p>
+          </div>
         </div>
-    </div>
 
-    <!-- LEVEL SELECT MODAL -->
-    <div id="levels-modal" class="modal">
-        <div class="modal-content" style="max-width: 400px;">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <h3>Select Level (1 - 50)</h3>
-                <button class="btn" onclick="ui.toggleLevelMenu(false)">✕</button>
-            </div>
-            <div id="level-list" class="level-grid"></div>
+        {/* Active Role Indicator Card */}
+        <div className="bg-blue-800/80 border border-blue-700 px-4 py-2 rounded-lg flex items-center gap-3 text-xs">
+          <Shield className="w-5 h-5 text-amber-400" />
+          <div>
+            <div className="text-blue-300 text-[10px] uppercase font-bold tracking-wider">Logged in as</div>
+            <div className="font-bold text-white text-sm">{t.roles[role]}</div>
+          </div>
         </div>
-    </div>
+      </div>
 
-    <script>
-        // SOUND GENERATOR
-        class SoundEngine {
-            constructor() {
-                this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-            }
-            playTap() { this.synthTone(400, 0.05, 'sine'); }
-            playSuccess() {
-                this.synthTone(600, 0.08, 'triangle');
-                setTimeout(() => this.synthTone(800, 0.12, 'triangle'), 80);
-            }
-            playError() { this.synthTone(150, 0.15, 'sawtooth'); }
-            playWin() {
-                [523, 659, 783, 1046].forEach((f, i) => {
-                    setTimeout(() => this.synthTone(f, 0.18, 'sine'), i * 90);
-                });
-            }
-            synthTone(freq, duration, type) {
-                if (this.ctx.state === 'suspended') this.ctx.resume();
-                const osc = this.ctx.createOscillator();
-                const gain = this.ctx.createGain();
-                osc.type = type;
-                osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
-                gain.gain.setValueAtTime(0.08, this.ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
-                osc.connect(gain);
-                gain.connect(this.ctx.destination);
-                osc.start();
-                osc.stop(this.ctx.currentTime + duration);
-            }
-        }
+      {/* ================= NAVIGATION TABS ================= */}
+      <nav className="bg-white border-b border-slate-200 px-4 flex items-center gap-1 overflow-x-auto shadow-sm sticky top-[37px] z-40">
+        {[
+          { id: 'dashboard', label: t.nav.dashboard, icon: BarChart2, allowed: ['admin', 'accountant', 'teacher', 'student', 'parent', 'scanner'] },
+          { id: 'academic', label: t.nav.academic, icon: Building, allowed: ['admin', 'teacher'] },
+          { id: 'students', label: t.nav.students, icon: Users, allowed: ['admin', 'teacher', 'accountant'] },
+          { id: 'admissions', label: t.nav.admissions, icon: UserPlus, allowed: ['admin', 'accountant'] },
+          { id: 'attendance', label: t.nav.attendance, icon: QrCode, allowed: ['admin', 'teacher', 'scanner', 'student', 'parent'] },
+          { id: 'fees', label: t.nav.fees, icon: DollarSign, allowed: ['admin', 'accountant', 'student', 'parent'] },
+          { id: 'exams', label: t.nav.exams, icon: FileText, allowed: ['admin', 'teacher', 'student', 'parent'] },
+          { id: 'idCards', label: t.nav.idCards, icon: CreditCard, allowed: ['admin', 'accountant', 'student'] },
+          { id: 'certificates', label: t.nav.certificates, icon: Award, allowed: ['admin'] },
+          { id: 'notices', label: t.nav.notices, icon: Bell, allowed: ['admin', 'accountant', 'teacher', 'student', 'parent'] },
+          { id: 'settings', label: t.nav.settings, icon: Settings, allowed: ['admin'] }
+        ]
+        .filter(tab => tab.allowed.includes(role))
+        .map(tab => {
+          const Icon = tab.icon;
+          const isActive = activeTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex items-center gap-2 px-3.5 py-3 font-semibold text-xs transition-all whitespace-nowrap border-b-2 ${
+                isActive 
+                  ? 'border-blue-600 text-blue-700 bg-blue-50/50' 
+                  : 'border-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+              }`}
+            >
+              <Icon className={`w-4 h-4 ${isActive ? 'text-blue-600' : 'text-slate-400'}`} />
+              <span>{tab.label}</span>
+            </button>
+          );
+        })}
+      </nav>
 
-        const audio = new SoundEngine();
+      {/* ================= TOAST NOTIFICATION ================= */}
+      {toast && (
+        <div className="fixed bottom-5 right-5 z-50 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 border border-slate-700 animate-bounce">
+          <Sparkles className="w-5 h-5 text-amber-400" />
+          <span className="text-xs font-semibold">{toast.message}</span>
+        </div>
+      )}
 
-        const DIRECTIONS = {
-            'U': { x: 0, y: -1, symbol: '▲' },
-            'D': { x: 0, y: 1, symbol: '▼' },
-            'L': { x: -1, y: 0, symbol: '◀' },
-            'R': { x: 1, y: 0, symbol: '▶' }
-        };
+      {/* ================= BODY CONTENT AREA ================= */}
+      <main className="flex-1 p-4 md:p-6 max-w-7xl w-full mx-auto">
 
-        // DYNAMIC 50 LEVELS GENERATOR (Guaranteed Solvable & Progressive Scaling)
-        function generateLevels() {
-            let levels = [];
-            let dirs = ['U', 'D', 'L', 'R'];
-            
-            for (let i = 0; i < 50; i++) {
-                let size = i < 10 ? 3 : (i < 25 ? 4 : (i < 40 ? 4 : 5));
-                let count = Math.min(size * size - 1, 3 + Math.floor(i / 2));
-                let grid = Array(size).fill(null).map(() => Array(size).fill(null));
-                
-                // Deterministic pseudo-random placement based on level index
-                let seed = (i + 1) * 9301 + 49297;
-                function rnd() {
-                    seed = (seed * 9301 + 49297) % 233280;
-                    return seed / 233280;
-                }
-
-                let placed = 0;
-                let attempts = 0;
-                while (placed < count && attempts < 300) {
-                    attempts++;
-                    let rx = Math.floor(rnd() * size);
-                    let ry = Math.floor(rnd() * size);
-                    if (!grid[ry][rx]) {
-                        let dIdx = Math.floor(rnd() * 4);
-                        grid[ry][rx] = { x: rx, y: ry, d: dirs[dIdx] };
-                        placed++;
-                    }
-                }
-
-                // Ensure at least one arrow points outward so the puzzle is never stuck at start
-                let hasValid = false;
-                let arrowsList = [];
-                for (let r = 0; r < size; r++) {
-                    for (let c = 0; c < size; c++) {
-                        if (grid[r][c]) {
-                            arrowsList.push(grid[r][c]);
-                        }
-                    }
-                }
-
-                // Fallback check to ensure minimum 2-3 arrows
-                if (arrowsList.length < 2) {
-                    arrowsList = [
-                        {x: 0, y: 0, d: 'R'},
-                        {x: size-1, y: size-1, d: 'L'}
-                    ];
-                    if (size > 3) arrowsList.push({x: 1, y: 1, d: 'U'});
-                }
-
-                levels.push({ grid: [size, size], arrows: arrowsList });
-            }
-            return levels;
-        }
-
-        const LEVELS = generateLevels();
-
-        class GameEngine {
-            constructor() {
-                this.currentLevelIdx = parseInt(localStorage.getItem('arrow_level_50') || '0');
-                this.moveHistory = [];
-                this.movesCount = 0;
-                this.starsEarned = parseInt(localStorage.getItem('arrow_stars_50') || '0');
-                this.grid = [];
-                this.cols = 0;
-                this.rows = 0;
-                this.isAnimating = false;
-            }
-
-            initLevel(idx) {
-                if (idx >= LEVELS.length) idx = 0;
-                this.currentLevelIdx = idx;
-                const levelData = LEVELS[idx];
-                this.cols = levelData.grid[0];
-                this.rows = levelData.grid[1];
-                this.movesCount = 0;
-                this.moveHistory = [];
-                this.isAnimating = false;
-
-                this.grid = Array(this.rows).fill(null).map(() => Array(this.cols).fill(null));
-                levelData.arrows.forEach(a => {
-                    this.grid[a.y][a.x] = { dir: a.d };
-                });
-
-                ui.renderBoard(this.grid, this.cols, this.rows);
-                ui.updateStats(this.currentLevelIdx + 1, this.movesCount, this.starsEarned);
-                localStorage.setItem('arrow_level_50', this.currentLevelIdx);
-            }
-
-            tryMove(x, y) {
-                if (this.isAnimating) return;
-                const arrow = this.grid[y][x];
-                if (!arrow) return;
-
-                if (this.canExit(x, y, arrow.dir)) {
-                    audio.playSuccess();
-                    this.saveState();
-                    this.isAnimating = true;
-
-                    ui.animateExit(x, y, arrow.dir, () => {
-                        this.grid[y][x] = null;
-                        this.movesCount++;
-                        this.isAnimating = false;
-                        ui.renderBoard(this.grid, this.cols, this.rows);
-                        ui.updateStats(this.currentLevelIdx + 1, this.movesCount, this.starsEarned);
-                        this.evaluateGameState();
-                    });
-                } else {
-                    audio.playError();
-                    ui.animateBlock(x, y);
-                }
-            }
-
-            canExit(x, y, dirKey) {
-                const vector = DIRECTIONS[dirKey];
-                let currX = x + vector.x;
-                let currY = y + vector.y;
-
-                while (currX >= 0 && currX < this.cols && currY >= 0 && currY < this.rows) {
-                    if (this.grid[currY][currX] !== null) return false;
-                    currX += vector.x;
-                    currY += vector.y;
-                }
-                return true;
-            }
-
-            evaluateGameState() {
-                let remaining = 0;
-                let validMoveAvailable = false;
-
-                for (let r = 0; r < this.rows; r++) {
-                    for (let c = 0; c < this.cols; c++) {
-                        if (this.grid[r][c]) {
-                            remaining++;
-                            if (this.canExit(c, r, this.grid[r][c].dir)) {
-                                validMoveAvailable = true;
-                            }
-                        }
-                    }
-                }
-
-                if (remaining === 0) {
-                    audio.playWin();
-                    this.starsEarned += 3;
-                    localStorage.setItem('arrow_stars_50', this.starsEarned);
-                    ui.showWinModal();
-                } else if (!validMoveAvailable) {
-                    audio.playError();
-                    ui.toggleStuckModal(true);
-                }
-            }
-
-            saveState() {
-                this.moveHistory.push(JSON.stringify(this.grid));
-            }
-
-            undoMove() {
-                if (this.moveHistory.length === 0 || this.isAnimating) return;
-                audio.playTap();
-                this.grid = JSON.parse(this.moveHistory.pop());
-                this.movesCount++;
-                ui.renderBoard(this.grid, this.cols, this.rows);
-                ui.updateStats(this.currentLevelIdx + 1, this.movesCount, this.starsEarned);
-            }
-
-            showHint() {
-                for (let r = 0; r < this.rows; r++) {
-                    for (let c = 0; c < this.cols; c++) {
-                        if (this.grid[r][c] && this.canExit(c, r, this.grid[r][c].dir)) {
-                            audio.playTap();
-                            ui.highlightHint(c, r);
-                            return;
-                        }
-                    }
-                }
-            }
-
-            restartLevel() {
-                audio.playTap();
-                this.initLevel(this.currentLevelIdx);
-            }
-
-            nextLevel() {
-                ui.toggleWinModal(false);
-                this.initLevel(this.currentLevelIdx + 1);
-            }
-        }
-
-        class UIManager {
-            constructor() {
-                this.boardEl = document.getElementById('board');
-                this.levelInd = document.getElementById('level-indicator');
-                this.chapterInd = document.getElementById('chapter-indicator');
-                this.moveInd = document.getElementById('move-count');
-                this.starInd = document.getElementById('total-stars');
-            }
-
-            renderBoard(grid, cols, rows) {
-                this.boardEl.innerHTML = '';
-                this.boardEl.style.gridTemplateColumns = `repeat(${cols}, 52px)`;
-                this.boardEl.style.gridTemplateRows = `repeat(${rows}, 52px)`;
-
-                for (let r = 0; r < rows; r++) {
-                    for (let c = 0; c < cols; c++) {
-                        const cell = document.createElement('div');
-                        cell.className = 'cell';
-                        cell.dataset.x = c;
-                        cell.dataset.y = r;
-
-                        const item = grid[r][c];
-                        if (item) {
-                            cell.innerHTML = DIRECTIONS[item.dir].symbol;
-                            cell.onclick = () => game.tryMove(c, r);
-                        } else {
-                            cell.style.visibility = 'hidden';
-                        }
-                        this.boardEl.appendChild(cell);
-                    }
-                }
-            }
-
-            updateStats(level, moves, stars) {
-                this.levelInd.innerText = `Level ${level}`;
-                this.moveInd.innerText = moves;
-                this.starInd.innerText = `★ ${stars}`;
-
-                let chapter = "Chapter 1: Beginner (3x3)";
-                if (level > 10 && level <= 25) chapter = "Chapter 2: Intermediate (4x4)";
-                else if (level > 25 && level <= 40) chapter = "Chapter 3: Advanced (4x4)";
-                else if (level > 40) chapter = "Chapter 4: Master Challenge (5x5)";
-                this.chapterInd.innerText = chapter;
-            }
-
-            animateBlock(x, y) {
-                const el = this.getCellEl(x, y);
-                if (el) {
-                    el.classList.add('blocked-anim');
-                    setTim
-                    
+        {/* ------------------ 1. DASHBOARD ----
