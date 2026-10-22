@@ -1,452 +1,374 @@
-```react
-import React, { useState, useEffect, useMemo } from 'react';
-import { 
-  Users, UserCheck, Shield, GraduationCap, DollarSign, Calendar, BookOpen, 
-  FileText, QrCode, Bell, Settings, Award, Layers, Plus, Search, Filter, 
-  CheckCircle, XCircle, Clock, AlertTriangle, Printer, Download, Share2, 
-  RefreshCw, ChevronRight, Eye, Edit3, Trash2, Check, Lock, Unlock, LogOut,
-  Globe, Sparkles, Building, Phone, Mail, MapPin, CreditCard, ChevronDown,
-  BarChart2, TrendingUp, CheckSquare, XSquare, Camera, ArrowRight, ArrowLeft,
-  UserPlus, FileCheck, Bookmark, Send, HelpCircle, CheckCircle2, ChevronUp
-} from 'lucide-react';
+import React, { useState } from 'react';
 
-// ==========================================
-// 1. DICTIONARIES & LOCALIZATION (EN, UR, AR, HI)
-// ==========================================
+// --- MOCK DATA & TRANSLATIONS ---
 const TRANSLATIONS = {
   en: {
-    appName: "EduSmart ERP",
     schoolName: "Bright Horizon Academy",
-    tagline: "Class 1-12 Complete School Management System",
-    dir: "ltr",
-    roles: {
-      admin: "Super Admin / Principal",
-      accountant: "Accountant",
-      teacher: "Teacher",
-      student: "Student",
-      parent: "Parent",
-      scanner: "Gate Scanner"
-    },
-    nav: {
-      dashboard: "Dashboard",
-      academic: "Academic & Classes",
-      students: "Student Roster",
-      admissions: "Admissions Workflow",
-      attendance: "QR Attendance",
-      fees: "Fee Management",
-      exams: "Exams & Results",
-      idCards: "Student ID Cards",
-      certificates: "SLC & Certificates",
-      notices: "Notices & Broadcast",
-      settings: "System Settings"
-    },
-    common: {
-      save: "Save Changes",
-      cancel: "Cancel",
-      search: "Search...",
-      filter: "Filter",
-      export: "Export CSV/PDF",
-      print: "Print Document",
-      actions: "Actions",
-      status: "Status",
-      view: "View",
-      edit: "Edit",
-      delete: "Delete",
-      submit: "Submit",
-      approved: "Approved",
-      pending: "Pending",
-      rejected: "Rejected",
-      enrolled: "Enrolled",
-      all: "All",
-      currency: "PKR (Rs.)"
-    },
-    dashboard: {
-      totalStudents: "Total Active Students",
-      todayAttendance: "Today's Attendance",
-      feeCollection: "Fee Collected (This Month)",
-      pendingDues: "Total Outstanding Dues",
-      quickActions: "Quick Actions & Operations",
-      recentActivities: "System Audit Log & Activity Stream",
-      attendanceOverview: "Weekly Attendance Trend"
-    }
+    dashboard: "Dashboard",
+    adminCenter: "Admin Center",
+    admissions: "Admissions",
+    attendance: "QR Attendance",
+    fees: "Fee Management",
+    exams: "Exams & Results",
+    idCards: "ID Cards & Certs",
+    notices: "Notices",
+    totalStudents: "Total Students",
+    feeCollected: "Fee Collected",
+    todayAttendance: "Attendance Rate",
+    pendingAdmissions: "Pending Admissions",
+    quickActions: "Quick Actions",
+    scanQR: "Scan Student QR",
+    payFee: "Pay Fee Voucher",
+    enterMarks: "Enter Exam Marks",
+    issueSLC: "Issue Leaving Cert"
   },
   ur: {
-    appName: "ایجو سمارٹ ERP",
-    schoolName: "برائٹ ہورائزن اکیڈمی",
-    tagline: "جماعت 1 تا 12 مکمل اسکول مینجمنٹ سسٹم",
-    dir: "rtl",
-    roles: {
-      admin: "سپر ایڈمن / پرنسپل",
-      accountant: "اکاؤنٹنٹ",
-      teacher: "استاد / ٹیچر",
-      student: "طالب علم",
-      parent: "والدین",
-      scanner: "گیٹ اسکینر"
-    },
-    nav: {
-      dashboard: "ڈیش بورڈ",
-      academic: "تعليمى شعبہ و کلاسز",
-      students: "طلباء کی فہرست",
-      admissions: "نئے داخلے",
-      attendance: "کیو آر حاضری",
-      fees: "فیس کی وصولی",
-      exams: "امتحانات و نتائج",
-      idCards: "اسٹوڈنٹ شناختی کارڈ",
-      certificates: "سرٹیفکیٹ و ایس ایل سی",
-      notices: "نوٹس بورڈ",
-      settings: "سسٹم سیٹنگز"
-    },
-    common: {
-      save: "محفوظ کریں",
-      cancel: "منسوخ کریں",
-      search: "تلاش کریں...",
-      filter: "فلٹر",
-      export: "ایکسپورٹ کریں",
-      print: "پرنٹ کریں",
-      actions: "کارروائی",
-      status: "حالت",
-      view: "دیکھیں",
-      edit: "ترمیم",
-      delete: "حذف کریں",
-      submit: "جمع کرائیں",
-      approved: "منظور شدہ",
-      pending: "زیر التواء",
-      rejected: "مسترد",
-      enrolled: "داخل شدہ",
-      all: "تمام",
-      currency: "روپے"
-    },
-    dashboard: {
-      totalStudents: "کل فعال طلباء",
-      todayAttendance: "آج کی حاضری",
-      feeCollection: "اس ماہ کی وصولی",
-      pendingDues: "بقایا جات",
-      quickActions: "فوری اقدامات",
-      recentActivities: "سسٹم کی سرگرمیاں",
-      attendanceOverview: "ہفتہ وار حاضری کی صورتحال"
-    }
+    schoolName: "برائٹ ہائزن اکیڈمی",
+    dashboard: "ڈیش بورڈ",
+    adminCenter: "ایڈمن سینٹر",
+    admissions: "داخلے",
+    attendance: "کیو آر حاضری",
+    fees: "فیس انتظام",
+    exams: "امتحانات اور نتائج",
+    idCards: "شناختی کارڈ اور اسناد",
+    notices: "نوٹس",
+    totalStudents: "کل طلباء",
+    feeCollected: "وصول شدہ فیس",
+    todayAttendance: "حاضری کی شرح",
+    pendingAdmissions: "زیر التواء داخلے",
+    quickActions: "فوری اقدامات",
+    scanQR: "طالب علم کا کیو آر سکین کریں",
+    payFee: "فیس واؤچر ادا کریں",
+    enterMarks: "امتحانی نمبر درج کریں",
+    issueSLC: "اسکول چھوڑنے کا سرٹیفکیٹ"
   },
   ar: {
-    appName: "إديوسمارت ERP",
-    schoolName: "أكاديمية الأفق المشرق",
-    tagline: "نظام إدارة المدارس الشامل (من الصف 1 إلى 12)",
-    dir: "rtl",
-    roles: {
-      admin: "المشرف العام / مدیر",
-      accountant: "المحاسب",
-      teacher: "المعلم",
-      student: "الطالب",
-      parent: "ولي الأمر",
-      scanner: "ماسح البوابة"
-    },
-    nav: {
-      dashboard: "لوحة التحكم",
-      academic: "الأكاديمية والفصول",
-      students: "قائمة الطلاب",
-      admissions: "إجراءات القبول",
-      attendance: "حضور رمز QR",
-      fees: "إدارة الرسوم",
-      exams: "الامتحانات والنتائج",
-      idCards: "بطاقات الهوية",
-      certificates: "الشهادات والترك",
-      notices: "الإعلانات",
-      settings: "إعدادات النظام"
-    },
-    common: {
-      save: "حفظ التغييرات",
-      cancel: "إلغاء",
-      search: "بحث...",
-      filter: "تصفية",
-      export: "تصدير",
-      print: "طباعة",
-      actions: "إجراءات",
-      status: "الحالة",
-      view: "عرض",
-      edit: "تعديل",
-      delete: "حذف",
-      submit: "إرسال",
-      approved: "مقبول",
-      pending: "قيد الانتظار",
-      rejected: "مرفوض",
-      enrolled: "مسجل",
-      all: "الكل",
-      currency: "روبية"
-    },
-    dashboard: {
-      totalStudents: "إجمالي الطلاب النشطين",
-      todayAttendance: "حضور اليوم",
-      feeCollection: "الرسوم المحصلة هذا الشهر",
-      pendingDues: "إجمالي المستحقات المتبقية",
-      quickActions: "الإجراءات السريعة",
-      recentActivities: "سجل أنشطة النظام",
-      attendanceOverview: "اتجاه الحضور الأسبوعي"
-    }
+    schoolName: "أكاديمية برايت هورايزون",
+    dashboard: "لوحة القيادة",
+    adminCenter: "مركز الإدارة",
+    admissions: "القبول والتسجيل",
+    attendance: "حضور QR",
+    fees: "إدارة الرسوم",
+    exams: "الامتحانات والنتائج",
+    idCards: "بطاقات الهوية والشهادات",
+    notices: "الإشعارات",
+    totalStudents: "إجمالي الطلاب",
+    feeCollected: "الرسوم المحصلة",
+    todayAttendance: "معدل الحضور",
+    pendingAdmissions: "طلبات قيد الانتظار",
+    quickActions: "إجراءات سريعة",
+    scanQR: "مسح رمز الطالب",
+    payFee: "دفع رسوم القسيمة",
+    enterMarks: "إدخال الدرجات",
+    issueSLC: "إصدار شهادة مغادرة"
   },
   hi: {
-    appName: "एड्यूसर्माट ERP",
-    schoolName: "ब्राइट हॉराइजन एकेडमी",
-    tagline: "कक्षा 1 से 12 तक पूर्ण विद्यालय प्रबंधन प्रणाली",
-    dir: "ltr",
-    roles: {
-      admin: "सुपर एडमिन / प्रधानाचार्य",
-      accountant: "लेखापाल (अकाउंटेंट)",
-      teacher: "शिक्षक",
-      student: "छात्र",
-      parent: "अभिभावक",
-      scanner: "गेट स्कैनर"
-    },
-    nav: {
-      dashboard: "डैशबोर्ड",
-      academic: "अकादमिक और कक्षाएं",
-      students: "छात्र सूची",
-      admissions: "प्रवेश प्रक्रिया",
-      attendance: "क्यूआर उपस्थिति",
-      fees: "शुल्क प्रबंधन",
-      exams: "परीक्षा एवं परिणाम",
-      idCards: "छात्र पहचान पत्र",
-      certificates: "प्रमाण पत्र और एसएलसी",
-      notices: "सूचना पट्ट",
-      settings: "सिस्टम सेटिंग्स"
-    },
-    common: {
-      save: "सहेजें",
-      cancel: "रद्द करें",
-      search: "खोजें...",
-      filter: "फ़िल्टर",
-      export: "निर्यात करें",
-      print: "प्रिंट करें",
-      actions: "कार्रवाई",
-      status: "स्थिति",
-      view: "देखें",
-      edit: "संपादित करें",
-      delete: "हटाएं",
-      submit: "जमा करें",
-      approved: "स्वीकृत",
-      pending: "लंबित",
-      rejected: "अस्वीकृत",
-      enrolled: "नामांकित",
-      all: "सभी",
-      currency: "रुपये"
-    },
-    dashboard: {
-      totalStudents: "कुल सक्रिय छात्र",
-      todayAttendance: "आज की उपस्थिति",
-      feeCollection: "इस महीने की फीस संग्रह",
-      pendingDues: "कुल बकाया राशि",
-      quickActions: "त्वरित कार्रवाई",
-      recentActivities: "सिस्टम ऑडिट लॉग",
-      attendanceOverview: "साप्ताहिक उपस्थिति रुझान"
-    }
+    schoolName: "ब्राइट क्षितिज अकादमी",
+    dashboard: "डैशबोर्ड",
+    adminCenter: "एडमिन सेंटर",
+    admissions: "प्रवेश",
+    attendance: "क्यूआर उपस्थिति",
+    fees: "फीस प्रबंधन",
+    exams: "परीक्षा और परिणाम",
+    idCards: "आईडी कार्ड और प्रमाण पत्र",
+    notices: "सूचनाएं",
+    totalStudents: "कुल छात्र",
+    feeCollected: "संग्रहित शुल्क",
+    todayAttendance: "उपस्थिति दर",
+    pendingAdmissions: "लंबित प्रवेश",
+    quickActions: "त्वरित कार्रवाई",
+    scanQR: "छात्र क्यूआर स्कैन करें",
+    payFee: "फीस वाउचर भुगतान",
+    enterMarks: "परीक्षा अंक दर्ज करें",
+    issueSLC: "स्कूल छोड़ने का प्रमाण पत्र"
   }
 };
 
-// ==========================================
-// 2. MOCK DATA GENERATOR FOR CLASSES 1-12
-// ==========================================
-const INITIAL_CLASSES = Array.from({ length: 12 }, (_, i) => {
-  const grade = i + 1;
-  let stream = 'General';
-  if (grade >= 9) stream = 'Science / Computer Science / Arts';
-  return {
-    id: `c${grade}`,
-    grade: grade,
-    name: `Class ${grade}`,
-    sections: ['A', 'B', 'C'],
-    stream: stream,
-    studentCount: 35 + Math.floor(Math.random() * 15),
-    classTeacher: `Teacher ${['Ahmed', 'Fatima', 'Zaid', 'Ayesha', 'Bilal', 'Sana', 'Usman', 'Hina', 'Tariq', 'Zainab', 'Hamza', 'Maryam'][i]}`
-  };
-});
-
 const INITIAL_STUDENTS = [
-  { id: 'STU-1001', name: 'Muhammad Ali', fatherName: 'Tariq Mehmood', classId: 'c10', section: 'A', bForm: '35202-1234567-1', phone: '0300-1234567', status: 'Enrolled', balance: 0, rollNo: '101', stream: 'Science', photoUrl: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&auto=format&fit=crop&q=80' },
-  { id: 'STU-1002', name: 'Ayesha Khan', fatherName: 'Imran Khan', classId: 'c10', section: 'A', bForm: '35202-7654321-2', phone: '0301-7654321', status: 'Enrolled', balance: 3500, rollNo: '102', stream: 'Science', photoUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80' },
-  { id: 'STU-1003', name: 'Zaid Hussain', fatherName: 'Shabbir Hussain', classId: 'c9', section: 'B', bForm: '35202-9988776-3', phone: '0321-9988776', status: 'Enrolled', balance: 0, rollNo: '201', stream: 'Computer Science', photoUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80' },
-  { id: 'STU-1004', name: 'Fatima Zahra', fatherName: 'Ali Raza', classId: 'c8', section: 'A', bForm: '35202-4455667-4', phone: '0333-4455667', status: 'Enrolled', balance: 7000, rollNo: '301', stream: 'General', photoUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80' },
-  { id: 'STU-1005', name: 'Hamza Farooq', fatherName: 'Farooq Ahmed', classId: 'c12', section: 'A', bForm: '35202-1122334-5', phone: '0345-1122334', status: 'Enrolled', balance: 0, rollNo: '1201', stream: 'Pre-Engineering', photoUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80' },
-  { id: 'STU-1006', name: 'Sara Usman', fatherName: 'Usman Ghani', classId: 'c5', section: 'C', bForm: '35202-5566778-6', phone: '0302-5566778', status: 'Under Review', balance: 0, rollNo: '501', stream: 'General', photoUrl: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&auto=format&fit=crop&q=80' },
+  { id: 1, name: "Ayaan Khan", class: "Class 10", section: "A", admissionNo: "BHA-2026-1001", status: "Present", feeStatus: "Paid", attendanceRate: "96%" },
+  { id: 2, name: "Fatima Noor", class: "Class 8", section: "B", admissionNo: "BHA-2026-1002", status: "Present", feeStatus: "Pending", attendanceRate: "92%" },
+  { id: 3, name: "Zainab Ali", class: "Class 5", section: "A", admissionNo: "BHA-2026-1003", status: "Absent", feeStatus: "Paid", attendanceRate: "88%" },
+  { id: 4, name: "Hamza Ahmed", class: "Class 12", section: "Science", admissionNo: "BHA-2026-1004", status: "Present", feeStatus: "Paid", attendanceRate: "95%" }
 ];
 
-const MOCK_NOTICES = [
-  { id: 'N-1', title: 'Mid-Term Examination Date Sheet Released', date: '2026-10-20', audience: 'All', priority: 'High', content: 'Mid-term exams for Classes 1-12 start on November 5th. Detailed date sheets are available in the student portal.' },
-  { id: 'N-2', title: 'Parent-Teacher Meeting (PTM)', date: '2026-10-18', audience: 'Parents', priority: 'Medium', content: 'PTM for Q2 performance review will be held on Saturday from 9:00 AM to 1:00 PM.' },
-  { id: 'N-3', title: 'Annual Sports Gala Registration Open', date: '2026-10-15', audience: 'Students', priority: 'Low', content: 'Interested students can submit their names to physical education instructors by October 25th.' }
-];
-
-const MOCK_FEE_VOUCHERS = [
-  { voucherNo: 'V-2026-1001', studentId: 'STU-1001', studentName: 'Muhammad Ali', class: 'Class 10-A', month: 'October 2026', amount: 8500, fine: 0, paidAmount: 8500, status: 'Paid', date: '2026-10-05' },
-  { voucherNo: 'V-2026-1002', studentId: 'STU-1002', studentName: 'Ayesha Khan', class: 'Class 10-A', month: 'October 2026', amount: 8500, fine: 500, paidAmount: 5500, status: 'Partial', date: '2026-10-10' },
-  { voucherNo: 'V-2026-1004', studentId: 'STU-1004', studentName: 'Fatima Zahra', class: 'Class 8-A', month: 'October 2026', amount: 7000, fine: 0, paidAmount: 0, status: 'Unpaid', date: '2026-10-01' }
-];
-
-const MOCK_EXAM_MARKS = [
-  { studentId: 'STU-1001', name: 'Muhammad Ali', math: 92, english: 85, urdu: 88, science: 94, computer: 96 },
-  { studentId: 'STU-1002', name: 'Ayesha Khan', math: 78, english: 90, urdu: 82, science: 85, computer: 89 },
-  { studentId: 'STU-1003', name: 'Zaid Hussain', math: 65, english: 72, urdu: 70, science: 68, computer: 80 }
-];
-
-// ==========================================
-// MAIN APP COMPONENT
-// ==========================================
-export default function App() {
+export default function SchoolManagementApp() {
+  const [currentRole, setCurrentRole] = useState('super_admin'); // super_admin, accountant, teacher, student, parent, gate_scanner
   const [lang, setLang] = useState('en');
-  const [role, setRole] = useState('admin'); // admin, accountant, teacher, student, parent, scanner
   const [activeTab, setActiveTab] = useState('dashboard');
-  const [classes, setClasses] = useState(INITIAL_CLASSES);
   const [students, setStudents] = useState(INITIAL_STUDENTS);
-  const [notices, setNotices] = useState(MOCK_NOTICES);
-  const [vouchers, setVouchers] = useState(MOCK_FEE_VOUCHERS);
-  const [examMarks, setExamMarks] = useState(MOCK_EXAM_MARKS);
-  const [selectedStudentForID, setSelectedStudentForID] = useState(INITIAL_STUDENTS[0]);
-  const [selectedStudentForSLC, setSelectedStudentForSLC] = useState(INITIAL_STUDENTS[0]);
-  const [resultsPublished, setResultsPublished] = useState(true);
-  const [scannerActive, setScannerActive] = useState(false);
-  const [scanResult, setScanResult] = useState(null);
-  const [auditLog, setAuditLog] = useState([
-    { id: 1, user: 'Admin Principal', action: 'Published Mid-Term Date Sheet', time: '10 mins ago' },
-    { id: 2, user: 'Accountant', action: 'Issued October Fee Vouchers for Class 10', time: '1 hour ago' },
-    { id: 3, user: 'Teacher Zaid', action: 'Updated Class 9-B Mathematics Marks', time: '3 hours ago' }
-  ]);
+  const [scannedMessage, setScannedMessage] = useState(null);
 
   const t = TRANSLATIONS[lang];
-  const isRTL = t.dir === 'rtl';
+  const isRtl = lang === 'ur' || lang === 'ar';
 
-  // Synchronize layout direction with language state
-  useEffect(() => {
-    document.documentElement.dir = t.dir;
-    document.documentElement.lang = lang;
-  }, [lang, t.dir]);
-
-  // Toast Notification state
-  const [toast, setToast] = useState(null);
-  const showToast = (message, type = 'success') => {
-    setToast({ message, type });
-    setTimeout(() => setToast(null), 3000);
+  // Quick Action Handler for QR Scan simulation
+  const simulateScan = (student) => {
+    setScannedMessage(`Verified: ${student.name} (${student.class}-${student.section}) - Attendance Marked Successfully at ${new Date().toLocaleTimeString()}`);
+    setTimeout(() => setScannedMessage(null), 4000);
   };
 
-  // Metric summaries
-  const totalStudentsCount = useMemo(() => students.length * 32, [students]);
-  const totalCollectedFees = useMemo(() => vouchers.reduce((acc, v) => acc + v.paidAmount, 0), [vouchers]);
-  const totalOutstandingFees = useMemo(() => vouchers.reduce((acc, v) => acc + (acc + (v.amount + v.fine - v.paidAmount)), 0), [vouchers]);
-
   return (
-    <div className={`min-h-screen bg-slate-50 text-slate-800 flex flex-col font-sans ${isRTL ? 'text-right' : 'text-left'}`} dir={t.dir}>
+    <div dir={isRtl ? "rtl" : "ltr"} className="min-h-screen bg-slate-50 font-sans text-slate-800 flex flex-col">
       
-      {/* ================= TOP SWITCHER BAR ================= */}
-      <header className="bg-slate-900 text-white px-4 py-2 text-xs flex flex-wrap justify-between items-center border-b border-slate-800 gap-2 sticky top-0 z-50 shadow-md">
-        <div className="flex items-center gap-3">
-          <span className="bg-amber-500 text-slate-950 font-extrabold px-2 py-0.5 rounded tracking-wide uppercase text-[10px]">
-            Demo Controls
-          </span>
-          <div className="flex items-center gap-1 overflow-x-auto py-1">
-            <span className="text-slate-400 mr-1 hidden sm:inline">Active Role:</span>
-            {Object.keys(t.roles).map((rKey) => (
+      {/* TOP CONFIGURATION BAR (Role & Language Switcher) */}
+      <header className="bg-slate-900 text-white px-6 py-3 flex flex-wrap justify-between items-center shadow-md">
+        <div className="flex items-center space-x-3 rtl:space-x-reverse">
+          <div className="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center font-bold text-lg">🎓</div>
+          <div>
+            <h1 className="font-bold text-lg leading-tight">{t.schoolName}</h1>
+            <p className="text-xs text-slate-400">Enterprise School OS (Classes 1–12)</p>
+          </div>
+        </div>
+
+        <div className="flex items-center space-x-4 rtl:space-x-reverse mt-2 sm:mt-0">
+          {/* Role Selector */}
+          <div className="flex items-center bg-slate-800 rounded-lg px-3 py-1.5 border border-slate-700">
+            <span className="text-xs text-slate-400 mr-2 rtl:ml-2">Role:</span>
+            <select 
+              value={currentRole} 
+              onChange={(e) => setCurrentRole(e.target.value)}
+              className="bg-transparent text-sm font-medium text-blue-400 focus:outline-none cursor-pointer"
+            >
+              <option value="super_admin" className="bg-slate-800 text-white">Super Admin / Principal</option>
+              <option value="accountant" className="bg-slate-800 text-white">Accountant</option>
+              <option value="teacher" className="bg-slate-800 text-white">Teacher</option>
+              <option value="student" className="bg-slate-800 text-white">Student</option>
+              <option value="parent" className="bg-slate-800 text-white">Parent</option>
+              <option value="gate_scanner" className="bg-slate-800 text-white">Gate Scanner / Staff</option>
+            </select>
+          </div>
+
+          {/* Language Selector */}
+          <div className="flex bg-slate-800 rounded-lg p-1 border border-slate-700">
+            {['en', 'ur', 'ar', 'hi'].map((l) => (
               <button
-                key={rKey}
-                onClick={() => {
-                  setRole(rKey);
-                  showToast(`Switched view to ${t.roles[rKey]} mode`, 'info');
-                }}
-                className={`px-2.5 py-1 rounded-md transition-all font-medium whitespace-nowrap text-xs ${
-                  role === rKey 
-                    ? 'bg-blue-600 text-white shadow-sm ring-1 ring-blue-400' 
-                    : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
-                }`}
+                key={l}
+                onClick={() => setLang(l)}
+                className={`px-2.5 py-1 text-xs rounded uppercase font-semibold transition ${lang === l ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'}`}
               >
-                {t.roles[rKey]}
+                {l}
               </button>
             ))}
           </div>
         </div>
-
-        {/* Language Switcher */}
-        <div className="flex items-center gap-2">
-          <Globe className="w-3.5 h-3.5 text-slate-400" />
-          <select 
-            value={lang} 
-            onChange={(e) => setLang(e.target.value)}
-            className="bg-slate-800 text-slate-200 border border-slate-700 rounded px-2 py-0.5 text-xs focus:outline-none focus:ring-1 focus:ring-amber-500"
-          >
-            <option value="en">English (EN)</option>
-            <option value="ur">اردو (Urdu)</option>
-            <option value="ar">العربية (Arabic)</option>
-            <option value="hi">हिंदी (Hindi)</option>
-          </select>
-        </div>
       </header>
 
-      {/* ================= MAIN BRANDING & HEADER ================= */}
-      <div className="bg-blue-900 text-white px-6 py-4 shadow-lg flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div className="flex items-center gap-4">
-          <div className="bg-amber-500 p-2.5 rounded-xl shadow-inner text-blue-950">
-            <GraduationCap className="w-8 h-8" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-2xl font-black tracking-tight">{t.schoolName}</h1>
-              <span className="bg-blue-800 text-blue-200 text-xs px-2 py-0.5 rounded-full border border-blue-700 font-semibold">
-                Class 1 - 12
-              </span>
-            </div>
-            <p className="text-blue-200 text-xs mt-0.5">{t.tagline} • Academic Year 2026-2027</p>
-          </div>
-        </div>
-
-        {/* Active Role Indicator Card */}
-        <div className="bg-blue-800/80 border border-blue-700 px-4 py-2 rounded-lg flex items-center gap-3 text-xs">
-          <Shield className="w-5 h-5 text-amber-400" />
-          <div>
-            <div className="text-blue-300 text-[10px] uppercase font-bold tracking-wider">Logged in as</div>
-            <div className="font-bold text-white text-sm">{t.roles[role]}</div>
-          </div>
-        </div>
-      </div>
-
-      {/* ================= NAVIGATION TABS ================= */}
-      <nav className="bg-white border-b border-slate-200 px-4 flex items-center gap-1 overflow-x-auto shadow-sm sticky top-[37px] z-40">
-        {[
-          { id: 'dashboard', label: t.nav.dashboard, icon: BarChart2, allowed: ['admin', 'accountant', 'teacher', 'student', 'parent', 'scanner'] },
-          { id: 'academic', label: t.nav.academic, icon: Building, allowed: ['admin', 'teacher'] },
-          { id: 'students', label: t.nav.students, icon: Users, allowed: ['admin', 'teacher', 'accountant'] },
-          { id: 'admissions', label: t.nav.admissions, icon: UserPlus, allowed: ['admin', 'accountant'] },
-          { id: 'attendance', label: t.nav.attendance, icon: QrCode, allowed: ['admin', 'teacher', 'scanner', 'student', 'parent'] },
-          { id: 'fees', label: t.nav.fees, icon: DollarSign, allowed: ['admin', 'accountant', 'student', 'parent'] },
-          { id: 'exams', label: t.nav.exams, icon: FileText, allowed: ['admin', 'teacher', 'student', 'parent'] },
-          { id: 'idCards', label: t.nav.idCards, icon: CreditCard, allowed: ['admin', 'accountant', 'student'] },
-          { id: 'certificates', label: t.nav.certificates, icon: Award, allowed: ['admin'] },
-          { id: 'notices', label: t.nav.notices, icon: Bell, allowed: ['admin', 'accountant', 'teacher', 'student', 'parent'] },
-          { id: 'settings', label: t.nav.settings, icon: Settings, allowed: ['admin'] }
-        ]
-        .filter(tab => tab.allowed.includes(role))
-        .map(tab => {
-          const Icon = tab.icon;
-          const isActive = activeTab === tab.id;
-          return (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-3.5 py-3 font-semibold text-xs transition-all whitespace-nowrap border-b-2 ${
-                isActive 
-                  ? 'border-blue-600 text-blue-700 bg-blue-50/50' 
-                  : 'border-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-              }`}
-            >
-              <Icon className={`w-4 h-4 ${isActive ? 'text-blue-600' : 'text-slate-400'}`} />
-              <span>{tab.label}</span>
-            </button>
-          );
-        })}
-      </nav>
-
-      {/* ================= TOAST NOTIFICATION ================= */}
-      {toast && (
-        <div className="fixed bottom-5 right-5 z-50 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 border border-slate-700 animate-bounce">
-          <Sparkles className="w-5 h-5 text-amber-400" />
-          <span className="text-xs font-semibold">{toast.message}</span>
+      {/* SCANNER NOTIFICATION TOAST */}
+      {scannedMessage && (
+        <div className="bg-emerald-600 text-white text-center py-2.5 px-4 font-medium shadow-lg animate-fade-in flex items-center justify-center space-x-2">
+          <span>✅</span>
+          <span>{scannedMessage}</span>
         </div>
       )}
 
-      {/* ================= BODY CONTENT AREA ================= */}
-      <main className="flex-1 p-4 md:p-6 max-w-7xl w-full mx-auto">
+      {/* MAIN APPLICATION CONTAINER */}
+      <div className="flex flex-1 overflow-hidden">
+        
+        {/* SIDEBAR NAVIGATION */}
+        <aside className="w-64 bg-white border-r border-slate-200 p-4 flex flex-col justify-between hidden md:flex">
+          <nav className="space-y-1">
+            {[
+              { id: 'dashboard', label: t.dashboard, icon: '📊', roles: ['super_admin', 'accountant', 'teacher', 'student', 'parent', 'gate_scanner'] },
+              { id: 'admin_center', label: t.adminCenter, icon: '⚙️', roles: ['super_admin'] },
+              { id: 'admissions', label: t.admissions, icon: '📝', roles: ['super_admin', 'accountant'] },
+              { id: 'attendance', label: t.attendance, icon: '📷', roles: ['super_admin', 'teacher', 'gate_scanner'] },
+              { id: 'fees', label: t.fees, icon: '💳', roles: ['super_admin', 'accountant', 'parent', 'student'] },
+              { id: 'exams', label: t.exams, icon: '📋', roles: ['super_admin', 'teacher', 'student', 'parent'] },
+              { id: 'id_cards', label: t.idCards, icon: '🪪', roles: ['super_admin', 'teacher'] },
+              { id: 'notices', label: t.notices, icon: '🔔', roles: ['super_admin', 'teacher', 'student', 'parent', 'gate_scanner'] }
+            ]
+            .filter(item => item.roles.includes(currentRole))
+            .map(item => (
+              <button
+                key={item.id}
+                onClick={() => setActiveTab(item.id)}
+                className={`w-full flex items-center space-x-3 rtl:space-x-reverse px-4 py-3 rounded-xl text-sm font-medium transition ${activeTab === item.id ? 'bg-blue-50 text-blue-700 font-semibold shadow-sm' : 'text-slate-600 hover:bg-slate-100'}`}
+              >
+                <span className="text-lg">{item.icon}</span>
+                <span>{item.label}</span>
+              </button>
+            ))}
+          </nav>
 
-        {/* ------------------ 1. DASHBOARD ----
+          <div className="bg-blue-50 p-3 rounded-xl border border-blue-100">
+            <p className="text-xs font-bold text-blue-900 uppercase">Active Role View</p>
+            <p className="text-xs text-blue-700 mt-0.5 capitalize font-medium">{currentRole.replace('_', ' ')}</p>
+          </div>
+        </aside>
+
+        {/* CONTENT AREA */}
+        <main className="flex-1 p-6 overflow-y-auto bg-slate-50">
+          
+          {/* DASHBOARD VIEW */}
+          {activeTab === 'dashboard' && (
+            <div className="space-y-6">
+              <div className="flex justify-between items-center">
+                <div>
+                  <h2 className="text-2xl font-bold text-slate-900">Welcome Back, Principal</h2>
+                  <p className="text-sm text-slate-500">Academic Year: 2026–2027 | Term 1 Active</p>
+                </div>
+                <div className="flex space-x-3 rtl:space-x-reverse">
+                  <button onClick={() => setActiveTab('attendance')} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow transition">
+                    📷 {t.scanQR}
+                  </button>
+                  <button onClick={() => setActiveTab('fees')} className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow transition">
+                    💳 {t.payFee}
+                  </button>
+                </div>
+              </div>
+
+              {/* KPI STATS CARDS */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                  <p className="text-xs font-semibold text-slate-400 uppercase">{t.totalStudents}</p>
+                  <p className="text-3xl font-extrabold text-slate-900 mt-2">1,480</p>
+                  <p className="text-xs text-emerald-600 mt-1 font-medium">↑ +12% from last term</p>
+                </div>
+                <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                  <p className="text-xs font-semibold text-slate-400 uppercase">{t.feeCollected}</p>
+                  <p className="text-3xl font-extrabold text-slate-900 mt-2">Rs. 4.82M</p>
+                  <p className="text-xs text-emerald-600 mt-1 font-medium">88% collection rate</p>
+                </div>
+                <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                  <p className="text-xs font-semibold text-slate-400 uppercase">{t.todayAttendance}</p>
+                  <p className="text-3xl font-extrabold text-slate-900 mt-2">94.2%</p>
+                  <p className="text-xs text-blue-600 mt-1 font-medium">1,394 students present</p>
+                </div>
+                <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                  <p className="text-xs font-semibold text-slate-400 uppercase">{t.pendingAdmissions}</p>
+                  <p className="text-3xl font-extrabold text-slate-900 mt-2">24</p>
+                  <p className="text-xs text-amber-600 mt-1 font-medium">Requires document check</p>
+                </div>
+              </div>
+
+              {/* LIVE STUDENT ROSTER TABLE */}
+              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                <div className="p-5 border-b border-slate-200 flex justify-between items-center">
+                  <h3 className="font-bold text-lg text-slate-900">Recent Students & Live Status</h3>
+                  <span className="text-xs bg-blue-50 text-blue-700 px-3 py-1 rounded-full font-semibold">Classes 1–12 Active</span>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-sm text-slate-600 rtl:text-right">
+                    <thead className="bg-slate-50 text-xs uppercase text-slate-500 font-semibold border-b border-slate-200">
+                      <tr>
+                        <th className="p-4">Student Name</th>
+                        <th className="p-4">Admission No</th>
+                        <th className="p-4">Class</th>
+                        <th className="p-4">Attendance</th>
+                        <th className="p-4">Fee Status</th>
+                        <th className="p-4 text-center">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {students.map((st) => (
+                        <tr key={st.id} className="hover:bg-slate-50 transition">
+                          <td className="p-4 font-semibold text-slate-900">{st.name}</td>
+                          <td className="p-4 font-mono text-xs">{st.admissionNo}</td>
+                          <td className="p-4">{st.class} - {st.section}</td>
+                          <td className="p-4 font-medium text-emerald-600">{st.attendanceRate}</td>
+                          <td className="p-4">
+                            <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${st.feeStatus === 'Paid' ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'}`}>
+                              {st.feeStatus}
+                            </span>
+                          </td>
+                          <td className="p-4 text-center">
+                            <button 
+                              onClick={() => simulateScan(st)}
+                              className="bg-blue-50 hover:bg-blue-100 text-blue-700 px-3 py-1.5 rounded-lg text-xs font-semibold transition shadow-sm"
+                            >
+                              Scan QR
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ADMIN CENTER VIEW */}
+          {activeTab === 'admin_center' && (
+            <div className="space-y-6">
+              <h2 className="text-2xl font-bold text-slate-900">Admin Control Center</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                  <h4 className="font-bold text-slate-900 mb-2">🏫 School Profile</h4>
+                  <p className="text-xs text-slate-500 mb-4">Configure branding, logo, principal signature, and address stamps.</p>
+                  <button className="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 py-2 rounded-lg text-xs font-semibold transition">Edit Profile</button>
+                </div>
+                <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                  <h4 className="font-bold text-slate-900 mb-2">📚 Classes & Streams</h4>
+                  <p className="text-xs text-slate-500 mb-4">Manage Class 1 to 12 sections, core subjects, and Science/Arts streams.</p>
+                  <button className="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 py-2 rounded-lg text-xs font-semibold transition">Configure Classes</button>
+                </div>
+                <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                  <h4 className="font-bold text-slate-900 mb-2">🔐 RBAC & Audit Logs</h4>
+                  <p className="text-xs text-slate-500 mb-4">Manage staff roles, permissions, and inspect automated server audit logs.</p>
+                  <button className="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 py-2 rounded-lg text-xs font-semibold transition">View Audit Logs</button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* QR ATTENDANCE SCANNER VIEW */}
+          {activeTab === 'attendance' && (
+            <div className="space-y-6">
+              <h2 className="text-2xl font-bold text-slate-900">QR Code Attendance Scanner</h2>
+              <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm max-w-xl mx-auto text-center">
+                <div className="w-48 h-48 mx-auto bg-slate-900 rounded-2xl flex items-center justify-center text-white text-5xl mb-4 shadow-inner">
+                  📷
+                </div>
+                <p className="text-sm font-medium text-slate-700">Point gate camera at student ID card or mobile QR token.</p>
+                <p className="text-xs text-slate-400 mt-1">Instant duplicate-scan protection & offline sync enabled.</p>
+                <div className="mt-6 flex justify-center space-x-3 rtl:space-x-reverse">
+                  {students.slice(0, 3).map(st => (
+                    <button 
+                      key={st.id}
+                      onClick={() => simulateScan(st)}
+                      className="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-2 rounded-lg font-semibold shadow transition"
+                    >
+                      Simulate: {st.name.split(' ')[0]}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* FEE COLLECTION VIEW */}
+          {activeTab === 'fees' && (
+            <div className="space-y-6">
+              <h2 className="text-2xl font-bold text-slate-900">Fee Vouchers & Collection</h2>
+              <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                <div className="flex justify-between items-center mb-4">
+                  <h4 className="font-bold text-slate-900">Active Monthly Fee Vouchers (April 2026)</h4>
+                  <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-xs font-semibold shadow transition">
+                    + Generate Bulk Vouchers
+                  </button>
+                </div>
+                <div className="space-y-3">
+                  {students.map(st => (
+                    <div key={st.id} className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-200">
+                      <div>
+                        <p className="font-bold text-slate-900">{st.name} <span className="text-xs font-normal text-slate-500">({st.class})</span></p>
+                        <p className="text-xs text-slate-500">Voucher #: VCH-2026-{st.id * 142}</p>
+                      </div>
+                      <div className="flex items-center space-x-4 rtl:space-x-reverse">
+                        <span className="font-bold text-slate-900">Rs. 12,500</span>
+                        <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${st.feeStatus === 'Paid' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
+                          {st.feeStatus}
+                        </span>
+                        <button className="bg-slate-900 hover:bg-slate-800 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition">
+                          Download PDF
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+        
